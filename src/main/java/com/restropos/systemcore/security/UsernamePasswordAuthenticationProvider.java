@@ -56,6 +56,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         boolean matches = passwordEncoder.matches(authentication.getCredentials().toString(), emailSecuredUser.getPassword()); //Credentials == password
 
         if (!matches) throw new BadCredentialsException("WRONG LOGIN INFORMATION PROVIDED");
+        else if(emailSecuredUser.isLoginDisabled()) throw new RuntimeException("YOU HAVE TO VERIFY YOUR ACCOUNT");
 
         return new UsernamePasswordAuthenticationToken(emailSecuredUser.getEmail(), emailSecuredUser.getPassword(), List.of(new SimpleGrantedAuthority(emailSecuredUser.getRole().getRoleName())));
     }

@@ -1,29 +1,19 @@
 package com.restropos.systemshop.api;
 
-import com.restropos.systemcore.dto.BearerToken;
-import com.restropos.systemcore.dto.LoginDto;
-import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
-import com.restropos.systemcore.utils.JwtTokenUtil;
-import com.restropos.systemshop.dto.EmailSecuredUserDto;
+import com.restropos.systemcore.entity.SecureToken;
+import com.restropos.systemcore.service.SecureTokenService;
 import com.restropos.systemshop.populator.BasicUserDtoPopulator;
 import com.restropos.systemshop.populator.CustomerDtoPopulator;
 import com.restropos.systemshop.populator.SystemUserDtoPopulator;
 import com.restropos.systemshop.repository.BasicUserRepository;
 import com.restropos.systemshop.repository.CustomerRepository;
 import com.restropos.systemshop.repository.SystemUserRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.management.relation.Role;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/tests")
@@ -46,6 +36,9 @@ public class CustomTestApi {
     @Autowired
     private SystemUserDtoPopulator systemUserDtoPopulator;
 
+    @Autowired
+    private SecureTokenService secureTokenService;
+
 
 
     @GetMapping("/basicUser")
@@ -61,6 +54,11 @@ public class CustomTestApi {
     @GetMapping("/systemUser")
     public List<?> getSystemUser(){
         return List.of(systemUserDtoPopulator.populate(systemUserRepository.findSystemUserByEmail("mahmut.382@gmail.com").orElseThrow(()->new RuntimeException("aa"))));
+    }
+
+    @GetMapping("/token")
+    public SecureToken getToken(){
+        return secureTokenService.generateTokenForBasicUser(basicUserRepository.findBasicUserByEmail("mahmut.382@hotmail.com").get());
     }
 
 }

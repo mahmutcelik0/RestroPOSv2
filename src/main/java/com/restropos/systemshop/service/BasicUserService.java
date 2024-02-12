@@ -34,4 +34,9 @@ public class BasicUserService {
         return basicUserRepository.findBasicUserByEmail(email);
     }
 
+    public void save(BasicUser user) {
+        basicUserRepository.save(user);
+    }
+
+
 }

@@ -26,6 +26,7 @@ public class UserFacade {
 
     public ResponseEntity<?> addNewUser(GenericUser genericUser, UserTypes userType) {
         ResponseEntity<?> successResponse = new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+//        genericUser.setRole(); //todo user type a göre rol eklenecek
         if (userType.equals(UserTypes.CUSTOMER)) {
             if (customerService.addNewCustomer((Customer) genericUser))
                 return successResponse;

@@ -1,5 +1,6 @@
 package com.restropos.systemshop.service;
 
+import com.restropos.systemshop.entity.user.BasicUser;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class SystemUserService {
         }
     }
 
+    public void save(SystemUser systemUser){
+        systemUserRepository.save(systemUser);
+    }
 
     public boolean checkSystemUserExists(String email) {
         return systemUserRepository.findSystemUserByEmail(email).isPresent();
@@ -36,5 +40,6 @@ public class SystemUserService {
     public Optional<SystemUser> findOptionalSystemUserByEmail(String email){
         return systemUserRepository.findSystemUserByEmail(email);
     }
+
 
 }

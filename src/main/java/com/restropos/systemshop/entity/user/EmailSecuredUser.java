@@ -20,7 +20,7 @@ public abstract class EmailSecuredUser extends GenericUser{
     @NotEmpty(message = "EMAIL IS REQUIRED FIELD")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-zA-ZçÇğĞıİöÖşŞüÜ])(?=.*[A-ZÇĞİÖŞÜçğıöşü])(?=.*[0-9])(?=.*[._])[a-zA-Z0-9çÇğĞıİöÖşŞüÜ._]{8,}$")
+//    @Pattern(regexp = "^(?=.*[a-zA-ZçÇğĞıİöÖşŞüÜ])(?=.*[A-ZÇĞİÖŞÜçğıöşü])(?=.*[0-9])(?=.*[._])[a-zA-Z0-9çÇğĞıİöÖşŞüÜ._]{8,}$")
     @NotEmpty(message = "PASSWORD IS REQUIRED FIELD")
     private String password;
 }
