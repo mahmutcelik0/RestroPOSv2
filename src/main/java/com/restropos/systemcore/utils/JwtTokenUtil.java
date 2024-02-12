@@ -29,6 +29,10 @@ public class JwtTokenUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role")).toString();
+    }
+
     public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
@@ -51,23 +55,23 @@ public class JwtTokenUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    private String generateToken(String subject, Set<Role> roles) {
+    private String generateToken(String subject, String role) {
 
         return Jwts.builder()
                 .setSubject(subject)
-                .claim("role", roles)
+                .claim("role", role)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(expiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    public String generateTokenForEmail(EmailSecuredUserDto emailSecuredUserDto,Set<Role> roles){
-        return generateToken(emailSecuredUserDto.getEmail(),roles);
+    public String generateTokenForEmail(EmailSecuredUserDto emailSecuredUserDto,String role){
+        return generateToken(emailSecuredUserDto.getEmail(),role);
     }
 
-    public String generateTokenForPhoneNumber(CustomerDto customerDto, Set<Role> roles){
-        return generateToken(customerDto.getPhoneNumber(),roles);
+    public String generateTokenForPhoneNumber(CustomerDto customerDto, String role){
+        return generateToken(customerDto.getPhoneNumber(),role);
     }
 
 

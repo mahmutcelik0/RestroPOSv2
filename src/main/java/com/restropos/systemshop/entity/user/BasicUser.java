@@ -1,4 +1,4 @@
-package com.restropos.systemshop.entity;
+package com.restropos.systemshop.entity.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

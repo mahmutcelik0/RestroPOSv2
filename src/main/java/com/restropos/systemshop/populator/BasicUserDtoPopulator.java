@@ -2,7 +2,7 @@ package com.restropos.systemshop.populator;
 
 import com.restropos.systemcore.populator.AbstractPopulator;
 import com.restropos.systemshop.dto.BasicUserDto;
-import com.restropos.systemshop.entity.BasicUser;
+import com.restropos.systemshop.entity.user.BasicUser;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,7 +10,6 @@ public class BasicUserDtoPopulator extends AbstractPopulator<BasicUser, BasicUse
     @Override
     protected BasicUserDto populate(BasicUser basicUser, BasicUserDto basicUserDto) {
         basicUserDto.setEmail(basicUser.getEmail());
-        basicUserDto.setPassword(basicUser.getPassword());
         basicUserDto.setDeviceName(basicUser.getDeviceName());
         return basicUserDto;
     }

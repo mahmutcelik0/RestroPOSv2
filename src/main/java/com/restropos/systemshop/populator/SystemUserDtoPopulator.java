@@ -2,7 +2,7 @@ package com.restropos.systemshop.populator;
 
 import com.restropos.systemcore.populator.AbstractPopulator;
 import com.restropos.systemshop.dto.SystemUserDto;
-import com.restropos.systemshop.entity.SystemUser;
+import com.restropos.systemshop.entity.user.SystemUser;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,9 +1,14 @@
 package com.restropos.systemshop.service;
 
-import com.restropos.systemshop.entity.SystemUser;
+import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+
+import javax.sound.midi.SysexMessage;
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Service
 public class SystemUserService {
@@ -22,6 +27,14 @@ public class SystemUserService {
 
     public boolean checkSystemUserExists(String email) {
         return systemUserRepository.findSystemUserByEmail(email).isPresent();
+    }
+
+    public SystemUser findSystemUserByEmail(String email){
+        return systemUserRepository.findSystemUserByEmail(email).orElseThrow(()-> new RuntimeException("not found"));
+    }
+
+    public Optional<SystemUser> findOptionalSystemUserByEmail(String email){
+        return systemUserRepository.findSystemUserByEmail(email);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.restropos.systemcore.filter;
 
+import com.restropos.systemcore.security.CustomUserDetailsService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
 import com.restropos.systemcore.utils.LogUtil;
 import jakarta.servlet.FilterChain;
@@ -20,7 +21,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenUtil jwtUtilities;
-    private final CustomUserDetailsService customerUserDetailsService;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
 
     @Override
@@ -28,13 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtUtilities.getToken(request);
 
         if (token != null && jwtUtilities.validateToken(token)) {
-            String email = jwtUtilities.extractUsername(token);
+            String subject = jwtUtilities.extractSubject(token);
+            String roleName = jwtUtilities.extractRole(token);
 
-            UserDetails userDetails = customerUserDetailsService.loadUserByUsername(email);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(subject,roleName);
             if (userDetails != null) {
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
-                LogUtil.printLog("authenticated user with email :"+email, JwtAuthenticationFilter.class);
+                LogUtil.printLog("authenticated user with subject :"+subject, JwtAuthenticationFilter.class);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             }

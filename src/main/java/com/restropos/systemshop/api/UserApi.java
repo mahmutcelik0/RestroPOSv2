@@ -1,7 +1,7 @@
 package com.restropos.systemshop.api;
 
 import com.restropos.systemshop.constants.UserTypes;
-import com.restropos.systemshop.entity.*;
+import com.restropos.systemshop.entity.user.*;
 import com.restropos.systemshop.facade.UserFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

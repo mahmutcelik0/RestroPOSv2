@@ -1,6 +1,6 @@
 package com.restropos.systemshop.service;
 
-import com.restropos.systemshop.entity.Customer;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,4 +24,7 @@ public class CustomerService {
         return customerRepository.findCustomerByPhoneNumber(phoneNumber).isPresent();
     }
 
+    public Customer findCustomerByPhoneNUmber(String phoneNumber) {
+        return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(()->new RuntimeException("not found"));
+    }
 }

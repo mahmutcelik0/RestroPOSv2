@@ -1,10 +1,10 @@
 package com.restropos.systemshop.facade;
 
 import com.restropos.systemshop.constants.UserTypes;
-import com.restropos.systemshop.entity.BasicUser;
-import com.restropos.systemshop.entity.Customer;
-import com.restropos.systemshop.entity.GenericUser;
-import com.restropos.systemshop.entity.SystemUser;
+import com.restropos.systemshop.entity.user.BasicUser;
+import com.restropos.systemshop.entity.user.Customer;
+import com.restropos.systemshop.entity.user.GenericUser;
+import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;

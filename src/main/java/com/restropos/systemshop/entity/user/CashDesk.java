@@ -1,4 +1,4 @@
-package com.restropos.systemshop.entity;
+package com.restropos.systemshop.entity.user;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

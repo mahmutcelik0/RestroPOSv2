@@ -1,4 +1,4 @@
-package com.restropos.systemshop.entity;
+package com.restropos.systemshop.entity.user;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue(value = "WAITER")
+@DiscriminatorValue(value = "ADMIN")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Waiter extends SystemUser {
+public class Admin extends SystemUser {
 }

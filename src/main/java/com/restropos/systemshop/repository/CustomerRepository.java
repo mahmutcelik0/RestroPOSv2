@@ -1,6 +1,6 @@
 package com.restropos.systemshop.repository;
 
-import com.restropos.systemshop.entity.Customer;
+import com.restropos.systemshop.entity.user.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

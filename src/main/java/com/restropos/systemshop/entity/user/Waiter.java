@@ -1,16 +1,15 @@
-package com.restropos.systemshop.entity;
+package com.restropos.systemshop.entity.user;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue(value = "ADMIN")
+@DiscriminatorValue(value = "WAITER")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Admin extends SystemUser {
+public class Waiter extends SystemUser {
 }
