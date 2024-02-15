@@ -6,6 +6,8 @@ import com.restropos.systemcore.dto.LoginDto;
 import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
+import com.restropos.systememail.command.WorkspaceVerifyEmailResponse;
+import com.restropos.systememail.service.EmailService;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class AuthApi {
     @Autowired
     private SecureTokenService secureTokenService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -44,9 +49,16 @@ public class AuthApi {
     public ResponseEntity<?> register(){
         return null;
     }
+    //response olarak token gelecek regis
 
     @PostMapping("/account/enable")
     public ResponseEntity<?> enableAccountWithToken(@RequestBody EnableToken enableToken){
         return secureTokenService.enableAccountWithToken(enableToken);
     }
+
+    @GetMapping("/sendVerifyEmail")
+    public WorkspaceVerifyEmailResponse sendVerifyEmailToAdmin(@RequestParam String email){
+        return emailService.sendWorkspaceVerifyEmail(email);
+    }
+
 }

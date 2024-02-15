@@ -30,7 +30,9 @@ public class SecureTokenService {
     @Autowired
     private SystemUserService systemUserService;
 
-    public SecureToken generateTokenForSystemUser(SystemUser systemUser) {
+    public SecureToken generateTokenForSystemUser(String adminEmail) {
+        SystemUser systemUser = systemUserService.findSystemUserByEmail(adminEmail);
+
         SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), systemUser);
         return generateToken(secureToken);
     }
