@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/**").authenticated() //.hasAnyRole("USER","ADMIN")
-                        .requestMatchers("/auth/**").permitAll())
+                        .requestMatchers("/auth/**","/swagger-ui/**","/swagger-resources/*","/v3/api-docs/**").permitAll())
 
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable)
