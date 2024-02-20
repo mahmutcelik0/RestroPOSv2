@@ -9,4 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class EmailSecuredUserDto {
     private String email;
+    private String password;
+
+    public EmailSecuredUserDto(String email) {
+        this.email = email;
+    }
 }

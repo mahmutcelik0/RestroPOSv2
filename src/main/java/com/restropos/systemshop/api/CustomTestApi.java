@@ -1,12 +1,11 @@
 package com.restropos.systemshop.api;
 
-import com.restropos.systemcore.entity.SecureToken;
-import com.restropos.systemcore.service.SecureTokenService;
-import com.restropos.systememail.builder.WorkspaceVerifyEmailTemplate;
-import com.restropos.systememail.constants.EmailConstants;
-import com.restropos.systememail.entity.RawEmailTemplate;
-import com.restropos.systememail.factory.EmailTemplateFactory;
-import com.restropos.systememail.service.EmailService;
+import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemrefactor.builder.WorkspaceVerifyEmailTemplate;
+import com.restropos.systemrefactor.constants.EmailConstants;
+import com.restropos.systemrefactor.entity.RawEmailTemplate;
+import com.restropos.systemrefactor.factory.EmailTemplateFactory;
+import com.restropos.systemrefactor.service.EmailService;
 import com.restropos.systemshop.populator.BasicUserDtoPopulator;
 import com.restropos.systemshop.populator.CustomerDtoPopulator;
 import com.restropos.systemshop.populator.SystemUserDtoPopulator;
@@ -44,9 +43,6 @@ public class CustomTestApi {
     private SystemUserDtoPopulator systemUserDtoPopulator;
 
     @Autowired
-    private SecureTokenService secureTokenService;
-
-    @Autowired
     private WorkspaceVerifyEmailTemplate workspaceVerifyEmailTemplate;
 
     @GetMapping("/basicUser")
@@ -64,19 +60,13 @@ public class CustomTestApi {
         return List.of(systemUserDtoPopulator.populate(systemUserRepository.findSystemUserByEmail("mahmut.382@gmail.com").orElseThrow(()->new RuntimeException("aa"))));
     }
 
-    @GetMapping("/token")
-    public SecureToken getToken(){
-        return secureTokenService.generateTokenForBasicUser(basicUserRepository.findBasicUserByEmail("mahmut.382@hotmail.com").get());
-    }
-
     @GetMapping("/email")
-    public RawEmailTemplate getEmail(){
+    public RawEmailTemplate getEmail() throws NotFoundException {
         Map<String,String> map = new HashMap<>();
         map.put(EmailConstants.FIRSTNAME.getStr(),"Mahmut");
         map.put(EmailConstants.LASTNAME.getStr(),"Çelik");
         map.put(EmailConstants.VERIFY_CODE.getStr(),"123456");
         return EmailTemplateFactory.generateTemplate(workspaceVerifyEmailTemplate, map);
-        //secureTokenService.generateTokenForSystemUser("mahmut.382@hotmail.com")
     }
 
     @Autowired
@@ -86,5 +76,6 @@ public class CustomTestApi {
     public void sendMail(){
         emailService.sendWorkspaceVerifyEmail("mahmut.382@hotmail.com");
     }
+
 
 }

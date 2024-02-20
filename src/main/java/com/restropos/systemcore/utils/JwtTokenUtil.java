@@ -71,8 +71,8 @@ public class JwtTokenUtil {
         return generateToken(emailSecuredUserDto.getEmail(),role);
     }
 
-    public String generateTokenForPhoneNumber(CustomerDto customerDto, String role){
-        return generateToken(customerDto.getPhoneNumber(),role);
+    public String generateTokenForPhoneNumber(String phoneNumber, String role){
+        return generateToken(phoneNumber,role);
     }
 
 

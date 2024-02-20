@@ -20,6 +20,10 @@ public class BasicUser extends EmailSecuredUser{
     @NotEmpty
     private String deviceName;
 
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "WORKSPACE_NAME",referencedColumnName = "BUSINESS_NAME")
+    private Workspace workspace;
+
     @Override
     boolean isSecured() {
         return false;

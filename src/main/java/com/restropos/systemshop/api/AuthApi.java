@@ -1,21 +1,37 @@
 package com.restropos.systemshop.api;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.dto.BearerToken;
 import com.restropos.systemcore.dto.EnableToken;
 import com.restropos.systemcore.dto.LoginDto;
+import com.restropos.systemcore.exception.AlreadyUsedException;
+import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemcore.exception.TimeExceededException;
+import com.restropos.systemcore.exception.WrongCredentialsException;
+import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
-import com.restropos.systememail.command.WorkspaceVerifyEmailResponse;
-import com.restropos.systememail.service.EmailService;
+import com.restropos.systemcore.utils.LogUtil;
+import com.restropos.systemrefactor.command.WorkspaceVerifyEmailResponse;
+import com.restropos.systemrefactor.dto.OtpResponseDto;
+import com.restropos.systemrefactor.service.EmailService;
+import com.restropos.systemrefactor.service.SmsService;
+import com.restropos.systemshop.constants.UserTypes;
+import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
+import com.restropos.systemshop.dto.RegisterDto;
+import com.restropos.systemshop.facade.UserFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,8 +48,14 @@ public class AuthApi {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
+    @Autowired
+    private SmsService smsService;
+
+    @Autowired
+    private UserFacade userFacade;
+
+    @PostMapping("/login/email")
+    public ResponseEntity<?> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -45,20 +67,45 @@ public class AuthApi {
         return ResponseEntity.ok(bearerToken);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(){
-        return null;
+    @PostMapping("/login/phoneNumber")
+    public ResponseEntity<?> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, WrongCredentialsException, TimeExceededException {
+        Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(enableToken.getAccountInformation(),"", List.of(new SimpleGrantedAuthority(UserTypes.CUSTOMER.getName()))));
+
+        secureTokenService.enableAccountWithToken(enableToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String accessToken = jwtTokenUtil.generateTokenForPhoneNumber(authentication.getPrincipal().toString(), authentication.getAuthorities().stream().findFirst().orElseThrow(()->new RuntimeException(CustomResponseMessage.AUTHORITY_EXCEPTION)).toString());
+
+        BearerToken bearerToken = new BearerToken(accessToken, "Bearer ");
+
+        return ResponseEntity.ok(bearerToken);
     }
-    //response olarak token gelecek regis
+
+    @PostMapping("/register/workspace")
+    public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestBody @Valid RegisterDto registerDto){
+        return userFacade.registerNewWorkspace(registerDto);
+    }
+
+    @PostMapping("/register/customer")
+    public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestBody @Valid CustomerDto customerDto) throws AlreadyUsedException {
+        return userFacade.registerNewCustomer(customerDto);
+    }
 
     @PostMapping("/account/enable")
-    public ResponseEntity<?> enableAccountWithToken(@RequestBody EnableToken enableToken){
+    public ResponseEntity<ResponseMessage> enableAccountWithToken(@RequestBody EnableToken enableToken) throws NotFoundException, TimeExceededException, WrongCredentialsException {
         return secureTokenService.enableAccountWithToken(enableToken);
     }
 
     @GetMapping("/sendVerifyEmail")
     public WorkspaceVerifyEmailResponse sendVerifyEmailToAdmin(@RequestParam String email){
         return emailService.sendWorkspaceVerifyEmail(email);
+    }
+
+    @PostMapping("/sendVerifySms")
+    public OtpResponseDto sendOtp(@RequestParam String phoneNumber) throws NotFoundException {
+        LogUtil.printLog("inside sendOtp :: "+ phoneNumber, CustomTestApi.class);
+        return smsService.sendSMS(phoneNumber);
     }
 
 }

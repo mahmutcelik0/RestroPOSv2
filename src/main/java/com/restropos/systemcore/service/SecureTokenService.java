@@ -1,12 +1,17 @@
 package com.restropos.systemcore.service;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.dto.EnableToken;
 import com.restropos.systemcore.entity.SecureToken;
+import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemcore.exception.TimeExceededException;
+import com.restropos.systemcore.exception.WrongCredentialsException;
+import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.repository.SecureTokenRepository;
 import com.restropos.systemshop.constants.UserTypes;
-import com.restropos.systemshop.entity.user.BasicUser;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
-import com.restropos.systemshop.service.BasicUserService;
+import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,27 +30,27 @@ public class SecureTokenService {
     private SecureTokenRepository secureTokenRepository;
 
     @Autowired
-    private BasicUserService basicUserService;
+    private CustomerService customerService;
 
     @Autowired
     private SystemUserService systemUserService;
 
-    public SecureToken generateTokenForSystemUser(String adminEmail) {
+    public SecureToken generateTokenForSystemUser(String adminEmail) throws NotFoundException {
         SystemUser systemUser = systemUserService.findSystemUserByEmail(adminEmail);
 
         SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), systemUser);
         return generateToken(secureToken);
     }
 
-    public SecureToken generateTokenForBasicUser(BasicUser basicUser) {
-        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), basicUser);
+    public SecureToken generateTokenForCustomer(Customer customer) {
+        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), customer);
         return generateToken(secureToken);
     }
 
     private SecureToken generateToken(SecureToken secureToken) {
         secureTokenRepository.existsSecureTokenByToken(secureToken.getToken());
 
-        while (secureTokenRepository.existsSecureTokenByToken(secureToken.getToken())){
+        while (secureTokenRepository.existsSecureTokenByToken(secureToken.getToken())) {
             secureToken.setToken(generateRandomCode());
         }
 
@@ -53,34 +58,34 @@ public class SecureTokenService {
     }
 
 
-    public String  generateRandomCode() {
+    public String generateRandomCode() {
         SecureRandom random = new SecureRandom();
         return String.valueOf(random.nextInt(100000, 999999));
     }
 
-    public ResponseEntity<?> enableAccountWithToken(EnableToken enableToken) {
-        List<SecureToken> secureTokens = secureTokenRepository.findSecureTokenByUserEmail(enableToken.getAccountInformation());
+    public ResponseEntity<ResponseMessage> enableAccountWithToken(EnableToken enableToken) throws NotFoundException, TimeExceededException, WrongCredentialsException {
+        List<SecureToken> secureTokens = secureTokenRepository.findSecureTokenByAccountInformation(enableToken.getAccountInformation());
 
-        if (CollectionUtils.isEmpty(secureTokens)) return new ResponseEntity<>("q",HttpStatus.NOT_ACCEPTABLE);
+        if (CollectionUtils.isEmpty(secureTokens)) throw new NotFoundException(CustomResponseMessage.TOKEN_NOT_FOUND);
         var token = secureTokens.get(0);
 
-        if(token.isExpired()) return new ResponseEntity<>("Time is up",HttpStatus.NOT_ACCEPTABLE);
-        else if(!token.getToken().equals(enableToken.getTokenCode())) {
+        if (token.isExpired()) throw new TimeExceededException(CustomResponseMessage.TIME_EXCEEDED);
+        else if (!token.getToken().equals(enableToken.getTokenCode())) {
             //deneme hakkından azaltılacak 0 olunca token i sil
-            return new ResponseEntity<>("Wrong code",HttpStatus.NOT_ACCEPTABLE);
-        }else {
-            var userRoleName = ObjectUtils.isEmpty(token.getBasicUser())?token.getSystemUser().getRole().getRoleName():token.getBasicUser().getRole().getRoleName();
-            if(userRoleName.equals(UserTypes.ADMIN.getName()) || userRoleName.equals(UserTypes.WAITER.getName())){
-                var user  = systemUserService.findSystemUserByEmail(token.getSystemUser().getEmail());
+            throw new WrongCredentialsException(CustomResponseMessage.WRONG_CREDENTIAL);
+        } else {
+            var userRoleName = ObjectUtils.isEmpty(token.getCustomer()) ? token.getSystemUser().getRole().getRoleName() : UserTypes.CUSTOMER.getName();
+            if (userRoleName.equals(UserTypes.ADMIN.getName()) || userRoleName.equals(UserTypes.WAITER.getName())) {
+                var user = systemUserService.findSystemUserByEmail(token.getSystemUser().getEmail());
                 user.setLoginDisabled(false);
                 systemUserService.save(user);
-            } else if (userRoleName.equals(UserTypes.CASH_DESK.getName()) || userRoleName.equals(UserTypes.KITCHEN.getName())) {
-                var user  = basicUserService.findBasicUserByEmail(token.getBasicUser().getEmail());
+            } else if (userRoleName.equals(UserTypes.CUSTOMER.getName())) {
+                var user = customerService.findCustomerByPhoneNumber(token.getCustomer().getPhoneNumber());
                 user.setLoginDisabled(false);
-                basicUserService.save(user);
+                customerService.save(user);
             }
         }
-        return new ResponseEntity<>("Account enabled",HttpStatus.ACCEPTED);
-
+        return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.ACCOUNT_ACTIVATED), HttpStatus.OK);
+        //token verify olduktan sonra token i sil todo sill
     }
 }

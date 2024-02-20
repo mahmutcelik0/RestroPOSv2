@@ -8,7 +8,7 @@ public enum UserTypes {
     WAITER("WAITER");
 
 
-    private String name;
+    private final String name;
 
     UserTypes(String name) {
         this.name = name;
@@ -18,7 +18,4 @@ public enum UserTypes {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

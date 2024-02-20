@@ -3,10 +3,7 @@ package com.restropos.systemshop.entity.user;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "CUSTOMERS")
@@ -14,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Customer extends GenericUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +36,8 @@ public class Customer extends GenericUser {
     @Size(min = 13, max = 13)
     private String phoneNumber;
 
+    @Column(name = "LOGIN_DISABLED",nullable = false)
+    private boolean loginDisabled = true;
 
     @Override
     boolean isSecured() {

@@ -1,6 +1,6 @@
 package com.restropos.systemcore.entity;
 
-import com.restropos.systemshop.entity.user.BasicUser;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 
 @Entity
 @Table(name = "SECURE_TOKENS")
@@ -34,18 +32,18 @@ public class SecureToken {
     private LocalDateTime expireAt;
 
     @ManyToOne
-    @JoinColumn(name = "BASIC_USER_ID")
-    private BasicUser basicUser;
+    @JoinColumn(name = "CUSTOMER_ID")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "SYSTEM_USER_ID")
     private SystemUser systemUser;
 
-    public SecureToken(String token, LocalDateTime creationTimeStamp, LocalDateTime expireAt, BasicUser basicUser) {
+    public SecureToken(String token, LocalDateTime creationTimeStamp, LocalDateTime expireAt, Customer customer) {
         this.token = token;
         this.creationTimeStamp = creationTimeStamp;
         this.expireAt = expireAt;
-        this.basicUser = basicUser;
+        this.customer = customer;
     }
 
     public SecureToken(String token, LocalDateTime creationTimeStamp, LocalDateTime expireAt, SystemUser systemUser) {

@@ -1,5 +1,7 @@
 package com.restropos.systemshop.service;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
+import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,15 @@ public class CustomerService {
         }
     }
 
-
     public boolean checkCustomerExists(String phoneNumber) {
         return customerRepository.findCustomerByPhoneNumber(phoneNumber).isPresent();
     }
 
-    public Customer findCustomerByPhoneNUmber(String phoneNumber) {
-        return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(()->new RuntimeException("not found"));
+    public Customer findCustomerByPhoneNumber(String phoneNumber) throws NotFoundException {
+        return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(()->new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
+    }
+
+    public void save(Customer customer){
+        customerRepository.save(customer);
     }
 }

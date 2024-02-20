@@ -1,14 +1,12 @@
 package com.restropos.systemshop.service;
 
-import com.restropos.systemshop.entity.user.BasicUser;
+import com.restropos.systemcore.constants.CustomResponseMessage;
+import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import javax.sound.midi.SysexMessage;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -25,16 +23,16 @@ public class SystemUserService {
         }
     }
 
-    public void save(SystemUser systemUser){
-        systemUserRepository.save(systemUser);
+    public SystemUser save(SystemUser systemUser){
+        return systemUserRepository.save(systemUser);
     }
 
     public boolean checkSystemUserExists(String email) {
         return systemUserRepository.findSystemUserByEmail(email).isPresent();
     }
 
-    public SystemUser findSystemUserByEmail(String email){
-        return systemUserRepository.findSystemUserByEmail(email).orElseThrow(()-> new RuntimeException("not found"));
+    public SystemUser findSystemUserByEmail(String email) throws NotFoundException {
+        return systemUserRepository.findSystemUserByEmail(email).orElseThrow(()-> new NotFoundException(CustomResponseMessage.USER_NOT_FOUND));
     }
 
     public Optional<SystemUser> findOptionalSystemUserByEmail(String email){
