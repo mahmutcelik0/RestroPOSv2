@@ -2,7 +2,8 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /home/app
 
 COPY ./pom.xml /home/app/pom.xml
-COPY ./src/main/java/com/restropos/RestroposApplication.java /home/app/src/main/java/com/restropos/RestroposApplication.java
+COPY src /home/app/src
+
 
 ENV SPRING_PROFILES_ACTIVE = dev
 
