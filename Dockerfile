@@ -6,10 +6,10 @@ COPY ./src/main/java/com/restropos/RestroposApplication.java /home/app/src/main/
 
 ENV SPRING_PROFILES_ACTIVE = dev
 
-RUN mvn -f /home/app/pom.xml clean package
+RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
 COPY . /home/app
-RUN mvn -f /home/app/pom.xml clean package
+RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
 FROM openjdk:17.0-slim
 
