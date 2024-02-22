@@ -1,21 +1,12 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /home/app
 
-COPY ./pom.xml /home/app/pom.xml
-COPY src /home/app/src
+FROM eclipse-temurin:17-jdk-focal
 
+WORKDIR /app
 
-ENV SPRING_PROFILES_ACTIVE = dev
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
 
-RUN mvn -f /home/app/pom.xml clean package -DskipTests
+COPY src ./src
 
-COPY . /home/app
-RUN mvn -f /home/app/pom.xml clean package -DskipTests
-
-FROM openjdk:17.0-slim
-
-ENV SPRING_PROFILES_ACTIVE = dev
-
-EXPOSE 8080
-COPY --from=build /home/app/target/*.jar app.jar
-ENTRYPOINT [ "sh", "-c", "java -jar" ,"/app.jar" ]
+CMD ["./mvnw", "spring-boot:run"]
