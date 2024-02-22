@@ -2,7 +2,7 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /home/app
 COPY . .
 ENV SPRING_PROFILES_ACTIVE = dev
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 FROM openjdk:17.0-slim
 WORKDIR /home/app
