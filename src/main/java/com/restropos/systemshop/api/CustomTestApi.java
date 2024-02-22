@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/tests")
+@RequestMapping("/auth/tests")
 public class CustomTestApi {
     @Autowired
     private BasicUserRepository basicUserRepository;
@@ -44,6 +44,11 @@ public class CustomTestApi {
 
     @Autowired
     private WorkspaceVerifyEmailTemplate workspaceVerifyEmailTemplate;
+
+    @GetMapping("/test")
+    public String getHello(){
+        return "HELLO";
+    }
 
     @GetMapping("/basicUser")
     public List<?> getBasicUser(){
