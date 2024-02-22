@@ -9,4 +9,4 @@ WORKDIR /home/app
 ENV SPRING_PROFILES_ACTIVE = dev
 EXPOSE 8080
 COPY --from=build /home/app/target/*.jar ./app.jar
-ENTRYPOINT [ "sh", "-c", "java", "-jar" ,"/app.jar" ]
+ENTRYPOINT [ "sh", "-c", "java", "-jar" ,"app.jar" ]
