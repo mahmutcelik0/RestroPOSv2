@@ -22,6 +22,7 @@ public class CustomResponseMessage {
     public static final String EMAIL_SENT = "Mail has sent successfully";
     public static final String VERIFICATION_REQUIRED = "You have to verify your account";
     public static final String ACCOUNT_BLOCKED = "Your account is blocked! You have to login!";
+    public static final String TOKEN_EXPIRED = "Token expired";
 
     private CustomResponseMessage(){
     }

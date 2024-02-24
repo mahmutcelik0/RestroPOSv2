@@ -1,5 +1,6 @@
 package com.restropos.systemshop.entity.user;
 
+import com.restropos.systemshop.entity.Role;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Admin extends SystemUser {
-    public Admin(@Email @NotEmpty(message = "EMAIL IS REQUIRED FIELD") String email, @NotEmpty(message = "PASSWORD IS REQUIRED FIELD") String password, String firstName, String lastName, boolean loginDisabled,Workspace workspace) {
-        super(email, password,firstName,lastName,loginDisabled,workspace);
+    public Admin(@Email @NotEmpty(message = "EMAIL IS REQUIRED FIELD") String email, @NotEmpty(message = "PASSWORD IS REQUIRED FIELD") String password, String firstName, String lastName, boolean loginDisabled, Workspace workspace, Role role) {
+        super(email, password,firstName,lastName,loginDisabled,workspace,role);
     }
 }

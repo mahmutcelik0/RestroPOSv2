@@ -38,12 +38,12 @@ public class SecureTokenService {
     public SecureToken generateTokenForSystemUser(String adminEmail) throws NotFoundException {
         SystemUser systemUser = systemUserService.findSystemUserByEmail(adminEmail);
 
-        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), systemUser);
+        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(2), systemUser);
         return generateToken(secureToken);
     }
 
     public SecureToken generateTokenForCustomer(Customer customer) {
-        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5), customer);
+        SecureToken secureToken = new SecureToken(generateRandomCode(), LocalDateTime.now(), LocalDateTime.now().plusMinutes(2), customer);
         return generateToken(secureToken);
     }
 

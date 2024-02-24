@@ -37,6 +37,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @SneakyThrows
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

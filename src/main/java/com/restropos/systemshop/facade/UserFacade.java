@@ -49,29 +49,6 @@ public class UserFacade {
     }
 
 
-    public ResponseEntity<ResponseMessage> registerNewWorkspace(RegisterDto registerDto) {
-        var workspaceDto = registerDto.getWorkspace();
-        var systemUserDto = registerDto.getSystemUser();
-
-        if (systemUserService.checkSystemUserExists(systemUserDto.getEmail())) {
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.EMAIL_ALREADY_USED), HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (workspaceService.checkWorkspaceExists(workspaceDto.getBusinessName())) {
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.WORKSPACE_NAME_ALREADY_USED), HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (workspaceService.checkWorkspaceDomainExists(workspaceDto.getBusinessDomain())) {
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.WORKSPACE_DOMAIN_ALREADY_USED), HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            Workspace workspace = Workspace.builder()
-                    .businessName(workspaceDto.getBusinessName())
-                    .businessDomain(workspaceDto.getBusinessDomain())
-                    .businessLogo(workspaceDto.getBusinessLogo())
-                    .build();
-
-            Admin admin = new Admin(systemUserDto.getEmail(), systemUserDto.getPassword(), systemUserDto.getFirstName(), systemUserDto.getLastName(), true, workspace);
-            systemUserService.save(admin);
-
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.WORKSPACE_CREATED), HttpStatus.OK);
-        }
-    }
 
     public ResponseEntity<ResponseMessage> registerNewCustomer(CustomerDto customerDto) throws AlreadyUsedException {
         if (customerService.checkCustomerExists(customerDto.getPhoneNumber())) {
@@ -89,5 +66,9 @@ public class UserFacade {
 
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.CUSTOMER_CREATED), HttpStatus.OK);
         }
+    }
+
+    public boolean customerValid(String phoneNumber){
+        return customerService.checkCustomerExists(phoneNumber);
     }
 }

@@ -13,7 +13,6 @@ import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
 import com.restropos.systemcore.utils.LogUtil;
-import com.restropos.systemrefactor.command.WorkspaceVerifyEmailResponse;
 import com.restropos.systemrefactor.dto.OtpResponseDto;
 import com.restropos.systemrefactor.service.EmailService;
 import com.restropos.systemrefactor.service.SmsService;
@@ -22,6 +21,7 @@ import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
 import com.restropos.systemshop.dto.RegisterDto;
 import com.restropos.systemshop.facade.UserFacade;
+import com.restropos.systemshop.service.WorkspaceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +54,9 @@ public class AuthApi {
     @Autowired
     private UserFacade userFacade;
 
+    @Autowired
+    private WorkspaceService workspaceService;
+
     @PostMapping("/login/email")
     public ResponseEntity<?> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -62,10 +65,12 @@ public class AuthApi {
 
         String accessToken = jwtTokenUtil.generateTokenForEmail(new EmailSecuredUserDto(authentication.getPrincipal().toString()), authentication.getAuthorities().stream().findFirst().get().toString());
 
-        BearerToken bearerToken = new BearerToken(accessToken, "Bearer ");
+        BearerToken bearerToken = getBearerToken(accessToken);
 
         return ResponseEntity.ok(bearerToken);
     }
+
+
 
     @PostMapping("/login/phoneNumber")
     public ResponseEntity<?> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, WrongCredentialsException, TimeExceededException {
@@ -77,17 +82,21 @@ public class AuthApi {
 
         String accessToken = jwtTokenUtil.generateTokenForPhoneNumber(authentication.getPrincipal().toString(), authentication.getAuthorities().stream().findFirst().orElseThrow(()->new RuntimeException(CustomResponseMessage.AUTHORITY_EXCEPTION)).toString());
 
-        BearerToken bearerToken = new BearerToken(accessToken, "Bearer ");
+        BearerToken bearerToken = getBearerToken(accessToken);
 
         return ResponseEntity.ok(bearerToken);
     }
 
-    @PostMapping("/register/workspace")
+    @PostMapping("/workspace/register")
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestBody @Valid RegisterDto registerDto){
-        return userFacade.registerNewWorkspace(registerDto);
+        ResponseEntity<ResponseMessage> response = workspaceService.registerNewWorkspace(registerDto);
+        if (response.getStatusCode().is2xxSuccessful()){
+            return emailService.sendWorkspaceVerifyEmail(registerDto.getSystemUser().getEmail());
+        }
+        return response;
     }
 
-    @PostMapping("/register/customer")
+    @PostMapping("/customer/register")
     public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestBody @Valid CustomerDto customerDto) throws AlreadyUsedException {
         return userFacade.registerNewCustomer(customerDto);
     }
@@ -98,7 +107,7 @@ public class AuthApi {
     }
 
     @GetMapping("/sendVerifyEmail")
-    public WorkspaceVerifyEmailResponse sendVerifyEmailToAdmin(@RequestParam String email){
+    public ResponseEntity<ResponseMessage> sendVerifyEmailToAdmin(@RequestParam String email){
         return emailService.sendWorkspaceVerifyEmail(email);
     }
 
@@ -108,4 +117,18 @@ public class AuthApi {
         return smsService.sendSMS(phoneNumber);
     }
 
+    @GetMapping("/workspace/valid")
+    public boolean workspaceValid(@RequestParam String businessDomain){
+        return workspaceService.checkWorkspaceDomainExists(businessDomain);
+    }
+
+    @GetMapping("/customer/valid")
+    public boolean customerValid(@RequestParam String phoneNumber){
+        if(!phoneNumber.startsWith("+")) phoneNumber = "+"+phoneNumber;
+        return userFacade.customerValid(phoneNumber);
+    }
+
+    private static BearerToken getBearerToken(String accessToken) {
+        return BearerToken.builder().accessToken(accessToken).tokenType("Bearer ").build();
+    }
 }

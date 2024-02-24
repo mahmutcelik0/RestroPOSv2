@@ -16,10 +16,10 @@ import java.util.List;
 @Builder
 public class Workspace {
     @Id
-    @Column(name = "BUSINESS_NAME")
-    private String businessName;
-
+    @Column(name = "BUSINESS_DOMAIN")
     private String businessDomain;
+
+    private String businessName;
 
     private byte[] businessLogo;
 
