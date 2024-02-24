@@ -30,8 +30,9 @@ public abstract class EmailSecuredUser extends GenericUser{
     @JoinColumn(name = "USER_ROLE",referencedColumnName = "ROLE_NAME")
     private Role role;
 
-    public EmailSecuredUser(String email, String password) {
+    public EmailSecuredUser(String email, String password,Role role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 }

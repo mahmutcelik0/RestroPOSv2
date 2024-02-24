@@ -27,6 +27,8 @@ public class SmsService {
 
 
     public OtpResponseDto sendSMS(String phoneNumber) throws NotFoundException {
+        if(!phoneNumber.startsWith("+")) phoneNumber = "+"+phoneNumber;
+
         Customer customer = customerService.findCustomerByPhoneNumber(phoneNumber);
 
         SecureToken secureToken = tokenService.generateTokenForCustomer(customer);
@@ -36,7 +38,7 @@ public class SmsService {
             PhoneNumber to = new PhoneNumber(phoneNumber);//to
             PhoneNumber from = new PhoneNumber(twilioConfig.getPhoneNumber()); // from
 
-            String otpMessage = "Dear Customer , Your OTP is  " + secureToken.getToken() + " for sending sms through Spring boot application. Thank You.";
+            String otpMessage = "Merhaba "+customer.getFirstName()+" "+customer.getLastName()+"," +secureToken.getToken()+" kodu kullanarak hesabınızı doğrulamanız gerekmektedir.";
             Message.creator(to, from,otpMessage).create(); //sends sms
             otpResponseDto = new OtpResponseDto(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception e) {

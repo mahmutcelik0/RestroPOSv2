@@ -21,7 +21,7 @@ public class BasicUser extends EmailSecuredUser{
     private String deviceName;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.EAGER)
-    @JoinColumn(name = "WORKSPACE_NAME",referencedColumnName = "BUSINESS_NAME")
+    @JoinColumn(name = "WORKSPACE_NAME",referencedColumnName = "BUSINESS_DOMAIN")
     private Workspace workspace;
 
     @Override

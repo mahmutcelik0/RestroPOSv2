@@ -20,12 +20,12 @@ public class Customer extends GenericUser {
 
     @Column(name = "FIRST_NAME",nullable = false,columnDefinition = "nvarchar(50)")
     @NotBlank
-    @Size(min = 3,max = 50)
+    @Size(min = 2,max = 50)
     private String firstName;
 
     @Column(name = "LAST_NAME",nullable = false,columnDefinition = "nvarchar(50)")
     @NotBlank
-    @Size(min = 3,max = 50)
+    @Size(min = 2,max = 50)
     private String lastName;
 
     @Column(name = "PROFILE_PHOTO")
