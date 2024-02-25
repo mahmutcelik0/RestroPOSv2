@@ -37,7 +37,7 @@ public class WorkspaceService {
     }
 
     public boolean checkWorkspaceDomainValid(String businessDomain) {
-        return !checkWorkspaceNameExists(businessDomain);
+        return !checkWorkspaceDomainExists(businessDomain);
     }
 
     public ResponseEntity<ResponseMessage> registerNewWorkspace(RegisterDto registerDto) {
