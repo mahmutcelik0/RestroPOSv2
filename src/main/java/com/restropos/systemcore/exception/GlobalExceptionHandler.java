@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+
+import java.util.logging.Handler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,5 +31,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ResponseMessage> handleConstraintViolationException(ConstraintViolationException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getConstraintViolations().stream().findFirst().orElseThrow(RuntimeException::new).getMessageTemplate()));
+    }
+
+    @ExceptionHandler({HandlerMethodValidationException.class})
+    public ResponseEntity<ResponseMessage> handleHandlerMethodValidationException(HandlerMethodValidationException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getAllValidationResults().get(0).getResolvableErrors().get(0).getDefaultMessage()));
     }
 }

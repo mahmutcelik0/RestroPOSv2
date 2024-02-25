@@ -23,6 +23,7 @@ import com.restropos.systemshop.dto.RegisterDto;
 import com.restropos.systemshop.facade.UserFacade;
 import com.restropos.systemshop.service.WorkspaceService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -118,7 +119,7 @@ public class AuthApi {
     }
 
     @GetMapping("/workspace/valid")
-    public boolean workspaceValid(@RequestParam String businessDomain){
+    public boolean workspaceValid(@RequestParam @Pattern(regexp = "[A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?",message = CustomResponseMessage.BUSINESS_DOMAIN_PATTERN) String businessDomain){
         return workspaceService.checkWorkspaceDomainValid(businessDomain);
     }
 
