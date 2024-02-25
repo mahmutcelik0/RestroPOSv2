@@ -25,6 +25,9 @@ public class CustomerService {
         return customerRepository.findCustomerByPhoneNumber(phoneNumber).isPresent();
     }
 
+    public boolean checkCustomerValid(String phoneNumber) {
+        return !checkCustomerExists(phoneNumber);
+    }
     public Customer findCustomerByPhoneNumber(String phoneNumber) throws NotFoundException {
         return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(()->new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
     }

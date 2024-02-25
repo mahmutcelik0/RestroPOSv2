@@ -69,6 +69,6 @@ public class UserFacade {
     }
 
     public boolean customerValid(String phoneNumber){
-        return customerService.checkCustomerExists(phoneNumber);
+        return customerService.checkCustomerValid(phoneNumber);
     }
 }

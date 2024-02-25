@@ -8,6 +8,7 @@ import com.restropos.systemrefactor.constants.EmailConstants;
 import com.restropos.systemrefactor.entity.RawEmailTemplate;
 import com.restropos.systemshop.entity.user.SystemUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,6 +16,9 @@ import java.util.Map;
 
 @Service
 public class WorkspaceVerifyEmailCommand extends EmailCommand {
+    @Value("${spring.mail.username}")
+    private String senderMail;
+
     @Autowired
     private WorkspaceVerifyEmailTemplate workspaceVerifyEmailTemplate;
 
@@ -37,7 +41,7 @@ public class WorkspaceVerifyEmailCommand extends EmailCommand {
 
     @Override
     EmailRequest generateRequest(SystemUser user, RawEmailTemplate emailTemplate) {
-        return new WorkspaceVerifyEmailRequest("mahmutcelik1618@gmail.com", user.getEmail(), EmailConstants.VERIFY_ACCOUNT_SUBJECT.getStr(), emailTemplate.getTemplateContent()); // TODO: 8/23/2023 FROM PART WILL CHANGE
+        return new WorkspaceVerifyEmailRequest(senderMail, user.getEmail(), EmailConstants.VERIFY_ACCOUNT_SUBJECT.getStr(), emailTemplate.getTemplateContent());
     }
 
 }
