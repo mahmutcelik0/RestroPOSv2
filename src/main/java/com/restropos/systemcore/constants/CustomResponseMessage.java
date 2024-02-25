@@ -38,6 +38,7 @@ public class CustomResponseMessage {
     public static final String PASSWORD_SIZE = "Password size must contain min 8 characters";
     public static final String BUSINESS_NAME_REQUIRED = "Business name is required field";
     public static final String BUSINESS_DOMAIN_REQUIRED = "Business domain is required field";
+    public static final String BUSINESS_DOMAIN_PATTERN = "Business domain does not following naming rules";
 
 
     private CustomResponseMessage(){
