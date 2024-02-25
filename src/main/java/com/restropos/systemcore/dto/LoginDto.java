@@ -1,5 +1,6 @@
 package com.restropos.systemcore.dto;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -10,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDto {
-    @NotEmpty(message = "Email can't be null")
-    @Email(message = "Content is not email")
+    @NotEmpty(message = CustomResponseMessage.EMAIL_REQUIRED)
+    @Email(message = CustomResponseMessage.CONTENT_MUST_BE_EMAIL)
     private String email;
-    @NotEmpty(message = "Password can't be null")
+    @NotEmpty(message = CustomResponseMessage.PASSWORD_REQUIRED)
     private String password;
 }

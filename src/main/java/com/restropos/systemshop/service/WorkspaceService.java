@@ -36,6 +36,10 @@ public class WorkspaceService {
         return workspaceRepository.existsById(businessDomain);
     }
 
+    public boolean checkWorkspaceDomainValid(String businessDomain) {
+        return !checkWorkspaceNameExists(businessDomain);
+    }
+
     public ResponseEntity<ResponseMessage> registerNewWorkspace(RegisterDto registerDto) {
         var workspaceDto = registerDto.getWorkspace();
         var systemUserDto = registerDto.getSystemUser();

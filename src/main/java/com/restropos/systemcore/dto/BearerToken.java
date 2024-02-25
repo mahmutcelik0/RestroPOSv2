@@ -1,5 +1,6 @@
 package com.restropos.systemcore.dto;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +11,8 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @Builder
 public class BearerToken{
-    @NotEmpty
+    @NotEmpty(message = CustomResponseMessage.ACCESS_TOKEN_REQUIRED)
     private String accessToken;
-    @NotEmpty
+    @NotEmpty(message = CustomResponseMessage.TOKEN_TYPE_REQUIRED)
     private String tokenType;
 }

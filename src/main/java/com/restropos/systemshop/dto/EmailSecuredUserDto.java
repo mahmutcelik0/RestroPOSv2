@@ -1,5 +1,6 @@
 package com.restropos.systemshop.dto;
 
+import com.restropos.systemcore.constants.CustomResponseMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -11,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class EmailSecuredUserDto {
-    @NotEmpty(message = "Email can't be null")
-    @Email(message = "Content must be in email format")
+    @NotEmpty(message = CustomResponseMessage.EMAIL_REQUIRED)
+    @Email(message = CustomResponseMessage.CONTENT_MUST_BE_EMAIL)
     private String email;
-    @NotEmpty(message = "Password can't be null")
-    @Size(min = 8,message = "Password must be min 8 length")
+    @NotEmpty(message = CustomResponseMessage.PASSWORD_REQUIRED)
+    @Size(min = 8,message = CustomResponseMessage.PASSWORD_SIZE)
     private String password;
 
     public EmailSecuredUserDto(String email) {

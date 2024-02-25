@@ -119,7 +119,7 @@ public class AuthApi {
 
     @GetMapping("/workspace/valid")
     public boolean workspaceValid(@RequestParam String businessDomain){
-        return workspaceService.checkWorkspaceDomainExists(businessDomain);
+        return workspaceService.checkWorkspaceDomainValid(businessDomain);
     }
 
     @GetMapping("/customer/valid")
