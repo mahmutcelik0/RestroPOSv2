@@ -4,7 +4,7 @@ public class CustomResponseMessage {
     public static final String USER_NOT_FOUND = "User could not found";
     public static final String CUSTOMER_NOT_FOUND = "Customer could not found";
     public static final String TIME_EXCEEDED = "You have exceeded the time limit for your password";
-    public static final String TOKEN_NOT_FOUND = "Token could not found";
+    public static final String TOKEN_NOT_FOUND = "Wrong code";
     public static final String WRONG_CREDENTIAL = "You have entered wrong information";
     public static final String ACCOUNT_ACTIVATED = "Account activated";
     public static final String USER_CREATED = "User created successfully";
