@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class WorkspaceService {
     @Autowired
@@ -24,9 +26,6 @@ public class WorkspaceService {
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public boolean checkWorkspaceNameExists(String businessName) {
         return workspaceRepository.existsWorkspaceByBusinessName(businessName);
@@ -57,7 +56,7 @@ public class WorkspaceService {
                     .businessLogo(workspaceDto.getBusinessLogo())
                     .build();
 
-            Admin admin = new Admin(systemUserDto.getEmail(), passwordEncoder.encode(systemUserDto.getPassword()), systemUserDto.getFirstName(), systemUserDto.getLastName(), true, workspace,roleService.getRole(UserTypes.ADMIN.getName()));
+            Admin admin = new Admin(systemUserDto.getEmail(), systemUserDto.getPassword(), systemUserDto.getFirstName(), systemUserDto.getLastName(), true, workspace,roleService.getRole(UserTypes.ADMIN.getName()));
 
             systemUserService.save(admin);
 
@@ -65,4 +64,7 @@ public class WorkspaceService {
         }
     }
 
+    public List<String> getAllWorkspaces() {
+        return workspaceRepository.findAll().stream().map(Workspace::getBusinessDomain).toList();
+    }
 }
