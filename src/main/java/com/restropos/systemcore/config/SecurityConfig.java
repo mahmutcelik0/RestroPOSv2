@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .sessionManagement(e -> e.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173","http://*.localhost:5173","http://subdomain1.localhost:5173"));
                     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                     corsConfiguration.setAllowCredentials(true); //user credential alabilmek için true ya setlendi
                     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
