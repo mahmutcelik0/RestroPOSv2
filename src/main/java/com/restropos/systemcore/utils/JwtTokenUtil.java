@@ -1,7 +1,6 @@
 package com.restropos.systemcore.utils;
 
 
-import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,11 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.management.relation.Role;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Set;
 import java.util.function.Function;
 
 @Component
