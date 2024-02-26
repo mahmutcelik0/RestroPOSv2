@@ -23,6 +23,7 @@ import org.springframework.util.ObjectUtils;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SecureTokenService {
@@ -64,16 +65,15 @@ public class SecureTokenService {
     }
 
     public ResponseEntity<ResponseMessage> enableAccountWithToken(EnableToken enableToken) throws NotFoundException, TimeExceededException, WrongCredentialsException {
-        List<SecureToken> secureTokens = secureTokenRepository.findSecureTokenByAccountInformation(enableToken.getAccountInformation());
+        Optional<SecureToken> secureToken = secureTokenRepository.findSecureTokenByAccountInformation(enableToken.getAccountInformation(),enableToken.getTokenCode());
 
-        if (CollectionUtils.isEmpty(secureTokens)) throw new NotFoundException(CustomResponseMessage.TOKEN_NOT_FOUND);
-        var token = secureTokens.get(0);
+        if (secureToken.isEmpty()) throw new NotFoundException(CustomResponseMessage.TOKEN_NOT_FOUND);
+
+
+        var token = secureToken.get();
 
         if (token.isExpired()) throw new TimeExceededException(CustomResponseMessage.TIME_EXCEEDED);
-        else if (!token.getToken().equals(enableToken.getTokenCode())) {
-            //deneme hakkından azaltılacak 0 olunca token i sil
-            throw new WrongCredentialsException(CustomResponseMessage.WRONG_CREDENTIAL);
-        } else {
+        else {
             var userRoleName = ObjectUtils.isEmpty(token.getCustomer()) ? token.getSystemUser().getRole().getRoleName() : UserTypes.CUSTOMER.getName();
             if (userRoleName.equals(UserTypes.ADMIN.getName()) || userRoleName.equals(UserTypes.WAITER.getName())) {
                 var user = systemUserService.findSystemUserByEmail(token.getSystemUser().getEmail());
@@ -84,8 +84,8 @@ public class SecureTokenService {
                 user.setLoginDisabled(false);
                 customerService.save(user);
             }
+            secureTokenRepository.delete(token);
         }
         return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.ACCOUNT_ACTIVATED), HttpStatus.OK);
-        //token verify olduktan sonra token i sil todo sill
     }
 }
