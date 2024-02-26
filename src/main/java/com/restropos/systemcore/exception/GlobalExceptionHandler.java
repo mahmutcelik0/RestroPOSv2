@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
     }
 
-    @ExceptionHandler({NotFoundException.class, VerificationRequiredException.class, AlreadyUsedException.class, TimeExceededException.class, WrongCredentialsException.class})
+    @ExceptionHandler({NotFoundException.class, VerificationRequiredException.class, AlreadyUsedException.class, TimeExceededException.class, WrongCredentialsException.class,UnauthorizedException.class})
     public ResponseEntity<ResponseMessage> handleDistinctException(Exception exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
     }

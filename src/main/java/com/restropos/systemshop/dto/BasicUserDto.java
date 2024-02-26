@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class BasicUserDto extends EmailSecuredUserDto{
     @NotEmpty(message = CustomResponseMessage.DEVICE_NAME_REQUIRED)
     private String deviceName;
+    private WorkspaceDto workspaceDto;
 }

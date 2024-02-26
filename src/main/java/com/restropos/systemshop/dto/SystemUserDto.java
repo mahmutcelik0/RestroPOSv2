@@ -1,6 +1,7 @@
 package com.restropos.systemshop.dto;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
+import com.restropos.systemshop.entity.user.Workspace;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -13,4 +14,5 @@ public class SystemUserDto extends EmailSecuredUserDto{
     private String firstName;
     @NotEmpty(message = CustomResponseMessage.LAST_NAME_REQUIRED)
     private String lastName;
+    private WorkspaceDto workspaceDto;
 }

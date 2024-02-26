@@ -2,18 +2,25 @@ package com.restropos.systemshop.facade;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.AlreadyUsedException;
+import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemcore.exception.UnauthorizedException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.CustomerDto;
-import com.restropos.systemshop.dto.RegisterDto;
-import com.restropos.systemshop.entity.user.*;
+import com.restropos.systemshop.entity.user.BasicUser;
+import com.restropos.systemshop.entity.user.Customer;
+import com.restropos.systemshop.entity.user.GenericUser;
+import com.restropos.systemshop.entity.user.SystemUser;
+import com.restropos.systemshop.populator.BasicUserDtoPopulator;
+import com.restropos.systemshop.populator.SystemUserDtoPopulator;
 import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
-import com.restropos.systemshop.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,11 +35,14 @@ public class UserFacade {
     private CustomerService customerService;
 
     @Autowired
-    private WorkspaceService workspaceService;
+    private SystemUserDtoPopulator systemUserDtoPopulator;
+
+    @Autowired
+    private BasicUserDtoPopulator basicUserDtoPopulator;
 
     public ResponseEntity<ResponseMessage> addNewUser(GenericUser genericUser, UserTypes userType) {
         ResponseEntity<ResponseMessage> successResponse = new ResponseEntity<>(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.USER_CREATED), HttpStatus.OK);
-//        genericUser.setRole(); //todo user type a göre rol eklenecek
+//        genericUser.setRole(); //todo user type a göre rol eklenecek -- burada şu an gerek yok ilerde kullanılacak olursa o zaman ekle
         if (userType.equals(UserTypes.CUSTOMER)) {
             if (customerService.addNewCustomer((Customer) genericUser))
                 return successResponse;
@@ -70,5 +80,21 @@ public class UserFacade {
 
     public boolean customerValid(String phoneNumber){
         return customerService.checkCustomerValid(phoneNumber);
+    }
+
+    public ResponseEntity<?> getUser(String businessDomain) throws NotFoundException, UnauthorizedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var role = authentication.getAuthorities().stream().findFirst().orElseThrow(()-> new NotFoundException(CustomResponseMessage.ROLE_NOT_FOUND));
+
+        if(role.getAuthority().equals(UserTypes.ADMIN.getName()) || role.getAuthority().equals(UserTypes.WAITER.getName())){
+            SystemUser systemUser = systemUserService.findSystemUserByEmail(authentication.getPrincipal().toString());
+            if(!systemUser.getWorkspace().getBusinessDomain().equals(businessDomain)) throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
+            return ResponseEntity.ok(systemUserDtoPopulator.populate(systemUser));
+        }else if(role.getAuthority().equals(UserTypes.KITCHEN.getName()) || role.getAuthority().equals(UserTypes.CASH_DESK.getName())){
+            BasicUser basicUser = basicUserService.findBasicUserByEmail(authentication.getPrincipal().toString());
+            if(!basicUser.getWorkspace().getBusinessDomain().equals(businessDomain)) throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
+            return ResponseEntity.ok(basicUserDtoPopulator.populate(basicUser));
+        }
+        return ResponseEntity.badRequest().body(CustomResponseMessage.INTERNAL_EXCEPTION);
     }
 }
