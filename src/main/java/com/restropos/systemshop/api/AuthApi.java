@@ -21,7 +21,7 @@ import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
 import com.restropos.systemshop.dto.RegisterDto;
 import com.restropos.systemshop.facade.UserFacade;
-import com.restropos.systemshop.service.WorkspaceService;
+import com.restropos.systemshop.facade.WorkspaceFacade;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class AuthApi {
     private UserFacade userFacade;
 
     @Autowired
-    private WorkspaceService workspaceService;
+    private WorkspaceFacade workspaceFacade;
 
     @PostMapping("/login/email")
     public ResponseEntity<?> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
@@ -90,7 +90,7 @@ public class AuthApi {
 
     @PostMapping("/workspace/register")
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestBody @Valid RegisterDto registerDto){
-        ResponseEntity<ResponseMessage> response = workspaceService.registerNewWorkspace(registerDto);
+        ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto);
         if (response.getStatusCode().is2xxSuccessful()){
             return emailService.sendWorkspaceVerifyEmail(registerDto.getSystemUser().getEmail());
         }
@@ -120,7 +120,7 @@ public class AuthApi {
 
     @GetMapping("/workspace/valid")
     public boolean workspaceValid(@RequestParam @Pattern(regexp = "[A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?",message = CustomResponseMessage.BUSINESS_DOMAIN_PATTERN) String businessDomain){
-        return workspaceService.checkWorkspaceDomainValid(businessDomain);
+        return workspaceFacade.checkWorkspaceDomainValid(businessDomain);
     }
 
     @GetMapping("/customer/valid")
