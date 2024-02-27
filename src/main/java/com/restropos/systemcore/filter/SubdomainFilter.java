@@ -37,7 +37,10 @@ public class SubdomainFilter extends OncePerRequestFilter {
         List<String> subdomainOrigins = new ArrayList<>();
 
         workspaceService.getAllWorkspaces()
-                        .forEach(e -> subdomainOrigins.add(refactor(e)));
+                        .forEach(e -> {
+                            subdomainOrigins.add(softwareRefactor(e));
+                            subdomainOrigins.add(localRefactor(e));
+                        });
         subdomainOrigins.add("subdomain1"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("subdomain2"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("subdomain3"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
@@ -46,7 +49,11 @@ public class SubdomainFilter extends OncePerRequestFilter {
         return subdomainOrigins;
     }
 
-    public String refactor(String string){
+    public String softwareRefactor(String string){
         return string+"restropos.software";
+    }
+
+    public String localRefactor(String string){
+        return string+"restropos.localhost";
     }
 }
