@@ -64,11 +64,10 @@ public class SecureTokenService {
         return String.valueOf(random.nextInt(100000, 999999));
     }
 
-    public ResponseEntity<ResponseMessage> enableAccountWithToken(EnableToken enableToken) throws NotFoundException, TimeExceededException, WrongCredentialsException {
+    public ResponseEntity<ResponseMessage> enableAccountWithToken(EnableToken enableToken) throws NotFoundException, TimeExceededException {
         Optional<SecureToken> secureToken = secureTokenRepository.findSecureTokenByAccountInformation(enableToken.getAccountInformation(),enableToken.getTokenCode());
 
         if (secureToken.isEmpty()) throw new NotFoundException(CustomResponseMessage.TOKEN_NOT_FOUND);
-
 
         var token = secureToken.get();
 

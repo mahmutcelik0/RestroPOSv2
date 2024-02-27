@@ -112,7 +112,7 @@ public class AuthApi {
         return emailService.sendWorkspaceVerifyEmail(email);
     }
 
-    @PostMapping("/sendVerifySms")
+    @GetMapping("/sendVerifySms")
     public OtpResponseDto sendOtp(@RequestParam String phoneNumber) throws NotFoundException {
         LogUtil.printLog("inside sendOtp :: "+ phoneNumber, CustomTestApi.class);
         return smsService.sendSMS(phoneNumber);
