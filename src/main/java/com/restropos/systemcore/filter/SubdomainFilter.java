@@ -34,13 +34,19 @@ public class SubdomainFilter extends OncePerRequestFilter {
     }
 
     public List<String> getSubdomains(){
-        List<String> subdomainOrigins = new ArrayList<>(workspaceService.getAllWorkspaces());
+        List<String> subdomainOrigins = new ArrayList<>();
 
+        workspaceService.getAllWorkspaces()
+                        .forEach(e -> subdomainOrigins.add(refactor(e)));
         subdomainOrigins.add("subdomain1"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("subdomain2"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("subdomain3"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("localhost"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
 
         return subdomainOrigins;
+    }
+
+    public String refactor(String string){
+        return string+"restropos.software";
     }
 }
