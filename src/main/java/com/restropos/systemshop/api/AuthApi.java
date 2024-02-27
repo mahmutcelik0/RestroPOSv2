@@ -59,7 +59,7 @@ public class AuthApi {
     private WorkspaceFacade workspaceFacade;
 
     @PostMapping("/login/email")
-    public ResponseEntity<?> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
+    public ResponseEntity<BearerToken> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -74,7 +74,7 @@ public class AuthApi {
 
 
     @PostMapping("/login/phoneNumber")
-    public ResponseEntity<?> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, TimeExceededException {
+    public ResponseEntity<BearerToken> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, TimeExceededException {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(enableToken.getAccountInformation(),"", List.of(new SimpleGrantedAuthority(UserTypes.CUSTOMER.getName()))));
 
         secureTokenService.enableAccountWithToken(enableToken);
