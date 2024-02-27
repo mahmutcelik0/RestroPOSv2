@@ -43,7 +43,6 @@ public class JwtTokenUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    //todo check this code snippet
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String subject = extractSubject(token);
         return (subject.equals(userDetails.getUsername()) && !isTokenExpired(token));

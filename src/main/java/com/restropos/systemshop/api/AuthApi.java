@@ -74,7 +74,7 @@ public class AuthApi {
 
 
     @PostMapping("/login/phoneNumber")
-    public ResponseEntity<?> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, WrongCredentialsException, TimeExceededException {
+    public ResponseEntity<?> loginForPhoneNumber(@RequestBody @Valid EnableToken enableToken) throws NotFoundException, TimeExceededException {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(enableToken.getAccountInformation(),"", List.of(new SimpleGrantedAuthority(UserTypes.CUSTOMER.getName()))));
 
         secureTokenService.enableAccountWithToken(enableToken);
@@ -103,7 +103,7 @@ public class AuthApi {
     }
 
     @PostMapping("/account/enable")
-    public ResponseEntity<ResponseMessage> enableAccountWithToken(@RequestBody EnableToken enableToken) throws NotFoundException, TimeExceededException, WrongCredentialsException {
+    public ResponseEntity<ResponseMessage> enableAccountWithToken(@RequestBody EnableToken enableToken) throws NotFoundException, TimeExceededException {
         return secureTokenService.enableAccountWithToken(enableToken);
     }
 

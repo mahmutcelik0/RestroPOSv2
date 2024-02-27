@@ -1,9 +1,11 @@
 package com.restropos.systemshop.dto;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
-import com.restropos.systemshop.entity.user.Workspace;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
