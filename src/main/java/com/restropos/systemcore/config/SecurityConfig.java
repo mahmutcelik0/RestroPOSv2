@@ -1,7 +1,7 @@
 package com.restropos.systemcore.config;
 
 import com.restropos.systemcore.filter.JwtAuthenticationFilter;
-import com.restropos.systemcore.filter.SubdomainFilter;
+import com.restropos.systemshop.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    private SubdomainFilter subdomainFilter;
+    private WorkspaceService workspaceService;
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +32,7 @@ public class SecurityConfig {
                 .sessionManagement(e -> e.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173","http://sedat.restropos.software","http://sedat.localhost:5173","http://**"));
+                    corsConfiguration.setAllowedOrigins(getSubdomains());
                     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                     corsConfiguration.setAllowCredentials(true); //user credential alabilmek için true ya setlendi
                     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
@@ -43,8 +44,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/**").authenticated() //.hasAnyRole("USER","ADMIN")
                         .requestMatchers("/auth/**","/swagger-ui/**","/swagger-resources/*","/v3/api-docs/**").permitAll())
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(subdomainFilter, JwtAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
@@ -57,6 +58,37 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public List<String> getSubdomains(){
+        List<String> subdomainOrigins = new ArrayList<>();
+        workspaceService.getAllWorkspaces().forEach(e -> {
+            subdomainOrigins.add(generateSubdomainOriginWithSsl(e));
+            subdomainOrigins.add(generateSubdomainOriginWithoutSsl(e));
+            subdomainOrigins.add(generateSubdomainOriginWithoutSslForLocal(e));
+        });
+
+        subdomainOrigins.add("http://subdomain1.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://subdomain2.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://subdomain3.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://subdomain1.restropos.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://subdomain2.restropos.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://subdomain3.restropos.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://localhost:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+
+        return subdomainOrigins;
+    }
+
+    private String generateSubdomainOriginWithSsl(String e) {
+        return "http://"+e+"restropos.software";
+    }
+
+    private String generateSubdomainOriginWithoutSsl(String e){
+        return "http://"+e+".software";
+    }
+
+    private String generateSubdomainOriginWithoutSslForLocal(String e){
+        return "http://"+e+".localhost:5173";
+    }
 
 
 }
