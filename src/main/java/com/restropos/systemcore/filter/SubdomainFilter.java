@@ -26,6 +26,7 @@ public class SubdomainFilter extends OncePerRequestFilter {
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(!getSubdomains().contains(request.getServerName())){
+            LogUtil.printLog(request.getServerName(),SubdomainFilter.class);
             throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
         }
         LogUtil.printLog(request.getServerName(),SubdomainFilter.class);
