@@ -73,6 +73,7 @@ public class SecurityConfig {
         subdomainOrigins.add("http://subdomain1.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://subdomain2.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://subdomain3.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://localhost:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
 
         return subdomainOrigins;
     }
