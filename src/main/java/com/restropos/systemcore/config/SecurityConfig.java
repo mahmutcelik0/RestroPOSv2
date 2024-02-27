@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/**").authenticated() //.hasAnyRole("USER","ADMIN")
                         .requestMatchers("/auth/**","/swagger-ui/**","/swagger-resources/*","/v3/api-docs/**").permitAll())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(subdomainFilter, JwtAuthenticationFilter.class)
+//                .addFilterBefore(subdomainFilter, JwtAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
