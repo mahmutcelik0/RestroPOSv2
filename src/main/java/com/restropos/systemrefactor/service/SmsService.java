@@ -42,7 +42,7 @@ public class SmsService {
             Message.creator(to, from,otpMessage).create(); //sends sms
             otpResponseDto = new OtpResponseDto(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception e) {
-            //secure token silinmeli todo sil
+            tokenService.delete(secureToken);
             e.printStackTrace();
             otpResponseDto = new OtpResponseDto(OtpStatus.FAILED, e.getMessage());
         }

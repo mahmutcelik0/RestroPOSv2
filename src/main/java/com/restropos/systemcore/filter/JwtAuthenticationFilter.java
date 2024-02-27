@@ -5,7 +5,6 @@ import com.restropos.systemcore.security.CustomUserDetailsService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
 import com.restropos.systemcore.utils.LogUtil;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -15,8 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 @Service
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

@@ -4,14 +4,12 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.RegisterDto;
-import com.restropos.systemshop.entity.Role;
 import com.restropos.systemshop.entity.user.Admin;
 import com.restropos.systemshop.entity.user.Workspace;
 import com.restropos.systemshop.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -5,7 +5,6 @@ import com.restropos.systemcore.dto.EnableToken;
 import com.restropos.systemcore.entity.SecureToken;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.TimeExceededException;
-import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.repository.SecureTokenRepository;
 import com.restropos.systemshop.constants.UserTypes;
@@ -17,12 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -86,5 +83,9 @@ public class SecureTokenService {
             secureTokenRepository.delete(token);
         }
         return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.ACCOUNT_ACTIVATED), HttpStatus.OK);
+    }
+
+    public void delete(SecureToken token){
+        secureTokenRepository.delete(token);
     }
 }
