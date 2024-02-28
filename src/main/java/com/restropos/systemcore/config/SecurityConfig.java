@@ -82,11 +82,11 @@ public class SecurityConfig {
     }
 
     private String generateSubdomainOriginWithSsl(String e) {
-        return "http://"+e+"restropos.software";
+        return "https://"+e+"restropos.software";
     }
 
     private String generateSubdomainOriginWithoutSsl(String e){
-        return "http://"+e+".software";
+        return "http://"+e+"restropos.software";
     }
 
     private String generateSubdomainOriginWithoutSslForLocal(String e){
