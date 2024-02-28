@@ -24,4 +24,8 @@ public class WorkspaceFacade {
     public boolean checkWorkspaceDomainValid(String businessDomain) {
         return workspaceService.checkWorkspaceDomainValid(businessDomain);
     }
+
+    public boolean checkWorkspaceExists(String businessDomain) {
+        return !checkWorkspaceDomainValid(businessDomain);
+    }
 }

@@ -7,7 +7,6 @@ import com.restropos.systemcore.dto.LoginDto;
 import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.TimeExceededException;
-import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
@@ -127,6 +126,11 @@ public class AuthApi {
     public boolean customerValid(@RequestParam String phoneNumber){
         if(!phoneNumber.startsWith("+")) phoneNumber = "+"+phoneNumber;
         return userFacade.customerValid(phoneNumber);
+    }
+
+    @GetMapping("/workspace/exists")
+    public boolean workspaceExist(@RequestParam String businessDomain){
+        return workspaceFacade.checkWorkspaceExists(businessDomain);
     }
 
     private static BearerToken getBearerToken(String accessToken) {

@@ -74,7 +74,10 @@ public class SecurityConfig {
         subdomainOrigins.add("http://subdomain2.restropos.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://subdomain3.restropos.software:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://localhost:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
-
+        subdomainOrigins.add("http://**.localhost:5173");
+        subdomainOrigins.add("http://**.restropos.software:5173");
+        subdomainOrigins.add("http://**.localhost:5173");
+        subdomainOrigins.add("http://**.restropos.software");
         return subdomainOrigins;
     }
 

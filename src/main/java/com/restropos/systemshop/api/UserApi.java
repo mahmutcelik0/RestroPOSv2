@@ -2,6 +2,7 @@ package com.restropos.systemshop.api;
 
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.UnauthorizedException;
+import com.restropos.systemshop.dto.UserDto;
 import com.restropos.systemshop.facade.UserFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class UserApi {
     private UserFacade userFacade;
 
     @GetMapping
-    public ResponseEntity<?> getUser(@RequestParam String businessDomain) throws NotFoundException, UnauthorizedException {
+    public ResponseEntity<UserDto> getUser(@RequestParam String businessDomain) throws NotFoundException, UnauthorizedException {
         return userFacade.getUser(businessDomain);
     }
 

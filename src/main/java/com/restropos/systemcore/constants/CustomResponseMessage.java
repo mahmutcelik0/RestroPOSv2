@@ -41,6 +41,7 @@ public class CustomResponseMessage {
     public static final String BUSINESS_DOMAIN_PATTERN = "Business domain does not following naming rules";
     public static final String ROLE_NOT_FOUND = "Role not found";
     public static final String USER_PERMISSION_PROBLEM = "User doesn't have permission";
+    public static final String ROLE_DOES_NOT_EXIST = "Role doesn't exist";
 
     private CustomResponseMessage(){
     }

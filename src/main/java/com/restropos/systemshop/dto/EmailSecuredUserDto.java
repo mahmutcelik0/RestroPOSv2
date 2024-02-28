@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@SuperBuilder
 public class EmailSecuredUserDto {
     @NotEmpty(message = CustomResponseMessage.EMAIL_REQUIRED)
     @Email(message = CustomResponseMessage.CONTENT_MUST_BE_EMAIL)
