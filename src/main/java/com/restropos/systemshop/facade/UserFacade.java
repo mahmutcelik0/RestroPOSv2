@@ -7,12 +7,14 @@ import com.restropos.systemcore.exception.UnauthorizedException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.CustomerDto;
+import com.restropos.systemshop.dto.UserDto;
 import com.restropos.systemshop.entity.user.BasicUser;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.GenericUser;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.populator.BasicUserDtoPopulator;
 import com.restropos.systemshop.populator.SystemUserDtoPopulator;
+import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
 import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
@@ -39,6 +41,9 @@ public class UserFacade {
 
     @Autowired
     private BasicUserDtoPopulator basicUserDtoPopulator;
+
+    @Autowired
+    private WorkspaceDtoPopulator workspaceDtoPopulator;
 
     public ResponseEntity<ResponseMessage> addNewUser(GenericUser genericUser, UserTypes userType) {
         ResponseEntity<ResponseMessage> successResponse = new ResponseEntity<>(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.USER_CREATED), HttpStatus.OK);
@@ -82,19 +87,32 @@ public class UserFacade {
         return customerService.checkCustomerValid(phoneNumber);
     }
 
-    public ResponseEntity<?> getUser(String businessDomain) throws NotFoundException, UnauthorizedException {
+    public ResponseEntity<UserDto> getUser(String businessDomain) throws NotFoundException, UnauthorizedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var role = authentication.getAuthorities().stream().findFirst().orElseThrow(()-> new NotFoundException(CustomResponseMessage.ROLE_NOT_FOUND));
 
         if(role.getAuthority().equals(UserTypes.ADMIN.getName()) || role.getAuthority().equals(UserTypes.WAITER.getName())){
             SystemUser systemUser = systemUserService.findSystemUserByEmail(authentication.getPrincipal().toString());
             if(!systemUser.getWorkspace().getBusinessDomain().equals(businessDomain)) throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
-            return ResponseEntity.ok(systemUserDtoPopulator.populate(systemUser));
+            UserDto userDto = UserDto.builder()
+                    .firstName(systemUser.getFirstName())
+                    .lastName(systemUser.getLastName())
+                    .email(systemUser.getEmail())
+                    .workspaceDto(workspaceDtoPopulator.populate(systemUser.getWorkspace()))
+                    .role(systemUser.getRole().getRoleName())
+                    .build();
+            return ResponseEntity.ok(userDto);
         }else if(role.getAuthority().equals(UserTypes.KITCHEN.getName()) || role.getAuthority().equals(UserTypes.CASH_DESK.getName())){
             BasicUser basicUser = basicUserService.findBasicUserByEmail(authentication.getPrincipal().toString());
             if(!basicUser.getWorkspace().getBusinessDomain().equals(businessDomain)) throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
-            return ResponseEntity.ok(basicUserDtoPopulator.populate(basicUser));
+            UserDto userDto = UserDto.builder()
+                    .deviceName(basicUser.getDeviceName())
+                    .email(basicUser.getEmail())
+                    .workspaceDto(workspaceDtoPopulator.populate(basicUser.getWorkspace()))
+                    .role(basicUser.getRole().getRoleName())
+                    .build();
+            return ResponseEntity.ok(userDto);
         }
-        return ResponseEntity.badRequest().body(CustomResponseMessage.INTERNAL_EXCEPTION);
+        return ResponseEntity.badRequest().body(null);
     }
 }
