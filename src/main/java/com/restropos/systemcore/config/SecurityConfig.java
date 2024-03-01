@@ -63,7 +63,6 @@ public class SecurityConfig {
         List<String> subdomainOrigins = new ArrayList<>();
         workspaceService.getAllWorkspaces().forEach(e -> {
             subdomainOrigins.add(generateSubdomainOriginWithSsl(e));
-            subdomainOrigins.add(generateSubdomainOriginWithoutSsl(e));
             subdomainOrigins.add(generateSubdomainOriginWithoutSslForLocal(e));
         });
 
@@ -78,6 +77,7 @@ public class SecurityConfig {
         subdomainOrigins.add("http://**.restropos.software:5173");
         subdomainOrigins.add("http://**.localhost:5173");
         subdomainOrigins.add("http://**.restropos.software");
+        subdomainOrigins.add("https://restropos.software");
         return subdomainOrigins;
     }
 
@@ -85,9 +85,6 @@ public class SecurityConfig {
         return "https://"+e+"restropos.software";
     }
 
-    private String generateSubdomainOriginWithoutSsl(String e){
-        return "http://"+e+"restropos.software";
-    }
 
     private String generateSubdomainOriginWithoutSslForLocal(String e){
         return "http://"+e+".localhost:5173";
