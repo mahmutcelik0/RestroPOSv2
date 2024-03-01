@@ -29,7 +29,7 @@ public class EmailService {
             LogUtil.printLog("USER NOT FOUND", EmailService.class);
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.EMAIL_NOT_FOUND),HttpStatus.INTERNAL_SERVER_ERROR);
         }catch (NotFoundException e){
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.TEMPLATE_NOT_FOUND_EXCEPTION),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR,CustomResponseMessage.USER_NOT_FOUND),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
