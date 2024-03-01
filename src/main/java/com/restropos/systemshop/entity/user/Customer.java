@@ -32,8 +32,8 @@ public class Customer extends GenericUser {
     private byte[] profilePhoto;
 
     //@Pattern(regexp = "+") //todo TEL NO PATTERN I AYARLANACAK
-    @Column(name = "PHONE_NUMBER", nullable = false, columnDefinition = "nvarchar(13)")
-    @Size(min = 13, max = 13)
+    @Column(name = "PHONE_NUMBER", nullable = false, columnDefinition = "nvarchar(12)")
+    @Size(min = 12, max = 12)
     private String phoneNumber;
 
     @Column(name = "LOGIN_DISABLED",nullable = false)

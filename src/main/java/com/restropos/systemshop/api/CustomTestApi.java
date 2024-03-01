@@ -1,11 +1,11 @@
 package com.restropos.systemshop.api;
 
 import com.restropos.systemcore.exception.NotFoundException;
-import com.restropos.systemrefactor.builder.WorkspaceVerifyEmailTemplate;
-import com.restropos.systemrefactor.constants.EmailConstants;
-import com.restropos.systemrefactor.entity.RawEmailTemplate;
-import com.restropos.systemrefactor.factory.EmailTemplateFactory;
-import com.restropos.systemrefactor.service.EmailService;
+import com.restropos.systemverify.builder.WorkspaceVerifyEmailTemplate;
+import com.restropos.systemverify.constants.EmailConstants;
+import com.restropos.systemverify.entity.RawEmailTemplate;
+import com.restropos.systemverify.factory.EmailTemplateFactory;
+import com.restropos.systemverify.service.EmailService;
 import com.restropos.systemshop.populator.BasicUserDtoPopulator;
 import com.restropos.systemshop.populator.CustomerDtoPopulator;
 import com.restropos.systemshop.populator.SystemUserDtoPopulator;

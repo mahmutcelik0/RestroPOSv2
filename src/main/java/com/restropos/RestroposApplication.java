@@ -1,6 +1,6 @@
 package com.restropos;
 
-import com.restropos.systemrefactor.config.TwilioConfig;
+import com.restropos.systemverify.config.TwilioConfig;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

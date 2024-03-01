@@ -18,6 +18,7 @@ import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
 import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
+import com.restropos.systemverify.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,13 +38,10 @@ public class UserFacade {
     private CustomerService customerService;
 
     @Autowired
-    private SystemUserDtoPopulator systemUserDtoPopulator;
-
-    @Autowired
-    private BasicUserDtoPopulator basicUserDtoPopulator;
-
-    @Autowired
     private WorkspaceDtoPopulator workspaceDtoPopulator;
+
+    @Autowired
+    private SmsService smsService;
 
     public ResponseEntity<ResponseMessage> addNewUser(GenericUser genericUser, UserTypes userType) {
         ResponseEntity<ResponseMessage> successResponse = new ResponseEntity<>(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.USER_CREATED), HttpStatus.OK);
@@ -65,7 +63,7 @@ public class UserFacade {
 
 
 
-    public ResponseEntity<ResponseMessage> registerNewCustomer(CustomerDto customerDto) throws AlreadyUsedException {
+    public ResponseEntity<ResponseMessage> registerNewCustomer(CustomerDto customerDto) throws AlreadyUsedException, NotFoundException {
         if (customerService.checkCustomerExists(customerDto.getPhoneNumber())) {
             throw new AlreadyUsedException(CustomResponseMessage.PHONE_NUMBER_ALREADY_USED);
         } else {
@@ -78,8 +76,7 @@ public class UserFacade {
                     .build();
 
             customerService.save(customer);
-
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.CUSTOMER_CREATED), HttpStatus.OK);
+            return smsService.sendSMS(customer.getPhoneNumber());
         }
     }
 
