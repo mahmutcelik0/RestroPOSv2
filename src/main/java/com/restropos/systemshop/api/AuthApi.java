@@ -12,9 +12,9 @@ import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
 import com.restropos.systemcore.utils.JwtTokenUtil;
 import com.restropos.systemcore.utils.LogUtil;
-import com.restropos.systemrefactor.dto.OtpResponseDto;
-import com.restropos.systemrefactor.service.EmailService;
-import com.restropos.systemrefactor.service.SmsService;
+import com.restropos.systemverify.dto.OtpResponseDto;
+import com.restropos.systemverify.service.EmailService;
+import com.restropos.systemverify.service.SmsService;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
@@ -97,7 +97,7 @@ public class AuthApi {
     }
 
     @PostMapping("/customer/register")
-    public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestBody @Valid CustomerDto customerDto) throws AlreadyUsedException {
+    public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestBody @Valid CustomerDto customerDto) throws AlreadyUsedException, NotFoundException {
         return userFacade.registerNewCustomer(customerDto);
     }
 
@@ -112,7 +112,7 @@ public class AuthApi {
     }
 
     @GetMapping("/sendVerifySms")
-    public OtpResponseDto sendOtp(@RequestParam String phoneNumber) throws NotFoundException {
+    public ResponseEntity<ResponseMessage> sendOtp(@RequestParam String phoneNumber) throws NotFoundException {
         LogUtil.printLog("inside sendOtp :: "+ phoneNumber, CustomTestApi.class);
         return smsService.sendSMS(phoneNumber);
     }
@@ -124,7 +124,6 @@ public class AuthApi {
 
     @GetMapping("/customer/valid")
     public boolean customerValid(@RequestParam String phoneNumber){
-        if(!phoneNumber.startsWith("+")) phoneNumber = "+"+phoneNumber;
         return userFacade.customerValid(phoneNumber);
     }
 
