@@ -24,89 +24,89 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 
 @Service
 public class ImageService {
-    @Value("${firebase.bucket-name}")
+    /**@Value("${firebase.bucket-name}")
     private String firebaseBucketName;
 
-    @Value("${firebase.image-url}")
-    private String firebaseImageUrl;
+     @Value("${firebase.image-url}")
+     private String firebaseImageUrl;
 
-    @EventListener
-    public void init(ApplicationReadyEvent event) {
-        try {
-            ClassPathResource serviceAccount = new ClassPathResource("firebase.json");
+     @EventListener
+     public void init(ApplicationReadyEvent event) {
+     try {
+     ClassPathResource serviceAccount = new ClassPathResource("firebase.json");
 
-            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream())).setStorageBucket(firebaseBucketName).build();
+     FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream())).setStorageBucket(firebaseBucketName).build();
 
-            FirebaseApp.initializeApp(options);
+     FirebaseApp.initializeApp(options);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+     } catch (Exception ex) {
+     ex.printStackTrace();
 
-        }
-    }
+     }
+     }
 
-    public String getImageUrl(String name) {
-        return String.format(firebaseImageUrl, name);
-    }
+     public String getImageUrl(String name) {
+     return String.format(firebaseImageUrl, name);
+     }
 
-    public String save(MultipartFile file) throws IOException {
-        Bucket bucket = StorageClient.getInstance().bucket();
-        String name = generateFileName(file.getOriginalFilename());
-        bucket.create(name, file.getBytes(), file.getContentType());
-        return name;
-    }
+     public String save(MultipartFile file) throws IOException {
+     Bucket bucket = StorageClient.getInstance().bucket();
+     String name = generateFileName(file.getOriginalFilename());
+     bucket.create(name, file.getBytes(), file.getContentType());
+     return name;
+     }
 
-    public String save(BufferedImage bufferedImage, String originalFileName) throws IOException {
+     public String save(BufferedImage bufferedImage, String originalFileName) throws IOException {
 
-        byte[] bytes = getByteArrays(bufferedImage, getExtension(originalFileName));
+     byte[] bytes = getByteArrays(bufferedImage, getExtension(originalFileName));
 
-        Bucket bucket = StorageClient.getInstance().bucket();
+     Bucket bucket = StorageClient.getInstance().bucket();
 
-        String name = generateFileName(originalFileName);
+     String name = generateFileName(originalFileName);
 
-        bucket.create(name, bytes);
+     bucket.create(name, bytes);
 
-        return name;
-    }
+     return name;
+     }
 
-    public void delete(String name) throws IOException {
+     public void delete(String name) throws IOException {
 
-        Bucket bucket = StorageClient.getInstance().bucket();
+     Bucket bucket = StorageClient.getInstance().bucket();
 
-        if (StringUtils.isEmpty(name)) {
-            throw new IOException("invalid file name");
-        }
+     if (StringUtils.isEmpty(name)) {
+     throw new IOException("invalid file name");
+     }
 
-        Blob blob = bucket.get(name);
+     Blob blob = bucket.get(name);
 
-        if (blob == null) {
-            throw new IOException("file not found");
-        }
+     if (blob == null) {
+     throw new IOException("file not found");
+     }
 
-        blob.delete();
-    }
+     blob.delete();
+     }
 
-    public String generateFileName(String originalFileName) {
-        return UUID.randomUUID().toString() + getExtension(originalFileName);
-    }
+     public String generateFileName(String originalFileName) {
+     return UUID.randomUUID().toString() + getExtension(originalFileName);
+     }
 
-    public byte[] getByteArrays(BufferedImage bufferedImage, String format) throws IOException {
+     public byte[] getByteArrays(BufferedImage bufferedImage, String format) throws IOException {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        try {
+     try {
 
-            ImageIO.write(bufferedImage, format, baos);
+     ImageIO.write(bufferedImage, format, baos);
 
-            baos.flush();
+     baos.flush();
 
-            return baos.toByteArray();
+     return baos.toByteArray();
 
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            baos.close();
-        }
-    }
+     } catch (IOException e) {
+     throw e;
+     } finally {
+     baos.close();
+     }
+     }*/
 }
 

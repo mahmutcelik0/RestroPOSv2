@@ -17,7 +17,7 @@ public class ImageApi {
     ImageService imageService;
 
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity create(@RequestParam(name = "file") MultipartFile[] files) {
         for (MultipartFile file : files) {
             try {
@@ -31,5 +31,5 @@ public class ImageApi {
             }
         }
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
