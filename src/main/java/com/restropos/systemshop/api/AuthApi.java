@@ -22,7 +22,9 @@ import com.restropos.systemverify.service.EmailService;
 import com.restropos.systemverify.service.SmsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -91,7 +93,7 @@ public class AuthApi {
         return ResponseEntity.ok(bearerToken);
     }
 
-    @PostMapping("/workspace/register")
+    @PostMapping(value = "/workspace/register", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestPart @Valid String registerInformations, @RequestPart MultipartFile image) throws IOException, NotFoundException {
         var registerDto = jsonUtils.textToJson(registerInformations);
         ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto,image);
