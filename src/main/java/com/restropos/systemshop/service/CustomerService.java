@@ -46,7 +46,7 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public ResponseEntity<CustomerDto> getUser() throws NotFoundException, UnauthorizedException {
+    public ResponseEntity<CustomerDto>  getUser() throws NotFoundException, UnauthorizedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var role = authentication.getAuthorities().stream().findFirst().orElseThrow(()->new NotFoundException(CustomResponseMessage.ROLE_NOT_FOUND));
 

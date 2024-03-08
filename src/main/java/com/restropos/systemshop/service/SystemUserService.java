@@ -2,17 +2,24 @@ package com.restropos.systemshop.service;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemshop.constants.UserTypes;
+import com.restropos.systemshop.dto.SystemUserDto;
 import com.restropos.systemshop.entity.user.SystemUser;
+import com.restropos.systemshop.populator.SystemUserDtoPopulator;
 import com.restropos.systemshop.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SystemUserService {
     @Autowired
     private SystemUserRepository systemUserRepository;
+
+    @Autowired
+    private SystemUserDtoPopulator systemUserDtoPopulator;
 
     public boolean addNewSystemUser(SystemUser systemUser) {
         if (!checkSystemUserExists(systemUser.getEmail())) {
@@ -39,5 +46,11 @@ public class SystemUserService {
         return systemUserRepository.findSystemUserByEmail(email);
     }
 
+    public List<SystemUserDto> getAllAdminStaffs() {
+        return systemUserDtoPopulator.populateAll(systemUserRepository.getAllStaffsByRoleName(UserTypes.ADMIN.getName()));
+    }
 
+    public List<SystemUserDto> getAllWaiterStaffs() {
+        return systemUserDtoPopulator.populateAll(systemUserRepository.getAllStaffsByRoleName(UserTypes.WAITER.getName()));
+    }
 }

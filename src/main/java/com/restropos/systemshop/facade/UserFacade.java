@@ -6,14 +6,14 @@ import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.UnauthorizedException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.constants.UserTypes;
+import com.restropos.systemshop.dto.BasicUserDto;
 import com.restropos.systemshop.dto.CustomerDto;
+import com.restropos.systemshop.dto.SystemUserDto;
 import com.restropos.systemshop.dto.UserDto;
 import com.restropos.systemshop.entity.user.BasicUser;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.GenericUser;
 import com.restropos.systemshop.entity.user.SystemUser;
-import com.restropos.systemshop.populator.BasicUserDtoPopulator;
-import com.restropos.systemshop.populator.SystemUserDtoPopulator;
 import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
 import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserFacade {
@@ -111,5 +113,21 @@ public class UserFacade {
             return ResponseEntity.ok(userDto);
         }
         return ResponseEntity.badRequest().body(null);
+    }
+
+    public List<BasicUserDto> getAllKitchenStaffs() {
+        return basicUserService.getAllKitchenStaffs();
+    }
+
+    public List<BasicUserDto> getAllCashDeskStaffs() {
+        return basicUserService.getAllCashDeskStaffs();
+    }
+
+    public List<SystemUserDto> getAllAdminStaffs() {
+        return systemUserService.getAllAdminStaffs();
+    }
+
+    public List<SystemUserDto> getAllWaiterStaffs() {
+        return systemUserService.getAllWaiterStaffs();
     }
 }
