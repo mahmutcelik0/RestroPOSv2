@@ -10,17 +10,16 @@ import com.restropos.systemcore.exception.TimeExceededException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.UsernamePasswordAuthenticationProvider;
 import com.restropos.systemcore.service.SecureTokenService;
+import com.restropos.systemcore.utils.JsonUtils;
 import com.restropos.systemcore.utils.JwtTokenUtil;
 import com.restropos.systemcore.utils.LogUtil;
-import com.restropos.systemverify.dto.OtpResponseDto;
-import com.restropos.systemverify.service.EmailService;
-import com.restropos.systemverify.service.SmsService;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.CustomerDto;
 import com.restropos.systemshop.dto.EmailSecuredUserDto;
-import com.restropos.systemshop.dto.RegisterDto;
 import com.restropos.systemshop.facade.UserFacade;
 import com.restropos.systemshop.facade.WorkspaceFacade;
+import com.restropos.systemverify.service.EmailService;
+import com.restropos.systemverify.service.SmsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -56,6 +57,9 @@ public class AuthApi {
 
     @Autowired
     private WorkspaceFacade workspaceFacade;
+
+    @Autowired
+    private JsonUtils jsonUtils;
 
     @PostMapping("/login/email")
     public ResponseEntity<BearerToken> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
@@ -88,8 +92,9 @@ public class AuthApi {
     }
 
     @PostMapping("/workspace/register")
-    public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestBody @Valid RegisterDto registerDto){
-        ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto);
+    public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestPart @Valid String registerInformations, @RequestPart MultipartFile image) throws IOException, NotFoundException {
+        var registerDto = jsonUtils.textToJson(registerInformations);
+        ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto,image);
         if (response.getStatusCode().is2xxSuccessful()){
             return emailService.sendWorkspaceVerifyEmail(registerDto.getSystemUser().getEmail());
         }

@@ -42,6 +42,8 @@ public class CustomResponseMessage {
     public static final String ROLE_NOT_FOUND = "Role not found";
     public static final String USER_PERMISSION_PROBLEM = "User doesn't have permission";
     public static final String ROLE_DOES_NOT_EXIST = "Role doesn't exist";
+    public static final String IMAGE_COULD_NOT_SAVED = "Image could not saved";
+    public static final String WORKSPACE_COULD_NOT_FOUND = "Workspace could not found";
 
     private CustomResponseMessage(){
     }

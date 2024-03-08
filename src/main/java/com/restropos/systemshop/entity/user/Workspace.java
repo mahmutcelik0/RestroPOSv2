@@ -1,6 +1,7 @@
 package com.restropos.systemshop.entity.user;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
+import com.restropos.systemshop.entity.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,9 @@ public class Workspace {
 
     private String businessName;
 
-    private byte[] businessLogo;
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "IMAGE",referencedColumnName = "imageName")
+    private Image image;
 
     @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy = "workspace")
     private List<BasicUser> basicUsers;

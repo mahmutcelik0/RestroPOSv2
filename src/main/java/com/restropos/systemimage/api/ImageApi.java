@@ -4,32 +4,34 @@ import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemimage.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/images")
 public class ImageApi {
     @Autowired
-    ImageService imageService;
+    private ImageService imageService;
 
 
-    /*@PostMapping
-    public ResponseEntity create(@RequestParam(name = "file") MultipartFile[] files) {
-        for (MultipartFile file : files) {
-            try {
-                String fileName = imageService.save(file);
-                String imageUrl = imageService.getImageUrl(fileName);
-                // do whatever you want with that
-                LogUtil.printLog("FILE NAME:"+fileName,ImageApi.class);
-                LogUtil.printLog("IMAGE URL:"+imageUrl,ImageApi.class);
-            } catch (Exception e) {
-                //  throw internal error;
-            }
+    @PostMapping
+    public ResponseEntity create(@RequestParam(name = "file") MultipartFile file,@RequestParam(name = "name") String multipartFile) {
+        try {
+            return ResponseEntity.ok(imageService.saveForBusiness(file));
+        } catch (Exception e) {
+            LogUtil.printLog("Problem exists",ImageApi.class);
+            return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok().build();
-    }*/
+    }
+
+    @DeleteMapping
+    public ResponseEntity delete(@RequestParam(name = "name") String fileName) {
+        try {
+            imageService.deleteForBusiness(fileName);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            LogUtil.printLog("Problem exists",ImageApi.class);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
