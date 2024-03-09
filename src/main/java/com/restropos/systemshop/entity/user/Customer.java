@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer extends GenericUser {
+public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -37,10 +37,7 @@ public class Customer extends GenericUser {
     private String phoneNumber;
 
     @Column(name = "LOGIN_DISABLED",nullable = false)
+    @Builder.Default
     private boolean loginDisabled = true;
 
-    @Override
-    boolean isSecured() {
-        return false;
-    }
 }

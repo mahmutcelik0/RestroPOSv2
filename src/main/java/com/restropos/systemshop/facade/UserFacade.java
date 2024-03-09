@@ -4,6 +4,7 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.UnauthorizedException;
+import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.BasicUserDto;
@@ -12,18 +13,15 @@ import com.restropos.systemshop.dto.SystemUserDto;
 import com.restropos.systemshop.dto.UserDto;
 import com.restropos.systemshop.entity.user.BasicUser;
 import com.restropos.systemshop.entity.user.Customer;
-import com.restropos.systemshop.entity.user.GenericUser;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
-import com.restropos.systemshop.service.BasicUserService;
-import com.restropos.systemshop.service.CustomerService;
-import com.restropos.systemshop.service.SystemUserService;
+import com.restropos.systemshop.service.*;
 import com.restropos.systemverify.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,25 +43,14 @@ public class UserFacade {
     @Autowired
     private SmsService smsService;
 
-    public ResponseEntity<ResponseMessage> addNewUser(GenericUser genericUser, UserTypes userType) {
-        ResponseEntity<ResponseMessage> successResponse = new ResponseEntity<>(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.USER_CREATED), HttpStatus.OK);
-//        genericUser.setRole(); //todo user type a göre rol eklenecek -- burada şu an gerek yok ilerde kullanılacak olursa o zaman ekle
-        if (userType.equals(UserTypes.CUSTOMER)) {
-            if (customerService.addNewCustomer((Customer) genericUser))
-                return successResponse;
-        } else if (userType.equals(UserTypes.CASH_DESK) || userType.equals(UserTypes.KITCHEN)) {
-            if (basicUserService.addNewBasicUser((BasicUser) genericUser))
-                return successResponse;
-        } else if (userType.equals(UserTypes.ADMIN) || userType.equals(UserTypes.WAITER)) {
-            if (systemUserService.addNewSystemUser((SystemUser) genericUser))
-                return successResponse;
-        }
-        return new ResponseEntity<>(ResponseMessage.builder()
-                .message(CustomResponseMessage.USER_ALREADY_EXISTS)
-                .status(HttpStatus.INTERNAL_SERVER_ERROR).build(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private WorkspaceService workspaceService;
 
+    @Autowired
+    private RoleService roleService;
 
     public ResponseEntity<ResponseMessage> registerNewCustomer(CustomerDto customerDto) throws AlreadyUsedException, NotFoundException {
         if (customerService.checkCustomerExists(customerDto.getPhoneNumber())) {
@@ -116,18 +103,57 @@ public class UserFacade {
     }
 
     public List<BasicUserDto> getAllKitchenStaffs() {
-        return basicUserService.getAllKitchenStaffs();
+        return basicUserService.getAllStaffs(UserTypes.KITCHEN);
     }
 
     public List<BasicUserDto> getAllCashDeskStaffs() {
-        return basicUserService.getAllCashDeskStaffs();
+        return basicUserService.getAllStaffs(UserTypes.CASH_DESK);
     }
 
     public List<SystemUserDto> getAllAdminStaffs() {
-        return systemUserService.getAllAdminStaffs();
+        return systemUserService.getAllStaffs(UserTypes.ADMIN);
     }
 
     public List<SystemUserDto> getAllWaiterStaffs() {
-        return systemUserService.getAllWaiterStaffs();
+        return systemUserService.getAllStaffs(UserTypes.WAITER);
+    }
+
+    public ResponseEntity<ResponseMessage> deleteKitchenAndCashDeskStaff(String email) {
+        return basicUserService.deleteStaff(email);
+    }
+
+    public ResponseEntity<ResponseMessage> deleteAdminAndWaiterStaff(String email) {
+        return systemUserService.deleteStaff(email);
+    }
+
+    public ResponseEntity<ResponseMessage> addNewKitchenAndCashDeskStaffs(BasicUserDto basicUserDto) throws WrongCredentialsException, NotFoundException {
+        String basicUserRoleName = basicUserDto.getRole();
+        if(!(basicUserRoleName.equals(UserTypes.KITCHEN.getName()) || basicUserRoleName.equals(UserTypes.CASH_DESK.getName()))) throw new WrongCredentialsException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
+
+        BasicUser basicUser = BasicUser.builder()
+                .deviceName(basicUserDto.getDeviceName())
+                .role(roleService.getRole(basicUserRoleName))
+                .email(basicUserDto.getEmail())
+                .password(passwordEncoder.encode(basicUserDto.getPassword()))
+                .workspace(workspaceService.getWorkspace(basicUserDto.getWorkspaceDto().getBusinessName()))
+                .build();
+
+        return basicUserService.addStaff(basicUser);
+    }
+
+    public ResponseEntity<ResponseMessage> addNewAdminAndWaiterStaffs(SystemUserDto systemUserDto) throws WrongCredentialsException, NotFoundException {
+        String systemUserRoleName = systemUserDto.getRole();
+        if(!(systemUserRoleName.equals(UserTypes.ADMIN.getName()) || systemUserRoleName.equals(UserTypes.WAITER.getName()))) throw new WrongCredentialsException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
+
+        SystemUser systemUser = SystemUser.builder()
+                .firstName(systemUserDto.getFirstName())
+                .lastName(systemUserDto.getLastName())
+                .email(systemUserDto.getEmail())
+                .role(roleService.getRole(systemUserRoleName))
+                .password(passwordEncoder.encode(systemUserDto.getPassword()))
+                .workspace(workspaceService.getWorkspace(systemUserDto.getWorkspaceDto().getBusinessName()))
+                .build();
+
+        return systemUserService.addStaff(systemUser);
     }
 }

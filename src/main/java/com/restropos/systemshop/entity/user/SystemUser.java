@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "SYSTEM_USERS")
@@ -17,7 +18,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class SystemUser extends EmailSecuredUser{
     @Column(name = "FIRST_NAME",nullable = false,columnDefinition = "nvarchar(50)")
     @NotBlank
@@ -44,8 +45,4 @@ public class SystemUser extends EmailSecuredUser{
         this.workspace = workspace;
     }
 
-    @Override
-    boolean isSecured() {
-        return false;
-    }
 }

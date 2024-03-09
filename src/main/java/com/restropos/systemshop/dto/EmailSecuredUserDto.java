@@ -20,6 +20,7 @@ public class EmailSecuredUserDto {
     @NotEmpty(message = CustomResponseMessage.PASSWORD_REQUIRED)
     @Size(min = 8,message = CustomResponseMessage.PASSWORD_SIZE)
     private String password;
+    private String role;
 
     public EmailSecuredUserDto(String email) {
         this.email = email;
