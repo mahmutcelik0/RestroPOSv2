@@ -12,4 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Waiter extends SystemUser {
+    public Waiter(SystemUser systemUser) {
+        super(systemUser.getEmail(), systemUser.getPassword(), systemUser.getFirstName(), systemUser.getLastName(), systemUser.isLoginDisabled(), systemUser.getWorkspace(), systemUser.getRole());
+    }
 }

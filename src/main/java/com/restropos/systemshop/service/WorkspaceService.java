@@ -80,6 +80,6 @@ public class WorkspaceService {
     }
 
     public Workspace getWorkspace(String businessName) throws NotFoundException {
-        return workspaceRepository.findById(businessName).orElseThrow(()->new NotFoundException(CustomResponseMessage.WORKSPACE_COULD_NOT_FOUND));
+        return workspaceRepository.findWorkspaceByBusinessName(businessName).orElseThrow(()->new NotFoundException(CustomResponseMessage.WORKSPACE_COULD_NOT_FOUND));
     }
 }
