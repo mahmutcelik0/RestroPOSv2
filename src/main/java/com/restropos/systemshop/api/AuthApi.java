@@ -93,7 +93,7 @@ public class AuthApi {
         return ResponseEntity.ok(bearerToken);
     }
 
-    @PostMapping(value = "/workspace/register", consumes = MediaType.ALL_VALUE)
+    @PostMapping(value = "/workspace/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestPart @Valid String registerInformations, @RequestPart MultipartFile image) throws IOException, NotFoundException {
         var registerDto = jsonUtils.textToJson(registerInformations);
         ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto,image);
