@@ -99,7 +99,7 @@ public class AuthApi {
         return response;
     }
 
-    @PostMapping("/customer/register")
+    @PostMapping(name = "/customer/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestPart @Valid String customerDto,@RequestPart MultipartFile image) throws AlreadyUsedException, NotFoundException, IOException {
         CustomerDto customerInformations = JsonUtils.customerDtoToJson(customerDto);
         return userFacade.registerNewCustomer(customerInformations,image);
