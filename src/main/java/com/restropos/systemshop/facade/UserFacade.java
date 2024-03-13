@@ -106,13 +106,14 @@ public class UserFacade {
     }
 
     public ResponseEntity<SystemUserDtoResponse> addNewStaff(SystemUserDto systemUserDto) throws NotFoundException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SystemUser systemUser = SystemUser.builder()
                 .firstName(systemUserDto.getFirstName())
                 .lastName(systemUserDto.getLastName())
                 .email(systemUserDto.getEmail())
                 .role(roleService.getRole(systemUserDto.getRole()))
                 .password(passwordEncoder.encode(systemUserDto.getPassword()))
-                .workspace(workspaceService.getWorkspace(systemUserDto.getWorkspaceDto().getBusinessName()))
+                .workspace(systemUserService.getSystemUser(authentication.getPrincipal().toString()).getWorkspace())
                 .build();
 
         return systemUserService.addStaff(systemUser);

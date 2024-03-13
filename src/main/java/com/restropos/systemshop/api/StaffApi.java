@@ -41,7 +41,7 @@ public class StaffApi {
     }
 
     @DeleteMapping("/{email}")
-    public ResponseEntity<ResponseMessage> deleteKitchenStaff(@PathVariable String email) {
+    public ResponseEntity<ResponseMessage> deleteStaff(@PathVariable String email) {
         return userFacade.deleteStaff(email);
     }
 
