@@ -8,7 +8,7 @@ import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.RegisterDto;
 import com.restropos.systemshop.entity.Image;
 import com.restropos.systemshop.entity.user.Admin;
-import com.restropos.systemshop.entity.user.Workspace;
+import com.restropos.systemshop.entity.Workspace;
 import com.restropos.systemshop.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

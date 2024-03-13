@@ -2,7 +2,7 @@ package com.restropos.systemshop.populator;
 
 import com.restropos.systemcore.populator.AbstractPopulator;
 import com.restropos.systemshop.dto.WorkspaceDto;
-import com.restropos.systemshop.entity.user.Workspace;
+import com.restropos.systemshop.entity.Workspace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;

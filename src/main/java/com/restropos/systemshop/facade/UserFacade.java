@@ -18,7 +18,6 @@ import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.RoleService;
 import com.restropos.systemshop.service.SystemUserService;
-import com.restropos.systemshop.service.WorkspaceService;
 import com.restropos.systemverify.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,9 +47,6 @@ public class UserFacade {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private WorkspaceService workspaceService;
 
     @Autowired
     private RoleService roleService;

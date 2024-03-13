@@ -2,7 +2,6 @@ package com.restropos.systemshop.entity;
 
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemshop.entity.user.Customer;
-import com.restropos.systemshop.entity.user.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

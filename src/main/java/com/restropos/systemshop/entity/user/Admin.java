@@ -1,6 +1,7 @@
 package com.restropos.systemshop.entity.user;
 
 import com.restropos.systemshop.entity.Role;
+import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;

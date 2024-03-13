@@ -1,7 +1,7 @@
-package com.restropos.systemshop.entity.user;
+package com.restropos.systemshop.entity;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
-import com.restropos.systemshop.entity.Image;
+import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -31,4 +31,10 @@ public class Workspace {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "workspace")
     private List<SystemUser> systemUsers;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "workspace")
+    private List<Category> categories;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "workspace")
+    private List<Product> products;
 }
