@@ -47,6 +47,9 @@ public class CustomResponseMessage {
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     public static final String USER_COULD_NOT_CREATED = "User couldn't created";
     public static final String MESSAGE_COULD_NOT_SEND = "Message couldn't send";
+    public static final String CATEGORY_TITLE_ALREADY_USED = "Category title already used";
+    public static final String CATEGORY_TITLE_NOT_FOUND = "Category title not found";
+    public static final String CATEGORY_DELETED_SUCCESSFULLY = "Category deleted successfully";
 
     private CustomResponseMessage(){
     }

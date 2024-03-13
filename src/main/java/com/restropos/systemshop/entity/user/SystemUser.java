@@ -2,6 +2,7 @@ package com.restropos.systemshop.entity.user;
 
 
 import com.restropos.systemshop.entity.Role;
+import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
