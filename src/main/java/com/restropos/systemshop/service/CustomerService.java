@@ -22,15 +22,6 @@ public class CustomerService {
     @Autowired
     private CustomerDtoPopulator customerDtoPopulator;
 
-    public boolean addNewCustomer(Customer customer) {
-        if (!checkCustomerExists(customer.getPhoneNumber())) {
-            customerRepository.save(customer);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public boolean checkCustomerExists(String phoneNumber) {
         return customerRepository.findCustomerByPhoneNumber(phoneNumber).isPresent();
     }
@@ -38,20 +29,22 @@ public class CustomerService {
     public boolean checkCustomerValid(String phoneNumber) {
         return !checkCustomerExists(phoneNumber);
     }
+
     public Customer findCustomerByPhoneNumber(String phoneNumber) throws NotFoundException {
-        return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(()->new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
+        return customerRepository.findCustomerByPhoneNumber(phoneNumber).orElseThrow(() -> new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
     }
 
-    public void save(Customer customer){
+    public void save(Customer customer) {
         customerRepository.save(customer);
     }
 
-    public ResponseEntity<CustomerDto>  getUser() throws NotFoundException, UnauthorizedException {
+    public ResponseEntity<CustomerDto> getUser() throws NotFoundException, UnauthorizedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        var role = authentication.getAuthorities().stream().findFirst().orElseThrow(()->new NotFoundException(CustomResponseMessage.ROLE_NOT_FOUND));
+        var role = authentication.getAuthorities().stream().findFirst().orElseThrow(() -> new NotFoundException(CustomResponseMessage.ROLE_NOT_FOUND));
 
-        if(!role.getAuthority().equals(UserTypes.CUSTOMER.getName())) throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
-        Customer customer = customerRepository.findCustomerByPhoneNumber(authentication.getPrincipal().toString()).orElseThrow(()->new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
+        if (!role.getAuthority().equals(UserTypes.CUSTOMER.getName()))
+            throw new UnauthorizedException(CustomResponseMessage.USER_PERMISSION_PROBLEM);
+        Customer customer = customerRepository.findCustomerByPhoneNumber(authentication.getPrincipal().toString()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.CUSTOMER_NOT_FOUND));
 
         return ResponseEntity.ok(customerDtoPopulator.populate(customer));
     }

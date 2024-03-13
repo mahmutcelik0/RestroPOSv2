@@ -17,6 +17,7 @@ public class SystemUserDtoPopulator extends AbstractPopulator<SystemUser, System
         systemUserDto.setLastName(systemUser.getLastName());
         systemUserDto.setEmail(systemUser.getEmail());
         systemUserDto.setWorkspaceDto(workspaceDtoPopulator.populate(systemUser.getWorkspace()));
+        systemUserDto.setRole(systemUser.getRole().getRoleName());
         return systemUserDto;
     }
 

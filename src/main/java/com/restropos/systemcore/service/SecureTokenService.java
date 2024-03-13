@@ -71,14 +71,14 @@ public class SecureTokenService {
         if (token.isExpired()) throw new TimeExceededException(CustomResponseMessage.TIME_EXCEEDED);
         else {
             var userRoleName = ObjectUtils.isEmpty(token.getCustomer()) ? token.getSystemUser().getRole().getRoleName() : UserTypes.CUSTOMER.getName();
-            if (userRoleName.equals(UserTypes.ADMIN.getName()) || userRoleName.equals(UserTypes.WAITER.getName())) {
-                var user = systemUserService.findSystemUserByEmail(token.getSystemUser().getEmail());
-                user.setLoginDisabled(false);
-                systemUserService.save(user);
-            } else if (userRoleName.equals(UserTypes.CUSTOMER.getName())) {
+            if (userRoleName.equals(UserTypes.CUSTOMER.getName())) {
                 var user = customerService.findCustomerByPhoneNumber(token.getCustomer().getPhoneNumber());
                 user.setLoginDisabled(false);
                 customerService.save(user);
+            } else {
+                var user = systemUserService.findSystemUserByEmail(token.getSystemUser().getEmail());
+                user.setLoginDisabled(false);
+                systemUserService.save(user);
             }
             secureTokenRepository.delete(token);
         }

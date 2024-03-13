@@ -22,7 +22,6 @@ import com.restropos.systemverify.service.EmailService;
 import com.restropos.systemverify.service.SmsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,9 +59,6 @@ public class AuthApi {
     @Autowired
     private WorkspaceFacade workspaceFacade;
 
-    @Autowired
-    private JsonUtils jsonUtils;
-
     @PostMapping("/login/email")
     public ResponseEntity<BearerToken> loginForEmail(@RequestBody @Valid LoginDto loginDto) {
         Authentication authentication = providerManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -95,7 +91,7 @@ public class AuthApi {
 
     @PostMapping(value = "/workspace/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestPart @Valid String registerInformations, @RequestPart MultipartFile image) throws IOException, NotFoundException {
-        var registerDto = jsonUtils.textToJson(registerInformations);
+        var registerDto = JsonUtils.registerDtoToJson(registerInformations);
         ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto,image);
         if (response.getStatusCode().is2xxSuccessful()){
             return emailService.sendWorkspaceVerifyEmail(registerDto.getSystemUser().getEmail());
@@ -104,8 +100,9 @@ public class AuthApi {
     }
 
     @PostMapping("/customer/register")
-    public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestBody @Valid CustomerDto customerDto) throws AlreadyUsedException, NotFoundException {
-        return userFacade.registerNewCustomer(customerDto);
+    public ResponseEntity<ResponseMessage> registerNewCustomer(@RequestPart @Valid String customerDto,@RequestPart MultipartFile image) throws AlreadyUsedException, NotFoundException, IOException {
+        CustomerDto customerInformations = JsonUtils.customerDtoToJson(customerDto);
+        return userFacade.registerNewCustomer(customerInformations,image);
     }
 
     @PostMapping("/account/enable")

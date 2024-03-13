@@ -3,9 +3,11 @@ package com.restropos.systemshop.api;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
-import com.restropos.systemshop.dto.BasicUserDto;
+import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.SystemUserDto;
+import com.restropos.systemshop.dto.SystemUserDtoResponse;
 import com.restropos.systemshop.facade.UserFacade;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,64 +20,29 @@ public class StaffApi {
     @Autowired
     private UserFacade userFacade;
 
-    @GetMapping("/kitchen")
-    public List<BasicUserDto> getAllKitchenStaffs() {
-        return userFacade.getAllKitchenStaffs();
+    @GetMapping("/getByType")
+    public List<SystemUserDtoResponse> getStaffByRole(@RequestParam String userType) {
+        return userFacade.getStaffByRole(UserTypes.valueOf(userType));
     }
 
-    @GetMapping("/cashDesk")
-    public List<BasicUserDto> getAllCashDeskStaffs() {
-        return userFacade.getAllCashDeskStaffs();
+    @GetMapping
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin(){
+        return userFacade.getAllStaffsExceptAdmin();
     }
 
-    @GetMapping("/admin")
-    public List<SystemUserDto> getAllAdminStaffs() {
-        return userFacade.getAllAdminStaffs();
+    @PostMapping
+    public ResponseEntity<SystemUserDtoResponse> addNewStaff(@RequestBody SystemUserDto systemUserDto) throws NotFoundException {
+        return userFacade.addNewStaff(systemUserDto);
     }
 
-    @GetMapping("/waiter")
-    public List<SystemUserDto> getAllWaiterStaffs() {
-        return userFacade.getAllWaiterStaffs();
+    @PutMapping("/{email}")
+    public ResponseEntity<SystemUserDtoResponse> updateStaff(@RequestBody SystemUserDto systemUserDto,@PathVariable @Email String email) throws NotFoundException {
+        return userFacade.updateStaff(systemUserDto,email);
     }
 
-    @PostMapping("/kitchen")
-    public ResponseEntity<ResponseMessage> addNewKitchenStaffs(@RequestBody BasicUserDto basicUserDto) throws WrongCredentialsException, NotFoundException {
-        return userFacade.addNewKitchenAndCashDeskStaffs(basicUserDto);
-    }
-
-    @PostMapping("/cashDesk")
-    public ResponseEntity<ResponseMessage> addNewCashDeskStaffs(@RequestBody BasicUserDto basicUserDto) throws WrongCredentialsException, NotFoundException {
-        return userFacade.addNewKitchenAndCashDeskStaffs(basicUserDto);
-    }
-
-    @PostMapping("/admin")
-    public ResponseEntity<ResponseMessage> addNewAdminStaffs(@RequestBody SystemUserDto systemUserDto) throws WrongCredentialsException, NotFoundException {
-        return userFacade.addNewAdminAndWaiterStaffs(systemUserDto);
-    }
-
-    @PostMapping("/waiter")
-    public ResponseEntity<ResponseMessage> addNewWaiterStaffs(@RequestBody SystemUserDto systemUserDto) throws WrongCredentialsException, NotFoundException {
-        return userFacade.addNewAdminAndWaiterStaffs(systemUserDto);
-    }
-
-    @DeleteMapping("/kitchen")
-    public ResponseEntity<ResponseMessage> deleteKitchenStaff(@RequestParam String email) {
-        return userFacade.deleteKitchenAndCashDeskStaff(email);
-    }
-
-    @DeleteMapping("/cashDesk")
-    public ResponseEntity<ResponseMessage> deleteCashDeskStaff(@RequestParam String email) {
-        return userFacade.deleteKitchenAndCashDeskStaff(email);
-    }
-
-    @DeleteMapping("/admin")
-    public ResponseEntity<ResponseMessage> deleteAdminStaff(@RequestParam String email) {
-        return userFacade.deleteAdminAndWaiterStaff(email);
-    }
-
-    @DeleteMapping("/waiter")
-    public ResponseEntity<ResponseMessage> deleteWaiterStaff(@RequestParam String email) {
-        return userFacade.deleteAdminAndWaiterStaff(email);
+    @DeleteMapping("/{email}")
+    public ResponseEntity<ResponseMessage> deleteKitchenStaff(@PathVariable String email) {
+        return userFacade.deleteStaff(email);
     }
 
 }

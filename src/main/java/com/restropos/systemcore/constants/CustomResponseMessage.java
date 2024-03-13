@@ -45,6 +45,8 @@ public class CustomResponseMessage {
     public static final String IMAGE_COULD_NOT_SAVED = "Image could not saved";
     public static final String WORKSPACE_COULD_NOT_FOUND = "Workspace could not found";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
+    public static final String USER_COULD_NOT_CREATED = "User couldn't created";
+    public static final String MESSAGE_COULD_NOT_SEND = "Message couldn't send";
 
     private CustomResponseMessage(){
     }

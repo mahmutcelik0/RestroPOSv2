@@ -1,5 +1,6 @@
 package com.restropos.systemshop.repository;
 
+import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,8 @@ public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
     void deleteSystemUserByEmail(String email);
 
     boolean existsSystemUserByEmail(String email);
+
+    @Query("select s from SystemUser as s where s.role.roleName != ?1")
+    List<SystemUser> getAllStaffsExceptRole(String userType);
+
 }
