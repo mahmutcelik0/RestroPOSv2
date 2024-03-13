@@ -1,6 +1,7 @@
 package com.restropos.systemshop.entity;
 
 import com.restropos.systemimage.constants.FolderEnum;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class Image {
 
     @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "image")
     private Workspace workspace;
+
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "image")
+    private Customer customer;
 
     public Image(String imageName, FolderEnum folderName, String link) {
         this.imageName = imageName;

@@ -1,5 +1,6 @@
 package com.restropos.systemshop.entity.user;
 
+import com.restropos.systemshop.entity.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,8 +29,9 @@ public class Customer{
     @Size(min = 2,max = 50)
     private String lastName;
 
-    @Column(name = "PROFILE_PHOTO")
-    private byte[] profilePhoto;
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "PROFILE_PHOTO",referencedColumnName = "imageName")
+    private Image image;
 
     //@Pattern(regexp = "+") //todo TEL NO PATTERN I AYARLANACAK
     @Column(name = "PHONE_NUMBER", nullable = false, columnDefinition = "nvarchar(12)")

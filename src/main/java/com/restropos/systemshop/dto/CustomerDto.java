@@ -14,7 +14,7 @@ public class CustomerDto {
     private String firstName;
     @NotEmpty(message = CustomResponseMessage.LAST_NAME_REQUIRED)
     private String lastName;
-    private byte[] profilePhoto;
+    private ImageDto imageDto;
     @NotEmpty(message = CustomResponseMessage.PHONE_NUMBER_REQUIRED)
     private String phoneNumber;
 }

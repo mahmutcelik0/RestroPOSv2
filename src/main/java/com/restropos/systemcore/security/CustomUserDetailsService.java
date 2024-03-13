@@ -2,10 +2,8 @@ package com.restropos.systemcore.security;
 
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemshop.constants.UserTypes;
-import com.restropos.systemshop.entity.user.BasicUser;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
-import com.restropos.systemshop.service.BasicUserService;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,6 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
-    private BasicUserService basicUserService;
-
-    @Autowired
     private CustomerService customerService;
 
     @Autowired
@@ -34,20 +29,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username, String userType) throws UsernameNotFoundException, NotFoundException {
-        if (userType.equals(UserTypes.ADMIN.getName()) || userType.equals(UserTypes.WAITER.getName())) {
-            SystemUser systemUser = systemUserService.findSystemUserByEmail(username);
-            if(systemUser.isLoginDisabled()) return null;
-            return new org.springframework.security.core.userdetails.User(systemUser.getEmail(), systemUser.getPassword(), List.of(new SimpleGrantedAuthority(systemUser.getRole().getRoleName())));
-        } else if (userType.equals(UserTypes.KITCHEN.getName()) || userType.equals(UserTypes.CASH_DESK.getName())) {
-            BasicUser basicUser = basicUserService.findBasicUserByEmail(username);
-
-            return new org.springframework.security.core.userdetails.User(basicUser.getEmail(), basicUser.getPassword(), List.of(new SimpleGrantedAuthority(basicUser.getRole().getRoleName())));
-        } else if (userType.equals(UserTypes.CUSTOMER.getName())) {
+        if (userType.equals(UserTypes.CUSTOMER.getName())) {
             Customer customer = customerService.findCustomerByPhoneNumber(username);
             if(customer.isLoginDisabled()) return null;
             return new org.springframework.security.core.userdetails.User(customer.getPhoneNumber(),customer.getPhoneNumber(), List.of(new SimpleGrantedAuthority(UserTypes.CUSTOMER.getName())));
+        } else {
+            SystemUser systemUser = systemUserService.findSystemUserByEmail(username);
+            if(systemUser.isLoginDisabled()) return null;
+            return new org.springframework.security.core.userdetails.User(systemUser.getEmail(), systemUser.getPassword(), List.of(new SimpleGrantedAuthority(systemUser.getRole().getRoleName())));
         }
-        return null;
     }
 
 

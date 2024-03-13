@@ -29,9 +29,6 @@ public class Workspace {
     @JoinColumn(name = "IMAGE",referencedColumnName = "imageName")
     private Image image;
 
-    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY,mappedBy = "workspace")
-    private List<BasicUser> basicUsers;
-
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "workspace")
     private List<SystemUser> systemUsers;
 }

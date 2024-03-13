@@ -1,17 +1,15 @@
 package com.restropos.systemshop.api;
 
 import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemshop.populator.CustomerDtoPopulator;
+import com.restropos.systemshop.populator.SystemUserDtoPopulator;
+import com.restropos.systemshop.repository.CustomerRepository;
+import com.restropos.systemshop.repository.SystemUserRepository;
 import com.restropos.systemverify.builder.WorkspaceVerifyEmailTemplate;
 import com.restropos.systemverify.constants.EmailConstants;
 import com.restropos.systemverify.entity.RawEmailTemplate;
 import com.restropos.systemverify.factory.EmailTemplateFactory;
 import com.restropos.systemverify.service.EmailService;
-import com.restropos.systemshop.populator.BasicUserDtoPopulator;
-import com.restropos.systemshop.populator.CustomerDtoPopulator;
-import com.restropos.systemshop.populator.SystemUserDtoPopulator;
-import com.restropos.systemshop.repository.BasicUserRepository;
-import com.restropos.systemshop.repository.CustomerRepository;
-import com.restropos.systemshop.repository.SystemUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +22,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth/tests")
 public class CustomTestApi {
-    @Autowired
-    private BasicUserRepository basicUserRepository;
-
-    @Autowired
-    private BasicUserDtoPopulator basicUserDtoPopulator;
-
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -48,11 +40,6 @@ public class CustomTestApi {
     @GetMapping("/test")
     public String getHello(){
         return "HELLO";
-    }
-
-    @GetMapping("/basicUser")
-    public List<?> getBasicUser(){
-        return List.of(basicUserDtoPopulator.populate(basicUserRepository.findBasicUserByEmail("mahmut.382@gmail.com").orElseThrow(()->new RuntimeException("aa"))));
     }
 
     @GetMapping("/customer")
