@@ -12,14 +12,11 @@ import com.restropos.systemshop.entity.user.*;
 import com.restropos.systemshop.populator.SystemUserDtoResponsePopulator;
 import com.restropos.systemshop.repository.SystemUserRepository;
 import io.micrometer.common.util.StringUtils;
-import io.netty.util.internal.ObjectUtil;
-import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,22 +54,21 @@ public class SystemUserService {
                 throw new AlreadyUsedException(CustomResponseMessage.WRONG_CREDENTIAL);
             else if (systemUser.getRole().getRoleName().equals(UserTypes.ADMIN.getName())) {
                 Admin admin = new Admin(systemUser);
-                systemUserRepository.save(admin);
+                systemUser = systemUserRepository.save(admin);
             } else if (systemUser.getRole().getRoleName().equals(UserTypes.WAITER.getName())) {
                 Waiter waiter = new Waiter(systemUser);
-                systemUserRepository.save(waiter);
+                systemUser = systemUserRepository.save(waiter);
             } else if (systemUser.getRole().getRoleName().equals(UserTypes.CASH_DESK.getName())) {
                 CashDesk cashDesk = new CashDesk(systemUser);
-                systemUserRepository.save(cashDesk);
+                systemUser = systemUserRepository.save(cashDesk);
             } else if (systemUser.getRole().getRoleName().equals(UserTypes.KITCHEN.getName())) {
                 Kitchen kitchen = new Kitchen(systemUser);
-                systemUserRepository.save(kitchen);
+                systemUser = systemUserRepository.save(kitchen);
             }
+            return ResponseEntity.ok(systemUserDtoResponsePopulator.populate(systemUser));
         } catch (Exception e) {
             throw new BadCredentialsException(CustomResponseMessage.WRONG_CREDENTIAL);
         }
-
-        return ResponseEntity.ok(systemUserDtoResponsePopulator.populate(systemUser));
     }
 
     public ResponseEntity<ResponseMessage> deleteStaff(String email) {
@@ -120,5 +116,9 @@ public class SystemUserService {
             return systemUserRepository.save(systemUser);
         }).orElseThrow(()-> new NotFoundException(CustomResponseMessage.USER_NOT_FOUND));
         return ResponseEntity.ok(systemUserDtoResponsePopulator.populate(updatedUser));
+    }
+
+    public SystemUser getSystemUser(String email) throws NotFoundException {
+        return systemUserRepository.findSystemUserByEmail(email).orElseThrow(()-> new NotFoundException(CustomResponseMessage.USER_NOT_FOUND));
     }
 }
