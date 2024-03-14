@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDto {
+    private Long id;
     private WorkspaceDto workspace;
     private ImageDto image;
     private String categoryTitle;

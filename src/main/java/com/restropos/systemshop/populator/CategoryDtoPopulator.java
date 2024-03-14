@@ -16,7 +16,7 @@ public class CategoryDtoPopulator extends AbstractPopulator<Category, CategoryDt
 
     @Override
     protected CategoryDto populate(Category category, CategoryDto categoryDto) {
-        return new CategoryDto(workspaceDtoPopulator.populate(category.getWorkspace()),imageDtoPopulator.populate(category.getImage()),category.getCategoryTitle());
+        return new CategoryDto(category.getId(), workspaceDtoPopulator.populate(category.getWorkspace()), imageDtoPopulator.populate(category.getImage()), category.getCategoryTitle());
     }
 
     @Override
