@@ -6,6 +6,7 @@ import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemshop.dto.CategoryDto;
 import com.restropos.systemshop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class CategoryApi {
     public List<CategoryDto> getAllCategories() throws NotFoundException {
         return categoryService.getAllCategories();
     }
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CategoryDto> addNewCategory(@RequestPart MultipartFile image, @RequestPart String categoryTitle) throws AlreadyUsedException, NotFoundException, IOException {
         return categoryService.addNewCategory(image,categoryTitle);
     }
