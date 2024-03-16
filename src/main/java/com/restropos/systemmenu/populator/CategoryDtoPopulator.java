@@ -1,8 +1,10 @@
-package com.restropos.systemshop.populator;
+package com.restropos.systemmenu.populator;
 
 import com.restropos.systemcore.populator.AbstractPopulator;
-import com.restropos.systemshop.dto.CategoryDto;
-import com.restropos.systemshop.entity.Category;
+import com.restropos.systemmenu.dto.CategoryDto;
+import com.restropos.systemmenu.entity.Category;
+import com.restropos.systemshop.populator.ImageDtoPopulator;
+import com.restropos.systemshop.populator.WorkspaceDtoPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
