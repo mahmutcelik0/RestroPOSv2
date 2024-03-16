@@ -13,6 +13,6 @@ import lombok.Setter;
 @Setter
 public class Kitchen extends SystemUser{
     public Kitchen(SystemUser systemUser) {
-        super(systemUser.getId(),systemUser.getEmail(), systemUser.getPassword(), systemUser.getFirstName(), null, systemUser.isLoginDisabled(), systemUser.getWorkspace(), systemUser.getRole());
+        super(systemUser.getId(),systemUser.getEmail(), systemUser.getPassword(), systemUser.getFirstName(), systemUser.getLastName(), systemUser.isLoginDisabled(), systemUser.getWorkspace(), systemUser.getRole());
     }
 }

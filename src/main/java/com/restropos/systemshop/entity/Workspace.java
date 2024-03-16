@@ -1,6 +1,8 @@
 package com.restropos.systemshop.entity;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
+import com.restropos.systemmenu.entity.Category;
+import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;

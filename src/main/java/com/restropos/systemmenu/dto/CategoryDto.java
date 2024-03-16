@@ -1,5 +1,7 @@
-package com.restropos.systemshop.dto;
+package com.restropos.systemmenu.dto;
 
+import com.restropos.systemshop.dto.ImageDto;
+import com.restropos.systemshop.dto.WorkspaceDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

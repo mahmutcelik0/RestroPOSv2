@@ -1,6 +1,6 @@
-package com.restropos.systemshop.repository;
+package com.restropos.systemmenu.repository;
 
-import com.restropos.systemshop.entity.Category;
+import com.restropos.systemmenu.entity.Category;
 import com.restropos.systemshop.entity.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,10 +1,10 @@
-package com.restropos.systemshop.api;
+package com.restropos.systemmenu.api;
 
 import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
-import com.restropos.systemshop.dto.CategoryDto;
-import com.restropos.systemshop.service.CategoryService;
+import com.restropos.systemmenu.dto.CategoryDto;
+import com.restropos.systemmenu.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

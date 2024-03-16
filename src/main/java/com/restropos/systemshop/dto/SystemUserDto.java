@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 public class SystemUserDto extends EmailSecuredUserDto{
     @NotEmpty(message = CustomResponseMessage.FIRST_NAME_REQUIRED)
     private String firstName;
+    @NotEmpty(message = CustomResponseMessage.LAST_NAME_REQUIRED)
     private String lastName;
     private WorkspaceDto workspaceDto;
     @NotEmpty(message = CustomResponseMessage.ROLE_DOES_NOT_EXIST)

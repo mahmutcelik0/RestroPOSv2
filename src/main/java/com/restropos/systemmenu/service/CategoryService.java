@@ -1,4 +1,4 @@
-package com.restropos.systemshop.service;
+package com.restropos.systemmenu.service;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.AlreadyUsedException;
@@ -7,11 +7,11 @@ import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemimage.service.ImageService;
-import com.restropos.systemshop.dto.CategoryDto;
-import com.restropos.systemshop.entity.Category;
+import com.restropos.systemmenu.dto.CategoryDto;
+import com.restropos.systemmenu.entity.Category;
 import com.restropos.systemshop.entity.Workspace;
-import com.restropos.systemshop.populator.CategoryDtoPopulator;
-import com.restropos.systemshop.repository.CategoryRepository;
+import com.restropos.systemmenu.populator.CategoryDtoPopulator;
+import com.restropos.systemmenu.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
