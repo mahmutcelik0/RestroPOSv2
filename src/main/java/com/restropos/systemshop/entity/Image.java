@@ -3,13 +3,12 @@ package com.restropos.systemshop.entity;
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemshop.entity.user.Customer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "IMAGES")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image {
