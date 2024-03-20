@@ -2,10 +2,7 @@ package com.restropos.systemmenu.entity;
 
 import com.restropos.systemmenu.constants.ChoiceEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -20,10 +17,11 @@ import java.util.Set;
                         )
                 }
         )
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@Builder
 public class ProductModifier implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +40,13 @@ public class ProductModifier implements Serializable {
     )
     private Product product;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "MODIFIERS_SUBMODIFIERS",
             joinColumns = {@JoinColumn(name = "PRODUCT_MODIFIER_ID",referencedColumnName = "PRODUCT_MODIFIER_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "PRODUCT_SUBMODIFIERS_ID",referencedColumnName = "PRODUCT_SUBMODIFIER_ID")}
+            inverseJoinColumns = {@JoinColumn(name = "PRODUCT_SUBMODIFIER_ID",referencedColumnName = "PRODUCT_SUBMODIFIER_ID")}
     )
-    private Set<ProductSubmodifier> productSubmodifierSet = new HashSet<>();
+    Set<ProductSubmodifier> productSubmodifierSet = new HashSet<>();
 
     private boolean isRequired;
 

@@ -3,18 +3,18 @@ package com.restropos.systemmenu.entity;
 import com.restropos.systemshop.entity.Image;
 import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "PRODUCTS")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(ProductId.class)
+@Builder
 public class Product {
 
     @Id
@@ -26,7 +26,7 @@ public class Product {
     @JoinColumn(name = "BUSINESS_DOMAIN",referencedColumnName = "BUSINESS_DOMAIN")
     private Workspace workspace;
 
-    @OneToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product")
     private List<ProductModifier> productModifiers;
 
     private String productDescription;

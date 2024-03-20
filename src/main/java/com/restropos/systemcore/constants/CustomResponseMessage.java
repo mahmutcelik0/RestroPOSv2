@@ -50,6 +50,11 @@ public class CustomResponseMessage {
     public static final String CATEGORY_TITLE_ALREADY_USED = "Category title already used";
     public static final String CATEGORY_TITLE_NOT_FOUND = "Category title not found";
     public static final String CATEGORY_DELETED_SUCCESSFULLY = "Category deleted successfully";
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
+    public static final String PRODUCT_REMOVED_SUCCESSFULLY = "Product removed successfully";
+    public static final String PRODUCT_ALREADY_EXISTS = "Product already exists";
+    public static final String PRODUCT_CREATED_SUCCESSFULLY = "Product created successfully";
+    public static final String PRODUCT_SUBMODIFIER_NOT_EXISTS = "Product submodifier does not exist";
 
     private CustomResponseMessage(){
     }

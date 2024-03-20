@@ -60,4 +60,13 @@ public class CategoryService {
         imageService.delete(category.get().getImage().getImageName(),FolderEnum.CATEGORIES);
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.CATEGORY_DELETED_SUCCESSFULLY));
     }
+
+    public boolean checkCategoryTitleExists(String categoryTitle,Workspace workspace) {
+        return categoryRepository.existsByCategoryTitleAndWorkspace(categoryTitle,workspace);
+    }
+
+    public Category getCategoryByTitle(String categoryTitle, Workspace workspace) throws NotFoundException {
+        return categoryRepository.getCategoryByCategoryTitleAndWorkspace(categoryTitle,workspace).orElseThrow(()->new NotFoundException(CustomResponseMessage
+                .CATEGORY_TITLE_NOT_FOUND));
+    }
 }
