@@ -100,4 +100,8 @@ public class ProductService {
 
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.PRODUCT_CREATED_SUCCESSFULLY));
     }
+
+    public Product getProductByWorkspaceAndProductName(String productName,Workspace workspace) throws NotFoundException {
+        return productRepository.getProductByProductNameAndWorkspace(productName,workspace).orElseThrow(()->new NotFoundException(CustomResponseMessage.PRODUCT_NOT_FOUND));
+    }
 }

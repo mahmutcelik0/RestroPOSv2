@@ -5,7 +5,9 @@ import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -18,7 +20,7 @@ import java.util.List;
 public class Product {
 
     @Id
-    @Column(name = "PRODUCT_NAME")
+    @Column(name = "PRODUCT_NAME",length = 50)
     private String productName;
 
     @Id
@@ -39,6 +41,9 @@ public class Product {
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private Category category;
+
+    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "productSet")
+    private Set<FeaturedGroups> featuredGroups = new HashSet<>();
 
 
 }

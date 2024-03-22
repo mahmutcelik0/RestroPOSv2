@@ -55,6 +55,10 @@ public class CustomResponseMessage {
     public static final String PRODUCT_ALREADY_EXISTS = "Product already exists";
     public static final String PRODUCT_CREATED_SUCCESSFULLY = "Product created successfully";
     public static final String PRODUCT_SUBMODIFIER_NOT_EXISTS = "Product submodifier does not exist";
+    public static final String FEATURE_GROUP_DELETED = "Feature group deleted";
+    public static final String FEATURE_GROUP_DOES_NOT_EXIST = "Feature group does not exist";
+    public static final String FEATURE_GROUP_ALREADY_EXIST ="Feature group already exists" ;
+    public static final String FEATURE_GROUP_SAVED = "Feature group saved";
 
     private CustomResponseMessage(){
     }
