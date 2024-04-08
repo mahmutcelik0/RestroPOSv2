@@ -24,6 +24,7 @@ public class EmailService {
     public ResponseEntity<ResponseMessage> sendWorkspaceVerifyEmail(String email){
         try {
             SystemUser user = userService.findSystemUserByEmail(email);
+            LogUtil.printLog("EMAL SENT", EmailService.class);
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,emailCommand.sendEmail(user).getResponseMessage()), HttpStatus.OK);
         }catch (UsernameNotFoundException e){
             LogUtil.printLog("USER NOT FOUND", EmailService.class);

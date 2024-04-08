@@ -40,7 +40,7 @@ public class FeaturedGroupsService {
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.FEATURE_GROUP_DELETED));
     }
 
-    public ResponseEntity<ResponseMessage> addNewFeaturedProduct(FeaturedGroupsDto featuredGroupsDto) throws NotFoundException {
+    public ResponseEntity<FeaturedGroupsDto> addNewFeaturedProduct(FeaturedGroupsDto featuredGroupsDto) throws NotFoundException {
         Workspace workspace = securityProvideService.getWorkspace();
         if (featuredGroupsRepository.existsFeaturedGroupsByGroupNameAndWorkspace(featuredGroupsDto.getGroupName(), workspace)) {
             throw new NotFoundException(CustomResponseMessage.FEATURE_GROUP_ALREADY_EXIST);
@@ -50,13 +50,13 @@ public class FeaturedGroupsService {
             try {
                 featuredGroups.getProductSet().add(productService.getProductByWorkspaceAndProductName(e.getProductName(), workspace));
             } catch (NotFoundException ex) {
-                throw new RuntimeException(ex);
+                throw new RuntimeException(ex.getMessage());
             }
         });
         featuredGroups.setGroupName(featuredGroupsDto.getGroupName());
         featuredGroups.setWorkspace(workspace);
 
-        featuredGroupsRepository.save(featuredGroups);
-        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.FEATURE_GROUP_SAVED));
+        FeaturedGroups savedGroups = featuredGroupsRepository.save(featuredGroups);
+        return ResponseEntity.ok(featuredGroupsDtoPopulator.populate(savedGroups));
     }
 }

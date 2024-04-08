@@ -3,6 +3,7 @@ package com.restropos.systemshop.service;
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
+import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemimage.service.ImageService;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.RegisterDto;
@@ -70,7 +71,7 @@ public class WorkspaceService {
             Admin admin = new Admin(systemUserDto.getEmail(), systemUserDto.getPassword(), systemUserDto.getFirstName(), systemUserDto.getLastName(), true, workspace,roleService.getRole(UserTypes.ADMIN.getName()));
 
             systemUserService.save(admin);
-
+            LogUtil.printLog("COMPLETED SERVICE",WorkspaceService.class);
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.WORKSPACE_CREATED), HttpStatus.OK);
         }
     }
