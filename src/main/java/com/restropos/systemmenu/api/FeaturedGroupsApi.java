@@ -22,7 +22,7 @@ public class FeaturedGroupsApi {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseMessage> addNewFeaturedProduct(@RequestBody FeaturedGroupsDto featuredGroupsDto) throws NotFoundException {
+    public ResponseEntity<FeaturedGroupsDto> addNewFeaturedProduct(@RequestBody FeaturedGroupsDto featuredGroupsDto) throws NotFoundException {
         return featuredGroupsService.addNewFeaturedProduct(featuredGroupsDto);
     }
 

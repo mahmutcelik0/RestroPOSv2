@@ -91,11 +91,13 @@ public class AuthApi {
 
     @PostMapping(value = "/workspace/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> registerNewWorkspace(@RequestPart @Valid String registerInformations, @RequestPart MultipartFile image) throws IOException, NotFoundException {
+        LogUtil.printLog("ENTERED to API",AuthApi.class);
         var registerDto = JsonUtils.registerDtoToJson(registerInformations);
         ResponseEntity<ResponseMessage> response = workspaceFacade.registerNewWorkspace(registerDto,image);
         if (response.getStatusCode().is2xxSuccessful()){
             return emailService.sendWorkspaceVerifyEmail(registerDto.getSystemUser().getEmail());
         }
+        LogUtil.printLog("END API",AuthApi.class);
         return response;
     }
 

@@ -12,10 +12,6 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-//    @ExceptionHandler({RuntimeException.class})
-//    public ResponseEntity<ResponseMessage> handleRuntimeException(RuntimeException exception) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
-//    }
 
     @ExceptionHandler({NotFoundException.class, VerificationRequiredException.class, AlreadyUsedException.class, TimeExceededException.class, WrongCredentialsException.class,UnauthorizedException.class, BadCredentialsException.class})
     public ResponseEntity<ResponseMessage> handleDistinctException(Exception exception) {
@@ -36,4 +32,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseMessage> handleHandlerMethodValidationException(HandlerMethodValidationException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getAllValidationResults().get(0).getResolvableErrors().get(0).getDefaultMessage()));
     }
+
+    @ExceptionHandler({RuntimeException.class})
+    public ResponseEntity<ResponseMessage> handleRuntimeException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
+    }
+
 }
