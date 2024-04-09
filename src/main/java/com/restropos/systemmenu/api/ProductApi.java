@@ -5,6 +5,7 @@ import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.utils.JsonUtils;
 import com.restropos.systemmenu.dto.ProductDto;
 import com.restropos.systemmenu.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,10 @@ public class ProductApi {
     @DeleteMapping("/{productName}")
     public ResponseEntity<ResponseMessage> deleteProduct(@PathVariable String productName) throws NotFoundException {
         return productService.deleteProduct(productName);
+    }
+
+    @GetMapping("/customer")
+    public List<ProductDto> getAllProductsForCustomer(HttpServletRequest request) {
+        return productService.getAllProductsForCustomer(request.getHeader("Origin"));
     }
 }

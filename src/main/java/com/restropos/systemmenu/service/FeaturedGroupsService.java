@@ -4,6 +4,7 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.SecurityProvideService;
+import com.restropos.systemcore.utils.RequestUtils;
 import com.restropos.systemmenu.dto.FeaturedGroupsDto;
 import com.restropos.systemmenu.entity.FeaturedGroups;
 import com.restropos.systemmenu.populator.FeaturedGroupsDtoPopulator;
@@ -58,5 +59,9 @@ public class FeaturedGroupsService {
 
         FeaturedGroups savedGroups = featuredGroupsRepository.save(featuredGroups);
         return ResponseEntity.ok(featuredGroupsDtoPopulator.populate(savedGroups));
+    }
+
+    public List<FeaturedGroupsDto> getAllFeaturedGroups(String origin)  {
+        return featuredGroupsDtoPopulator.populateAll(featuredGroupsRepository.findAllByWorkspaceBusinessDomain(RequestUtils.getDomainFromOrigin(origin)));
     }
 }

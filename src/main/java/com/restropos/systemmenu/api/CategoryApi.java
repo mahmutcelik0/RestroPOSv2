@@ -36,7 +36,7 @@ public class CategoryApi {
     }
 
     @GetMapping("/customer")
-    public List<CategoryDto> getAllCategoriesForCustomer(HttpServletRequest request) throws NotFoundException {
-        return categoryService.getAllCategoriesForCustomer(request.getServerName());
+    public List<CategoryDto> getAllCategoriesForCustomer(HttpServletRequest request) {
+        return categoryService.getAllCategoriesForCustomer(request.getHeader("Origin"));
     }
 }

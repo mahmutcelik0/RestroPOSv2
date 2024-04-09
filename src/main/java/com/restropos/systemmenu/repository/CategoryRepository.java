@@ -19,4 +19,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> getCategoryByCategoryTitleAndWorkspace(String categoryTitle, Workspace workspace);
 
     boolean existsByCategoryTitleAndWorkspace(String categoryTitle, Workspace workspace);
+
+    List<Category> findAllByWorkspaceBusinessDomain(String businessDomain);
 }
