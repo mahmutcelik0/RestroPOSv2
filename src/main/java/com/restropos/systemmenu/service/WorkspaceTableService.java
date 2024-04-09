@@ -44,7 +44,7 @@ public class WorkspaceTableService {
             throw new AlreadyUsedException(CustomResponseMessage.WORKSPACE_TABLE_ALREADY_EXISTS);
         try {
             workspaceTable = WorkspaceTable.builder()
-                    .tableId(workspace.getBusinessDomain() + "/" + tableName)
+                    .tableId(workspace.getBusinessDomain() + "-" + tableName)
                     .tableName(tableName)
                     .workspace(workspace)
                     .image(imageService.generateQrForTable( workspace.getBusinessDomain() + "/" + tableName,origin)).build();
