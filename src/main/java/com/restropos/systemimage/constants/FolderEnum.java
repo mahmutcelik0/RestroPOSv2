@@ -4,5 +4,6 @@ public enum FolderEnum {
     BUSINESS_LOGO,
     PRODUCTS,
     CUSTOMERS,
-    CATEGORIES
+    CATEGORIES,
+    TABLES
 }

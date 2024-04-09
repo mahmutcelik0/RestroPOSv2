@@ -34,7 +34,7 @@ public class ProductModifier implements Serializable {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumns(
             {
-                    @JoinColumn(name = "PRODUCT_NAME", referencedColumnName = "PRODUCT_NAME"),
+                    @JoinColumn(name = "PRODUCT_NAME", referencedColumnName = "NAME"),
                     @JoinColumn(name = "BUSINESS_DOMAIN", referencedColumnName = "BUSINESS_DOMAIN")
             }
     )

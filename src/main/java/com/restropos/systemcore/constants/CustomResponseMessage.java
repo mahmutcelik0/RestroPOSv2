@@ -59,6 +59,10 @@ public class CustomResponseMessage {
     public static final String FEATURE_GROUP_DOES_NOT_EXIST = "Feature group does not exist";
     public static final String FEATURE_GROUP_ALREADY_EXIST ="Feature group already exists" ;
     public static final String FEATURE_GROUP_SAVED = "Feature group saved";
+    public static final String WORKSPACE_TABLE_ALREADY_EXISTS = "Workspace table already exists";
+    public static final String WORKSPACE_TABLE_COULD_NOT_CREATED = "Workspace table could not created";
+    public static final String WORKSPACE_TABLE_DOES_NOT_EXIST = "Workspace table does not exist";
+    public static final String WORKSPACE_TABLE_REMOVED_SUCCESSFULLY = "Workspace table removed successfully";
 
     private CustomResponseMessage(){
     }

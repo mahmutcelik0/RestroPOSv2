@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 @Embeddable
 @EqualsAndHashCode
-public class ProductId implements Serializable {
-    @Column(name = "PRODUCT_NAME")
+public class GenericId implements Serializable {
+    @Column(name = "NAME")
     private String productName;
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "BUSINESS_DOMAIN",referencedColumnName = "BUSINESS_DOMAIN")
