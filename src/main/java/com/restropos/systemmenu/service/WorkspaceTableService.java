@@ -37,17 +37,17 @@ public class WorkspaceTableService {
         return workspaceTableDtoPopulator.populateAll(workspaceTableRepository.findAllByWorkspace(workspace));
     }
 
-    public ResponseEntity<WorkspaceTableDto> addNewTable(WorkspaceTableDto workspaceTableDto) throws NotFoundException, AlreadyUsedException, IOException {
+    public ResponseEntity<WorkspaceTableDto> addNewTable(String tableName) throws NotFoundException, AlreadyUsedException, IOException {
         Workspace workspace = securityProvideService.getWorkspace();
         WorkspaceTable workspaceTable = null;
-        if (workspaceTableRepository.existsWorkspaceTableByTableNameAndWorkspace(workspaceTableDto.getTableName(), workspace))
+        if (workspaceTableRepository.existsWorkspaceTableByTableNameAndWorkspace(tableName, workspace))
             throw new AlreadyUsedException(CustomResponseMessage.WORKSPACE_TABLE_ALREADY_EXISTS);
         try {
             workspaceTable = WorkspaceTable.builder()
-                    .tableId(workspace.getBusinessDomain() + "/" + workspaceTableDto.getTableName())
-                    .tableName(workspaceTableDto.getTableName())
+                    .tableId(workspace.getBusinessDomain() + "/" + tableName)
+                    .tableName(tableName)
                     .workspace(workspace)
-                    .image(imageService.generateQrForTable(workspace, workspaceTableDto.getTableName())).build();
+                    .image(imageService.generateQrForTable(workspace, tableName)).build();
             var generatedTable = workspaceTableRepository.save(workspaceTable);
 
             return ResponseEntity.ok(workspaceTableDtoPopulator.populate(generatedTable));

@@ -1,5 +1,6 @@
 package com.restropos.systemmenu.dto;
 
+import com.restropos.systemshop.dto.ImageDto;
 import com.restropos.systemshop.dto.WorkspaceDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,4 +14,5 @@ import lombok.Setter;
 public class WorkspaceTableDto {
     private String tableName;
     private WorkspaceDto workspaceDto;
+    private ImageDto imageDto;
 }
