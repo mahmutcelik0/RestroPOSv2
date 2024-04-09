@@ -5,6 +5,7 @@ import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemmenu.dto.CategoryDto;
 import com.restropos.systemmenu.service.CategoryService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,5 +33,10 @@ public class CategoryApi {
     @DeleteMapping("/{categoryTitle}")
     public ResponseEntity<ResponseMessage> deleteCategory(@PathVariable String categoryTitle) throws NotFoundException, IOException {
         return categoryService.deleteCategory(categoryTitle);
+    }
+
+    @GetMapping("/customer")
+    public List<CategoryDto> getAllCategoriesForCustomer(HttpServletRequest request) throws NotFoundException {
+        return categoryService.getAllCategoriesForCustomer(request.getServerName());
     }
 }

@@ -5,6 +5,7 @@ import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.SecurityProvideService;
+import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemimage.service.ImageService;
 import com.restropos.systemmenu.dto.CategoryDto;
@@ -68,5 +69,10 @@ public class CategoryService {
     public Category getCategoryByTitle(String categoryTitle, Workspace workspace) throws NotFoundException {
         return categoryRepository.getCategoryByCategoryTitleAndWorkspace(categoryTitle,workspace).orElseThrow(()->new NotFoundException(CustomResponseMessage
                 .CATEGORY_TITLE_NOT_FOUND));
+    }
+
+    public List<CategoryDto> getAllCategoriesForCustomer(String serverName) throws NotFoundException {
+        LogUtil.printLog("SERVER NAME:"+serverName, CategoryService.class);
+        return categoryDtoPopulator.populateAll(categoryRepository.findAllByWorkspace(securityProvideService.getWorkspace()));
     }
 }

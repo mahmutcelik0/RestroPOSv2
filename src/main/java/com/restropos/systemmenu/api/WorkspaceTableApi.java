@@ -24,8 +24,8 @@ public class WorkspaceTableApi {
     }
 
     @PostMapping
-    public ResponseEntity<WorkspaceTableDto> addNewTable(@RequestBody WorkspaceTableDto workspaceTableDto) throws NotFoundException, AlreadyUsedException, IOException {
-        return workspaceTableService.addNewTable(workspaceTableDto);
+    public ResponseEntity<WorkspaceTableDto> addNewTable(@RequestParam String tableName) throws NotFoundException, AlreadyUsedException, IOException {
+        return workspaceTableService.addNewTable(tableName);
     }
 
     @DeleteMapping
