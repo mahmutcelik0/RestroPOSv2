@@ -27,14 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.apache.commons.io.FilenameUtils.getExtension;
 
 @Service
 public class ImageService {
@@ -87,11 +86,13 @@ public class ImageService {
         return new Image(fileName, folderName, getImageUrl(folderName.name(), fileName));
     }
 
-    public Image save(BufferedImage bufferedImage, String originalFileName, FolderEnum folderName) throws IOException {
-        byte[] bytes = getByteArrays(bufferedImage, getExtension(originalFileName));
+    public Image save(BufferedImage bufferedImage, FolderEnum folderName) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", baos);
+        byte[] bytes = baos.toByteArray();
 
         Bucket bucket = StorageClient.getInstance().bucket();
-        String fileName = generateFileName(originalFileName);
+        String fileName = generateFileName("");
         BlobId blobId = BlobId.of(firebaseBucketName, folderName.name() + "/" + fileName);
 
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
@@ -150,8 +151,8 @@ public class ImageService {
         }
     }
 
-    public Image generateQrForTable(Workspace workspace, String tableName) throws IOException {
-        return save(generateQrCode("http://localhost:8080/api/v1/" + workspace.getBusinessDomain() + tableName), workspace.getBusinessDomain() + tableName, FolderEnum.TABLES);
+    public Image generateQrForTable(String tableId, String origin) throws Exception {
+        return save(generateQRCodeImage(origin + "/table/" + tableId), FolderEnum.TABLES);
     }
 
     public BufferedImage generateQrCode(String data) {
@@ -170,5 +171,31 @@ public class ImageService {
             throw new RuntimeException("PROBLMMM");
         }
     }
+
+    public static BufferedImage generateQRCodeImage(String data) throws Exception {
+        StringBuilder str = new StringBuilder();
+        str = str.append(data);
+        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix =
+                barcodeWriter.encode(str.toString(), BarcodeFormat.QR_CODE, 300, 300);
+
+        var bufferedImage =  MatrixToImageWriter.toBufferedImage(bitMatrix);
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight(); // Adjust this value based on your subtext size
+        BufferedImage combinedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        // Draw the QR code image
+        g.drawImage(bufferedImage, 0, 0, null);
+
+        // Draw the subtext below the QR code
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 18)); // Adjust font and size as needed
+
+        g.dispose();
+
+        return combinedImage;
+    }
+
 }
 
