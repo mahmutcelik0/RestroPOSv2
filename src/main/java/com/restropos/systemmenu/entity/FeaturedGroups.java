@@ -31,7 +31,7 @@ public class FeaturedGroups {
                 @JoinColumn(name = "GROUP_NAME",referencedColumnName = "GROUP_NAME"),
                 @JoinColumn(name = "GROUP_BUSINESS_DOMAIN",referencedColumnName = "BUSINESS_DOMAIN")},
             inverseJoinColumns = {
-                @JoinColumn(name = "PRODUCT_NAME",referencedColumnName = "PRODUCT_NAME"),
+                @JoinColumn(name = "PRODUCT_NAME",referencedColumnName = "NAME"),
                 @JoinColumn(name = "PRODUCT_BUSINESS_DOMAIN",referencedColumnName = "BUSINESS_DOMAIN")
             }
     )

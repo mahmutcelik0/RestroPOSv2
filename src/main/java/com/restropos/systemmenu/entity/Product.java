@@ -2,6 +2,7 @@ package com.restropos.systemmenu.entity;
 
 import com.restropos.systemshop.entity.Image;
 import com.restropos.systemshop.entity.Workspace;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,12 +16,12 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(ProductId.class)
+@IdClass(GenericId.class)
 @Builder
 public class Product {
 
     @Id
-    @Column(name = "PRODUCT_NAME",length = 50)
+    @Column(name = "NAME",length = 50)
     private String productName;
 
     @Id
