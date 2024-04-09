@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -80,22 +81,24 @@ public class ProductService {
                 .build();
         var savedProduct = productRepository.save(product);
 
-        productDto.getProductModifiers().forEach(e->{
-            ProductModifier productModifier = ProductModifier.builder()
-                    .product(savedProduct)
-                    .productModifierName(e.getProductModifierName())
-                    .choice(ChoiceEnum.valueOf(e.getChoice()))
-                    .isRequired(e.getIsRequired())
-                    .productSubmodifierSet(e.getProductSubmodifierSet().stream().map(x -> {
-                        try {
-                            return productSubmodifierService.getProductSubmodifier(x.getProductSubmodifierName(),x.getPrice());
-                        } catch (NotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }).collect(Collectors.toSet()))
-                    .build();
-            productModifierService.save(productModifier);
-        });
+        if(!CollectionUtils.isEmpty(productDto.getProductModifiers())){
+            productDto.getProductModifiers().forEach(e->{
+                ProductModifier productModifier = ProductModifier.builder()
+                        .product(savedProduct)
+                        .productModifierName(e.getProductModifierName())
+                        .choice(ChoiceEnum.valueOf(e.getChoice()))
+                        .isRequired(e.getIsRequired())
+                        .productSubmodifierSet(e.getProductSubmodifierSet().stream().map(x -> {
+                            try {
+                                return productSubmodifierService.getProductSubmodifier(x.getProductSubmodifierName(),x.getPrice());
+                            } catch (NotFoundException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }).collect(Collectors.toSet()))
+                        .build();
+                productModifierService.save(productModifier);
+            });
+        }
 
 
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.PRODUCT_CREATED_SUCCESSFULLY));
