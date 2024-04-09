@@ -47,7 +47,7 @@ public class WorkspaceTableService {
                     .tableId(workspace.getBusinessDomain() + "-" + tableName)
                     .tableName(tableName)
                     .workspace(workspace)
-                    .image(imageService.generateQrForTable( workspace.getBusinessDomain() + "/" + tableName,origin)).build();
+                    .image(imageService.generateQrForTable( workspace.getBusinessDomain() + "-" + tableName,origin)).build();
             var generatedTable = workspaceTableRepository.save(workspaceTable);
 
             return ResponseEntity.ok(workspaceTableDtoPopulator.populate(generatedTable));
