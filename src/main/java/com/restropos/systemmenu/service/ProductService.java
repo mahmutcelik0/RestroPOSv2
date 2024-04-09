@@ -4,6 +4,7 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.SecurityProvideService;
+import com.restropos.systemcore.utils.RequestUtils;
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemimage.service.ImageService;
 import com.restropos.systemmenu.constants.ChoiceEnum;
@@ -106,5 +107,9 @@ public class ProductService {
 
     public Product getProductByWorkspaceAndProductName(String productName,Workspace workspace) throws NotFoundException {
         return productRepository.getProductByProductNameAndWorkspace(productName,workspace).orElseThrow(()->new NotFoundException(CustomResponseMessage.PRODUCT_NOT_FOUND));
+    }
+
+    public List<ProductDto> getAllProductsForCustomer(String origin) {
+        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomain(RequestUtils.getDomainFromOrigin(origin)));
     }
 }

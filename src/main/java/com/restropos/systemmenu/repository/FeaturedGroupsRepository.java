@@ -17,4 +17,6 @@ public interface FeaturedGroupsRepository extends JpaRepository<FeaturedGroups, 
     void deleteFeaturedGroupsByGroupNameAndWorkspace(String groupName,Workspace workspace);
 
     boolean existsFeaturedGroupsByGroupNameAndWorkspace(String groupName,Workspace workspace);
+
+    List<FeaturedGroups> findAllByWorkspaceBusinessDomain(String businessDomain);
 }
