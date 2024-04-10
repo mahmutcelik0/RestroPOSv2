@@ -15,4 +15,8 @@ public abstract class AbstractPopulator <Source,Target>{
     public List<Target> populateAll(List<Source> sourceList){
         return sourceList.stream().map(this::populate).toList();
     }
+
+    public List<Target> sortedPopulateAll(List<Source> sourceList){
+        return sourceList.stream().map(this::populate).sorted().toList();
+    }
 }
