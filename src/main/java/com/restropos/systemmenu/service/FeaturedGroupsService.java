@@ -30,7 +30,15 @@ public class FeaturedGroupsService {
 
     public List<FeaturedGroupsDto> getAllFeaturedGroups() throws NotFoundException {
         Workspace workspace = securityProvideService.getWorkspace();
-        return featuredGroupsDtoPopulator.sortedPopulateAll(featuredGroupsRepository.findAllByWorkspace(workspace));
+
+        return featuredGroupsRepository.findAllByWorkspace(workspace)
+                .stream()
+                .map(e->{
+                    var group = featuredGroupsDtoPopulator.populate(e);
+                    group.setProducts(group.getProducts().stream().sorted((o1, o2) -> o1.getProductName().compareToIgnoreCase(o2.getProductName())).toList());
+                    return group;
+                })
+                .toList();
     }
 
     public ResponseEntity<ResponseMessage> deleteFeaturedGroup(String groupName) throws NotFoundException {
