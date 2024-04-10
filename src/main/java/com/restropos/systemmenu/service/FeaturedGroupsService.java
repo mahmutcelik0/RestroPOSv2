@@ -30,7 +30,7 @@ public class FeaturedGroupsService {
 
     public List<FeaturedGroupsDto> getAllFeaturedGroups() throws NotFoundException {
         Workspace workspace = securityProvideService.getWorkspace();
-        return featuredGroupsDtoPopulator.populateAll(featuredGroupsRepository.findAllByWorkspace(workspace));
+        return featuredGroupsDtoPopulator.sortedPopulateAll(featuredGroupsRepository.findAllByWorkspace(workspace));
     }
 
     public ResponseEntity<ResponseMessage> deleteFeaturedGroup(String groupName) throws NotFoundException {
