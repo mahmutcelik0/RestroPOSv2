@@ -64,4 +64,10 @@ public class WorkspaceTableService {
         workspaceTableRepository.delete(workspaceTable.get());
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.WORKSPACE_TABLE_REMOVED_SUCCESSFULLY));
     }
+
+    public ResponseEntity<WorkspaceTableDto> getTableById(String tableId) throws NotFoundException {
+        Optional<WorkspaceTable> workspaceTable = workspaceTableRepository.findWorkspaceTableByTableId(tableId);
+        if(workspaceTable.isEmpty()) throw new NotFoundException(CustomResponseMessage.WORKSPACE_TABLE_DOES_NOT_EXIST);
+        return ResponseEntity.ok(workspaceTableDtoPopulator.populate(workspaceTable.get()));
+    }
 }
