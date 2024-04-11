@@ -31,7 +31,7 @@ public class FeaturedGroupsService {
     public List<FeaturedGroupsDto> getAllFeaturedGroups() throws NotFoundException {
         Workspace workspace = securityProvideService.getWorkspace();
 
-        return featuredGroupsRepository.findAllByWorkspace(workspace)
+        return featuredGroupsRepository.findAllByWorkspaceOrderByGroupName(workspace)
                 .stream()
                 .map(e->{
                     var group = featuredGroupsDtoPopulator.populate(e);
@@ -70,6 +70,6 @@ public class FeaturedGroupsService {
     }
 
     public List<FeaturedGroupsDto> getAllFeaturedGroups(String origin)  {
-        return featuredGroupsDtoPopulator.populateAll(featuredGroupsRepository.findAllByWorkspaceBusinessDomain(RequestUtils.getDomainFromOrigin(origin)));
+        return featuredGroupsDtoPopulator.populateAll(featuredGroupsRepository.findAllByWorkspaceBusinessDomainOrderByGroupName(RequestUtils.getDomainFromOrigin(origin)));
     }
 }

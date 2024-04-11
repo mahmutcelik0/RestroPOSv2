@@ -50,7 +50,7 @@ public class ProductService {
 
     public List<ProductDto> getAllProducts() throws NotFoundException {
 
-        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomain(securityProvideService.getWorkspace().getBusinessDomain()));
+        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomainOrderByProductName(securityProvideService.getWorkspace().getBusinessDomain()));
 
     }
 
@@ -110,6 +110,6 @@ public class ProductService {
     }
 
     public List<ProductDto> getAllProductsForCustomer(String origin) {
-        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomain(RequestUtils.getDomainFromOrigin(origin)));
+        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomainOrderByProductName(RequestUtils.getDomainFromOrigin(origin)));
     }
 }
