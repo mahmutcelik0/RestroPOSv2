@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, GenericId> {
-    List<Product> findAllByWorkspaceBusinessDomain(String businessDomain);
-
+    List<Product> findAllByWorkspaceBusinessDomainOrderByProductName(String businessDomain);
 
     boolean existsByProductNameAndWorkspace(String productName, Workspace workspace);
 

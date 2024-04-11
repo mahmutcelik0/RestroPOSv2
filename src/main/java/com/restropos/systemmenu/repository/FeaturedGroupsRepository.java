@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import java.util.List;
 
 public interface FeaturedGroupsRepository extends JpaRepository<FeaturedGroups, FeaturedGroupId> {
-    List<FeaturedGroups> findAllByWorkspace(Workspace workspace);
+    List<FeaturedGroups> findAllByWorkspaceOrderByGroupName(Workspace workspace);
 
     @Transactional
     @Modifying
@@ -18,5 +18,5 @@ public interface FeaturedGroupsRepository extends JpaRepository<FeaturedGroups, 
 
     boolean existsFeaturedGroupsByGroupNameAndWorkspace(String groupName,Workspace workspace);
 
-    List<FeaturedGroups> findAllByWorkspaceBusinessDomain(String businessDomain);
+    List<FeaturedGroups> findAllByWorkspaceBusinessDomainOrderByGroupName(String businessDomain);
 }
