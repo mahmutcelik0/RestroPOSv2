@@ -41,4 +41,10 @@ public class WorkspaceTableApi {
     public ResponseEntity<ResponseMessage> deleteTable(@RequestParam String tableName) throws NotFoundException {
         return workspaceTableService.deleteTable(tableName);
     }
+
+    @GetMapping("/{tableId}")
+    public ResponseEntity<WorkspaceTableDto> getTableById(@PathVariable String tableId) throws NotFoundException {
+        return workspaceTableService.getTableById(tableId);
+    }
+
 }

@@ -13,4 +13,6 @@ public interface WorkspaceTableRepository extends JpaRepository<WorkspaceTable,S
     boolean existsWorkspaceTableByTableNameAndWorkspace(String tableName, Workspace workspace);
 
     Optional<WorkspaceTable> findWorkspaceTableByTableNameAndWorkspace(String tableName, Workspace workspace);
+
+    Optional<WorkspaceTable> findWorkspaceTableByTableId(String tableId);
 }
