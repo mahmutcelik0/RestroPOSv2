@@ -7,7 +7,7 @@ import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/auth/employees")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
     private String field = "123";
     private final Flux<Object> employeeUpdateStream;
