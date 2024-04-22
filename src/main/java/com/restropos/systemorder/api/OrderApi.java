@@ -27,7 +27,7 @@ public class OrderApi {
 //        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
         return events.share()
                 .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
-                .map(SubscribeKey::toString);
+                .map(e-> "1");
     }
 
     @GetMapping(value = "/qq", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
