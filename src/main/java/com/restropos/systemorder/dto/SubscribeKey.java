@@ -11,5 +11,5 @@ import lombok.*;
 public class SubscribeKey {
     private String businessDomain;
     private SubscribeDto subscribeDto;
-    private String order;
+    private OrderDto order;
 }

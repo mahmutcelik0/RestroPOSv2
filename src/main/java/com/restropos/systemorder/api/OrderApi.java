@@ -13,7 +13,7 @@ import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/auth/orders")
 public class OrderApi {
     @Autowired
     private OrderService orderService;
@@ -21,11 +21,19 @@ public class OrderApi {
     private EmitterProcessor<SubscribeKey> events = EmitterProcessor.create();
 
     @GetMapping(value = "/{businessDomain}/{userType}/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> getEvents(@PathVariable String businessDomain,@PathVariable String userType,@PathVariable String userInfo) {
-        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
+    public Flux<OrderDto> getEvents(@PathVariable String businessDomain,@PathVariable String userType,@PathVariable String userInfo) {
+//        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
         return events.share()
-                .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equals(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
+                .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
                 .map(SubscribeKey::getOrder);
+    }
+
+    @GetMapping(value = "/qq", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> getEventsEx() {
+//        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
+        return events.share()
+//                .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
+                .map(SubscribeKey::getBusinessDomain);
     }
 
     /*
@@ -38,9 +46,10 @@ public class OrderApi {
 
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestParam String businessDomain,@RequestParam String userType,@RequestParam String userInfo){
-        events.onNext(new SubscribeKey(businessDomain,new SubscribeDto(UserTypes.valueOf(userType),userInfo),"TOST"));
-        return ResponseEntity.ok("HANDLED");
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto){
+        orderService.createOrder(orderDto);
+        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),orderDto));
+        return ResponseEntity.ok(orderDto);
     }
 
 
