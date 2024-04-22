@@ -1,5 +1,6 @@
 package com.restropos.systemorder.api;
 
+import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.SubscribeDto;
 import com.restropos.systemorder.dto.SubscribeKey;
@@ -21,11 +22,12 @@ public class OrderApi {
     private EmitterProcessor<SubscribeKey> events = EmitterProcessor.create();
 
     @GetMapping(value = "/{businessDomain}/{userType}/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<OrderDto> getEvents(@PathVariable String businessDomain,@PathVariable String userType,@PathVariable String userInfo) {
+    public Flux<String> getEvents(@PathVariable String businessDomain,@PathVariable String userType,@PathVariable String userInfo) {
+        LogUtil.printLog("CONNECTED TO:"+businessDomain+"-"+userType+"-"+userInfo, OrderApi.class);
 //        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
         return events.share()
                 .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
-                .map(SubscribeKey::getOrder);
+                .map(SubscribeKey::toString);
     }
 
     @GetMapping(value = "/qq", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -47,6 +49,7 @@ public class OrderApi {
 
     @PostMapping
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto){
+        LogUtil.printLog("EVENT TRIGGERED:"+orderDto, OrderApi.class);
         orderService.createOrder(orderDto);
         events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),orderDto));
         return ResponseEntity.ok(orderDto);
