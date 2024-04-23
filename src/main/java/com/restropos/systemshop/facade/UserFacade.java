@@ -98,7 +98,7 @@ public class UserFacade {
     }
 
     public List<SystemUserDtoResponse> getAllStaffsExceptAdmin() {
-        return systemUserService.getAllStaffsExceptAdmin();
+        return systemUserService.getAllStaffsExceptAdminDto();
     }
 
     public ResponseEntity<SystemUserDtoResponse> addNewStaff(SystemUserDto systemUserDto) throws NotFoundException {

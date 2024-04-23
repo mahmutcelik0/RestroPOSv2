@@ -85,8 +85,12 @@ public class SystemUserService {
         return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsByRoleName(userType.getName()));
     }
 
-    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin() {
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdminDto() {
         return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsExceptRole(UserTypes.ADMIN.getName()));
+    }
+
+    public List<SystemUser> getAllWaiters() {
+        return systemUserRepository.getAllStaffsByRoleName(UserTypes.WAITER.getName());
     }
 
     public ResponseEntity<SystemUserDtoResponse> updateStaff(SystemUserDto systemUserDto, String email) throws NotFoundException {

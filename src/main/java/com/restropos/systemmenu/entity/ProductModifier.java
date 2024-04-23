@@ -1,6 +1,8 @@
 package com.restropos.systemmenu.entity;
 
 import com.restropos.systemmenu.constants.ChoiceEnum;
+import com.restropos.systemorder.entity.Order;
+import com.restropos.systemorder.entity.OrderProduct;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -53,5 +55,7 @@ public class ProductModifier implements Serializable {
     @Enumerated
     private ChoiceEnum choice;
 
+    @ManyToMany(cascade = {CascadeType.ALL},mappedBy = "productModifiers")
+    private Set<OrderProduct> orderProducts = new HashSet<>();
 
 }

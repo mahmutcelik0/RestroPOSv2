@@ -26,4 +26,5 @@ public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
     @Query("select s from SystemUser as s where s.role.roleName != ?1")
     List<SystemUser> getAllStaffsExceptRole(String userType);
 
+
 }

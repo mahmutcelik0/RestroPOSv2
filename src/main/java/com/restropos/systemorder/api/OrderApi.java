@@ -4,8 +4,12 @@ import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.SubscribeDto;
 import com.restropos.systemorder.dto.SubscribeKey;
+import com.restropos.systemorder.entity.Order;
+import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.service.OrderService;
 import com.restropos.systemshop.constants.UserTypes;
+import com.restropos.systemshop.entity.user.SystemUser;
+import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +17,22 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/auth/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderApi {
     @Autowired
     private OrderService orderService;
 
     private EmitterProcessor<SubscribeKey> events = EmitterProcessor.create();
+
+    @Autowired
+    private SystemUserService systemUserService;
+
+    @Autowired
+    private OrderDtoPopulator orderDtoPopulator;
+
 
     @GetMapping(value = "/{businessDomain}/{userType}/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<OrderDto> getEvents(@PathVariable String businessDomain,@PathVariable String userType,@PathVariable String userInfo) {
@@ -30,65 +43,17 @@ public class OrderApi {
                 .map(SubscribeKey::getOrder);
     }
 
-    @GetMapping(value = "/qq", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> getEventsEx() {
-//        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
-        return events.share()
-//                .filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo))
-                .map(SubscribeKey::getBusinessDomain);
-    }
-
-    /*
     @PostMapping
-    public void trigger(){
-        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder1"));
-//        events.onNext(new SubscribeKey("subdomain2",new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),"FirstOrder2"));
-    }
-    * */
-
-
-    @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto){
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto,@RequestParam String businessDomain){ //req paramı değiş
         LogUtil.printLog("EVENT TRIGGERED:"+orderDto, OrderApi.class);
-        orderService.createOrder(orderDto);
+        Order order = orderService.createOrder(orderDto);
         events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"905511223122"),orderDto));
-        return ResponseEntity.ok(orderDto);
+        List<SystemUser> waiters = systemUserService.getAllWaiters();
+        OrderDto response = orderDtoPopulator.populate(order);
+        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain,new SubscribeDto(UserTypes.WAITER,waiter.getEmail()),response)));
+
+        return ResponseEntity.ok(response);
     }
 
 
-
-//    @PostMapping
-//    public ResponseEntity<String> subscribeUser(@RequestBody SubscribeDto subscribeDto){
-////        orderService.subscribeUser(subscribeDto);
-//        return ResponseEntity.ok("Subscribed");
-//    }
-//
-//    @PostMapping("/subscribe/{businessDomain}/customer")
-//    public Mono<String> subscribeCustomer(@PathVariable String businessDomain){//, @RequestBody SubscribeDto subscribeDto
-//        SubscribeDto subscribeDto1 = new SubscribeDto(UserTypes.CUSTOMER,"5466053396");
-//    }
-//
-//    @GetMapping("/stream/{businessDomain}/customer")
-//    public Flux<ServerSentEvent<String>> streamMessages(@PathVariable String businessDomain) {//,@RequestBody SubscribeDto subscribeDto
-//        SubscribeDto subscribeDto1 = new SubscribeDto(UserTypes.CUSTOMER,"5466053396");
-//    }
-//
-//    @PostMapping("/send/{userId}")
-//    public Mono<String> sendMessage(@PathVariable String businessDomain, @RequestBody SubscribeDto subscribeDto) {
-//    }
-
-//    @PostMapping("/subscribe/{businessDomain}/waiter")
-//    public ResponseEntity<String> subscribeWaiter(@PathVariable String businessDomain, @RequestBody SubscribeDto subscribeDto){
-//        return orderService.subscribeWaiter(businessDomain,subscribeDto);
-//    }
-//
-//    @PostMapping("/subscribe/{businessDomain}/kitchen")
-//    public ResponseEntity<String> subscribeKitchen(@PathVariable String businessDomain, @RequestBody SubscribeDto subscribeDto){
-//        return orderService.subscribeKitchen(businessDomain,subscribeDto);
-//    }
-//
-//    @PostMapping("/subscribe/{businessDomain}/cashDesk")
-//    public ResponseEntity<String> subscribeCashDesk(@PathVariable String businessDomain, @RequestBody SubscribeDto subscribeDto){
-//        return orderService.subscribeCashDesk(businessDomain,subscribeDto);
-//    }
 }
