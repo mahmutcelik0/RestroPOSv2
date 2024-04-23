@@ -1,16 +1,13 @@
 package com.restropos.systemorder.entity;
 
-import com.restropos.systemmenu.dto.ProductDto;
-import com.restropos.systemmenu.dto.ProductModifierDto;
 import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.entity.ProductModifier;
+import com.restropos.systemmenu.entity.ProductSubmodifier;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ORDER_PRODUCTS")
@@ -18,18 +15,32 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private Product product;
+
     private Long quantity;
+
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinTable(name = "ORDER_PRODUCT_PRODUCT_MODIFIERS",
+    @JoinTable(name = "ORDER_PRODUCT_MODIFIERS",
     joinColumns = {@JoinColumn(name = "ORDER_PRODUCT_ID",referencedColumnName = "id")},
     inverseJoinColumns = {@JoinColumn(name = "PRODUCT_MODIFIER_ID",referencedColumnName = "PRODUCT_MODIFIER_ID")})
-    private List<ProductModifier> productModifiers;
+    private Set<ProductModifier> productModifiers = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(name = "ORDER_PRODUCT_SUBMODIFIERS",
+            joinColumns = {@JoinColumn(name = "ORDER_PRODUCT_ID",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "PRODUCT_SUBMODIFIER_ID",referencedColumnName = "PRODUCT_SUBMODIFIER_ID")})
+    private Set<ProductSubmodifier> productSubmodifiers = new HashSet<>();
+
+
     private Long calculatedPrice;
 
+    @ManyToOne(cascade = {CascadeType.ALL})
+    private Order order;
 }

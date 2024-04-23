@@ -1,5 +1,6 @@
 package com.restropos.systemmenu.entity;
 
+import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemshop.entity.Image;
 import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.Table;
@@ -46,5 +47,7 @@ public class Product {
     @ManyToMany(cascade = CascadeType.ALL,mappedBy = "productSet")
     private Set<FeaturedGroups> featuredGroups = new HashSet<>();
 
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},mappedBy = "product")
+    private List<OrderProduct> orderProducts;
 
 }

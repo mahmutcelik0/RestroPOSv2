@@ -1,6 +1,5 @@
 package com.restropos.systemorder.dto;
 
-import com.restropos.systemshop.constants.UserTypes;
 import lombok.*;
 
 @Getter

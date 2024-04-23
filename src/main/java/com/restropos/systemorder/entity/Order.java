@@ -3,12 +3,11 @@ package com.restropos.systemorder.entity;
 import com.restropos.systemorder.OrderStatus;
 import com.restropos.systemorder.dto.OrderProductDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "ORDERS")
@@ -16,17 +15,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated
     private OrderStatus orderStatus;
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinTable(name = "ORDER_ORDER_PRODUCTS",
-    joinColumns = {@JoinColumn(name = "ORDER_ID", referencedColumnName = "id")},
-    inverseJoinColumns = {@JoinColumn(name = "ORDER_PRODUCT_ID", referencedColumnName = "id")})
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},mappedBy = "order")
     private List<OrderProduct> orderProducts;
+
     private Long totalOrderPrice;
 
 }
