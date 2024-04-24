@@ -1,10 +1,12 @@
 package com.restropos.systemorder.entity;
 
+import com.restropos.systemmenu.entity.WorkspaceTable;
 import com.restropos.systemorder.OrderStatus;
 import com.restropos.systemorder.dto.OrderProductDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,5 +28,10 @@ public class Order {
     private List<OrderProduct> orderProducts;
 
     private Long totalOrderPrice;
+
+    private LocalDateTime orderCreationTime;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    private WorkspaceTable workspaceTable;
 
 }

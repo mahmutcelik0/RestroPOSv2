@@ -17,6 +17,7 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         orderDto.setOrderStatus(order.getOrderStatus());
         orderDto.setTotalOrderPrice(order.getTotalOrderPrice());
         orderDto.setOrderProducts(orderProductDtoPopulator.populateAll(order.getOrderProducts()));
+        orderDto.setOrderCreationTime(order.getOrderCreationTime());
         return orderDto;
     }
 

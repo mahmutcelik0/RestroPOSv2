@@ -1,9 +1,13 @@
 package com.restropos.systemmenu.entity;
 
+import com.restropos.systemorder.entity.Order;
 import com.restropos.systemshop.entity.Image;
 import com.restropos.systemshop.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "WORKSPACE_TABLES")
@@ -25,4 +29,7 @@ public class WorkspaceTable {
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "WORKSPACE_TABLE_IMAGE")
     private Image image;
+
+    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "workspaceTable")
+    private List<Order> orders = new ArrayList<>();
 }
