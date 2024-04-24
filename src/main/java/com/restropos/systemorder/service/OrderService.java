@@ -14,7 +14,9 @@ import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -31,6 +33,7 @@ public class OrderService {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
         Order order = Order.builder()
                 .orderStatus(OrderStatus.RECEIVED)
+                .orderCreationTime(LocalDateTime.now())
                 .build();
 
         List<OrderProduct> orderProducts = orderProductDtoList.stream().map(e -> {
@@ -62,27 +65,32 @@ public class OrderService {
 
     private void setProductModifiersAndSubmodifiers(Product product, OrderProductDto orderProductDto, OrderProduct orderProduct) {
         List<Double> totalProductCalculatedPrice = new ArrayList<>(Collections.singletonList(product.getPrice() * orderProductDto.getQuantity()));
-        orderProductDto.getProductSelectedModifiers().forEach(productSelectedModifierDto -> {
-            AtomicBoolean modifierFound = new AtomicBoolean(false);
-            product.getProductModifiers().forEach(productModifier -> {
-                if (productSelectedModifierDto.getName().equalsIgnoreCase(productModifier.getProductModifierName())) {
-                    modifierFound.set(true);
-                    productSelectedModifierDto.getSelections().forEach(productSelectedSubmodifierDto -> {
-                        AtomicBoolean submodifierFound = new AtomicBoolean(false);
-                        productModifier.getProductSubmodifierSet().forEach(productSubmodifier -> {
-                            if (productSelectedSubmodifierDto.getLabel().equalsIgnoreCase(productSubmodifier.getProductSubmodifierName())) {
-                                submodifierFound.set(true);
-                                totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + productSubmodifier.getPrice());
-                                orderProduct.getProductSubmodifiers().add(productSubmodifier);
-                            }
-                        });
-                        if (!submodifierFound.get()) throw new RuntimeException("SUBMODIFIER NOT FOUND");
-                    });
-                    orderProduct.getProductModifiers().add(productModifier);
-                }
+        if (!CollectionUtils.isEmpty(orderProductDto.getProductSelectedModifiers())) {
+            orderProductDto.getProductSelectedModifiers().forEach(productSelectedModifierDto -> {
+                AtomicBoolean modifierFound = new AtomicBoolean(false);
+                product.getProductModifiers().forEach(productModifier -> {
+                    if (productSelectedModifierDto.getName().equalsIgnoreCase(productModifier.getProductModifierName())) {
+                        modifierFound.set(true);
+                        if (!CollectionUtils.isEmpty(productSelectedModifierDto.getSelections())) {
+                            productSelectedModifierDto.getSelections().forEach(productSelectedSubmodifierDto -> {
+                                AtomicBoolean submodifierFound = new AtomicBoolean(false);
+                                productModifier.getProductSubmodifierSet().forEach(productSubmodifier -> {
+                                    if (productSelectedSubmodifierDto.getLabel().equalsIgnoreCase(productSubmodifier.getProductSubmodifierName())) {
+                                        submodifierFound.set(true);
+                                        totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + productSubmodifier.getPrice());
+                                        orderProduct.getProductSubmodifiers().add(productSubmodifier);
+                                    }
+                                });
+                                if (!submodifierFound.get()) throw new RuntimeException("SUBMODIFIER NOT FOUND");
+                            });
+                        }
+                        orderProduct.getProductModifiers().add(productModifier);
+                    }
+                });
+                if (!modifierFound.get()) throw new RuntimeException("MODIFIER NOT FOUND");
             });
-            if (!modifierFound.get()) throw new RuntimeException("MODIFIER NOT FOUND");
-        });
+        }
+
         if (totalProductCalculatedPrice.get(0).doubleValue() != orderProductDto.getCalculatedPrice())
             throw new RuntimeException("PRICE IS NOT VALID");
     }

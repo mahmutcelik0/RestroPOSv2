@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SelectionDto {
     private String label;
-    private int value;
+    private Double value;
 }

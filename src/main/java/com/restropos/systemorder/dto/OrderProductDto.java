@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderProductDto {
-    private String id;
+    private Long id;
     private ProductDto product;
     private Long quantity;
     private List<ProductSelectedModifierDto> productSelectedModifiers;
