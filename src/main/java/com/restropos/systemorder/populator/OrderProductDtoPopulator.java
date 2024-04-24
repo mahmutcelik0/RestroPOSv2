@@ -3,6 +3,7 @@ package com.restropos.systemorder.populator;
 import com.restropos.systemcore.populator.AbstractPopulator;
 import com.restropos.systemmenu.dto.ProductSelectedModifierDto;
 import com.restropos.systemmenu.dto.SelectionDto;
+import com.restropos.systemmenu.entity.ProductSubmodifier;
 import com.restropos.systemmenu.populator.ProductDtoPopulator;
 import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.entity.OrderProduct;
@@ -12,6 +13,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Component
 public class OrderProductDtoPopulator extends AbstractPopulator<OrderProduct, OrderProductDto> {
@@ -31,17 +34,17 @@ public class OrderProductDtoPopulator extends AbstractPopulator<OrderProduct, Or
                 productSelectedModifierDto.setName(e.getProductModifierName());
                 productSelectedModifierDto.setId(e.getId());
                 if(!CollectionUtils.isEmpty(orderProduct.getProductSubmodifiers())){
-                    List<SelectionDto> selectionDtoList = orderProduct.getProductSubmodifiers().stream().map(x -> {
-                        e.getProductSubmodifierSet().stream().forEach(m -> {
-                            if(m.getProductSubmodifierName().equalsIgnoreCase(x.getProductSubmodifierName())){
-
+                    List<SelectionDto> selectionDtoList = new ArrayList<>();
+                    orderProduct.getProductSubmodifiers().forEach(x -> {
+                        for(ProductSubmodifier submodifier: e.getProductSubmodifierSet()){
+                            if(submodifier.getProductSubmodifierName().equalsIgnoreCase(x.getProductSubmodifierName()) && Objects.equals(submodifier.getId(), x.getId())){
+                                SelectionDto selectionDto = new SelectionDto();
+                                selectionDto.setLabel(x.getProductSubmodifierName());
+                                selectionDto.setValue(x.getPrice());
+                                selectionDtoList.add(selectionDto);
                             }
-                        });
-                        SelectionDto selectionDto = new SelectionDto();
-                        selectionDto.setLabel(x.getProductSubmodifierName());
-                        selectionDto.setValue(x.getPrice());
-                        return selectionDto;
-                    }).toList();
+                        }
+                    });
                     productSelectedModifierDto.setSelections(selectionDtoList);
                 }
                 productSelectedModifierDtos.add(productSelectedModifierDto);
