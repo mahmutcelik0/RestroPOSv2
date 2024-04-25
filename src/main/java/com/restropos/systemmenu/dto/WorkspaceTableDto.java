@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkspaceTableDto {
+    private String tableId;
     private String tableName;
     private WorkspaceDto workspaceDto;
     private ImageDto imageDto;

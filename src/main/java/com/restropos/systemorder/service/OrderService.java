@@ -4,20 +4,24 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemmenu.entity.Product;
-import com.restropos.systemmenu.entity.ProductSubmodifier;
 import com.restropos.systemmenu.service.ProductService;
+import com.restropos.systemmenu.service.WorkspaceTableService;
 import com.restropos.systemorder.OrderStatus;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemorder.entity.OrderProduct;
+import com.restropos.systemorder.populator.OrderDtoPopulator;
+import com.restropos.systemorder.populator.OrderProductDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -28,12 +32,19 @@ public class OrderService {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private OrderProductDtoPopulator orderProductDtoPopulator;
+    @Autowired
+    private OrderDtoPopulator orderDtoPopulator;
+    @Autowired
+    private WorkspaceTableService workspaceTableService;
 
-    public Order createOrder(OrderDto orderDto) {
+    public Order createOrder(OrderDto orderDto) throws NotFoundException {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
         Order order = Order.builder()
                 .orderStatus(OrderStatus.RECEIVED)
                 .orderCreationTime(LocalDateTime.now())
+                .workspaceTable(workspaceTableService.getWorkspaceTableById(orderDto.getWorkspaceTableDto().getTableId()))
                 .build();
 
         List<OrderProduct> orderProducts = orderProductDtoList.stream().map(e -> {
@@ -95,4 +106,7 @@ public class OrderService {
             throw new RuntimeException("PRICE IS NOT VALID");
     }
 
+    public List<OrderDto> getOrders() {
+        return orderDtoPopulator.populateAll(orderRepository.findAll());
+    }
 }
