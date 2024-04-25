@@ -84,7 +84,7 @@ public class OrderApi {
         events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"905511223122"),orderDto));
         List<SystemUser> waiters = systemUserService.getAllWaiters();
         OrderDto response = orderDtoPopulator.populate(order);
-        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain,new SubscribeDto(UserTypes.CUSTOMER,"5466053396"),response)));
+        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain,new SubscribeDto(UserTypes.WAITER,waiter.getEmail()),response)));
 
         return ResponseEntity.ok(response);
     }
