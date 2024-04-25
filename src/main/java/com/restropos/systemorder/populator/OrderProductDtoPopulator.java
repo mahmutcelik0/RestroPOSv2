@@ -14,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Component
 public class OrderProductDtoPopulator extends AbstractPopulator<OrderProduct, OrderProductDto> {

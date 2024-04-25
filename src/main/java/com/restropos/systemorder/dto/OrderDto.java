@@ -1,5 +1,6 @@
 package com.restropos.systemorder.dto;
 
+import com.restropos.systemmenu.dto.WorkspaceTableDto;
 import com.restropos.systemorder.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +20,6 @@ public class OrderDto {
     private Long totalOrderPrice;
     private OrderStatus orderStatus;
     private LocalDateTime orderCreationTime;
+    private WorkspaceTableDto workspaceTableDto;
 
 }

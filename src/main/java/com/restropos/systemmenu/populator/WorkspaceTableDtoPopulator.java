@@ -17,6 +17,7 @@ public class WorkspaceTableDtoPopulator extends AbstractPopulator<WorkspaceTable
 
     @Override
     protected WorkspaceTableDto populate(WorkspaceTable workspaceTable, WorkspaceTableDto workspaceTableDto) {
+        workspaceTableDto.setTableId(workspaceTable.getTableId());
         workspaceTableDto.setWorkspaceDto(workspaceDtoPopulator.populate(workspaceTable.getWorkspace()));
         workspaceTableDto.setTableName(workspaceTable.getTableName());
         workspaceTableDto.setImageDto(imageDtoPopulator.populate(workspaceTable.getImage()));
