@@ -51,14 +51,14 @@ public class OrderApi {
 //    }
 
     @GetMapping(value = "/{businessDomain}/{userType}/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<OrderDto> getEvents(@PathVariable String businessDomain, @PathVariable String userType, @PathVariable String userInfo) {
+    public Flux<List<OrderDto>> getEvents(@PathVariable String businessDomain, @PathVariable String userType, @PathVariable String userInfo) {
         LogUtil.printLog("CONNECTED TO:" + businessDomain + "-" + userType + "-" + userInfo, OrderApi.class);
 
         // Emit a welcome message to the subscriber
-        Flux<OrderDto> welcomeMessage = Flux.just(orderService.getOrders().get(0));
+        Flux<List<OrderDto>> welcomeMessage = Flux.just(orderService.getOrders()); //burada ilgili kişi ilk subscribe olduğunda db ye istek atılacak
 
         // Subscribe to events and emit relevant orders
-        Flux<OrderDto> filteredOrders = events
+        Flux<List<OrderDto>> filteredOrders = events
                 .onErrorResume(throwable -> {
                     LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
                     return Flux.empty();
@@ -66,7 +66,7 @@ public class OrderApi {
                 .filter(event -> event.getBusinessDomain().equals(businessDomain) &&
                         event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) &&
                         event.getSubscribeDto().getUserInfo().equals(userInfo))
-                .map(SubscribeKey::getOrder)
+                .map(e-> List.of(e.getOrder()))
                 .onErrorResume(throwable -> {
                     LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
                     return Flux.empty();
