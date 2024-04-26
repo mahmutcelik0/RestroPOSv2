@@ -35,7 +35,7 @@ public class RestroposApplication {
 //        WebClient client = WebClient.create("http://localhost:8080");
 //
 //        Flux<OrderDto> customer = client.get()
-//                .uri("/auth/orders/subdomain1/CUSTOMER/5466053396")
+//                .uri("/auth/orders/subdomain1/CUSTOMER/905511223122")
 //                .retrieve()
 //                .bodyToFlux(OrderDto.class);
 //
