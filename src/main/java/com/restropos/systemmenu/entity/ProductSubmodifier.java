@@ -1,8 +1,11 @@
 package com.restropos.systemmenu.entity;
 
-import com.restropos.systemorder.entity.OrderProduct;
+import com.restropos.systemorder.entity.OrderSelectedModifier;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +35,7 @@ public class ProductSubmodifier {
     private Set<ProductModifier> productModifiers = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.ALL},mappedBy = "productSubmodifiers")
-    private Set<OrderProduct> orderProducts = new HashSet<>();
+    private Set<OrderSelectedModifier> orderSelectedModifiers = new HashSet<>();
 
     public ProductSubmodifier(String productSubmodifierName, Double price) {
         this.productSubmodifierName = productSubmodifierName;

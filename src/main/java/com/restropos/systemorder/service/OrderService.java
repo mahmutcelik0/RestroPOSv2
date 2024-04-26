@@ -11,8 +11,8 @@ import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemorder.entity.OrderProduct;
+import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
-import com.restropos.systemorder.populator.OrderProductDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +32,6 @@ public class OrderService {
 
     @Autowired
     private ProductService productService;
-    @Autowired
-    private OrderProductDtoPopulator orderProductDtoPopulator;
     @Autowired
     private OrderDtoPopulator orderDtoPopulator;
     @Autowired
@@ -79,9 +77,12 @@ public class OrderService {
         if (!CollectionUtils.isEmpty(orderProductDto.getProductSelectedModifiers())) {
             orderProductDto.getProductSelectedModifiers().forEach(productSelectedModifierDto -> {
                 AtomicBoolean modifierFound = new AtomicBoolean(false);
+                OrderSelectedModifier orderSelectedModifier = new OrderSelectedModifier();
                 product.getProductModifiers().forEach(productModifier -> {
                     if (productSelectedModifierDto.getName().equalsIgnoreCase(productModifier.getProductModifierName())) {
                         modifierFound.set(true);
+                        orderSelectedModifier.setOrderProducts(orderProduct); //dene
+                        orderSelectedModifier.setProductModifier(productModifier);
                         if (!CollectionUtils.isEmpty(productSelectedModifierDto.getSelections())) {
                             productSelectedModifierDto.getSelections().forEach(productSelectedSubmodifierDto -> {
                                 AtomicBoolean submodifierFound = new AtomicBoolean(false);
@@ -89,16 +90,16 @@ public class OrderService {
                                     if (productSelectedSubmodifierDto.getLabel().equalsIgnoreCase(productSubmodifier.getProductSubmodifierName())) {
                                         submodifierFound.set(true);
                                         totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + productSubmodifier.getPrice());
-                                        orderProduct.getProductSubmodifiers().add(productSubmodifier);
+                                        orderSelectedModifier.getProductSubmodifiers().add(productSubmodifier);
                                     }
                                 });
                                 if (!submodifierFound.get()) throw new RuntimeException("SUBMODIFIER NOT FOUND");
                             });
                         }
-                        orderProduct.getProductModifiers().add(productModifier);
                     }
                 });
                 if (!modifierFound.get()) throw new RuntimeException("MODIFIER NOT FOUND");
+                orderProduct.getOrderSelectedModifiers().add(orderSelectedModifier);
             });
         }
 

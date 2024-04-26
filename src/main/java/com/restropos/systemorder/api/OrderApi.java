@@ -58,19 +58,13 @@ public class OrderApi {
         Flux<List<OrderDto>> welcomeMessage = Flux.just(orderService.getOrders()); //burada ilgili kişi ilk subscribe olduğunda db ye istek atılacak
 
         // Subscribe to events and emit relevant orders
-        Flux<List<OrderDto>> filteredOrders = events
-                .onErrorResume(throwable -> {
-                    LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
-                    return Flux.empty();
-                })
-                .filter(event -> event.getBusinessDomain().equals(businessDomain) &&
-                        event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) &&
-                        event.getSubscribeDto().getUserInfo().equals(userInfo))
-                .map(e-> List.of(e.getOrder()))
-                .onErrorResume(throwable -> {
-                    LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
-                    return Flux.empty();
-                });
+        Flux<List<OrderDto>> filteredOrders = events.onErrorResume(throwable -> {
+            LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
+            return Flux.empty();
+        }).filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(e -> List.of(e.getOrder())).onErrorResume(throwable -> {
+            LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
+            return Flux.empty();
+        });
 
         // Concatenate the welcome message and filtered orders
         return Flux.concat(welcomeMessage, filteredOrders).share();
@@ -78,14 +72,12 @@ public class OrderApi {
 
 
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto,@RequestParam String businessDomain) throws NotFoundException { //req paramı değiş
-        LogUtil.printLog("EVENT TRIGGERED:"+orderDto, OrderApi.class);
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto, @RequestParam String businessDomain) throws NotFoundException {
+        LogUtil.printLog("EVENT TRIGGERED:" + orderDto, OrderApi.class);
         Order order = orderService.createOrder(orderDto);
-        events.onNext(new SubscribeKey("subdomain1",new SubscribeDto(UserTypes.CUSTOMER,"905511223122"),orderDto));
         List<SystemUser> waiters = systemUserService.getAllWaiters();
         OrderDto response = orderDtoPopulator.populate(order);
-        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain,new SubscribeDto(UserTypes.WAITER,waiter.getEmail()),response)));
-
+        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.WAITER, waiter.getEmail()), response)));
         return ResponseEntity.ok(response);
     }
 
