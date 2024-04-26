@@ -14,6 +14,8 @@ import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
+import com.restropos.systemshop.service.CustomerService;
+import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -36,6 +38,8 @@ public class OrderService {
     private OrderDtoPopulator orderDtoPopulator;
     @Autowired
     private WorkspaceTableService workspaceTableService;
+    @Autowired
+    private CustomerService customerService;
 
     public Order createOrder(OrderDto orderDto) throws NotFoundException {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
@@ -43,6 +47,7 @@ public class OrderService {
                 .orderStatus(OrderStatus.RECEIVED)
                 .orderCreationTime(LocalDateTime.now())
                 .workspaceTable(workspaceTableService.getWorkspaceTableById(orderDto.getWorkspaceTableDto().getTableId()))
+                .customer(customerService.findCustomerByPhoneNumber(orderDto.getCustomerDto().getPhoneNumber()))
                 .build();
 
         List<OrderProduct> orderProducts = orderProductDtoList.stream().map(e -> {
@@ -109,5 +114,13 @@ public class OrderService {
 
     public List<OrderDto> getOrders() {
         return orderDtoPopulator.populateAll(orderRepository.findAll());
+    }
+
+    public List<OrderDto> getCustomerActiveOrders(String phoneNumber,String businessDomain){
+        return orderDtoPopulator.populateAll(orderRepository.findAllByPhoneNumberAndBusinessDomainAndStatus(phoneNumber,businessDomain,OrderStatus.RECEIVED));
+    }
+
+    public List<OrderDto> getActiveOrders(String businessDomain) {
+        return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomainAndStatus(businessDomain,OrderStatus.RECEIVED));
     }
 }

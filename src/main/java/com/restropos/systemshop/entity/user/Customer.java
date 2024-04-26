@@ -1,10 +1,13 @@
 package com.restropos.systemshop.entity.user;
 
+import com.restropos.systemorder.entity.Order;
 import com.restropos.systemshop.entity.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "CUSTOMERS")
@@ -41,5 +44,8 @@ public class Customer{
     @Column(name = "LOGIN_DISABLED",nullable = false)
     @Builder.Default
     private boolean loginDisabled = true;
+
+    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "customer")
+    private List<Order> orders;
 
 }

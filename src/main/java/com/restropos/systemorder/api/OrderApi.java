@@ -55,13 +55,18 @@ public class OrderApi {
         LogUtil.printLog("CONNECTED TO:" + businessDomain + "-" + userType + "-" + userInfo, OrderApi.class);
 
         // Emit a welcome message to the subscriber
-        Flux<List<OrderDto>> welcomeMessage = Flux.just(orderService.getOrders()); //burada ilgili kişi ilk subscribe olduğunda db ye istek atılacak
+        Flux<List<OrderDto>> welcomeMessage = null;
+        if (userType.equalsIgnoreCase(UserTypes.CUSTOMER.getName())) {
+            welcomeMessage = Flux.just(orderService.getCustomerActiveOrders(userInfo, businessDomain));
+        } else if (userType.equalsIgnoreCase(UserTypes.WAITER.name())) {
+            welcomeMessage = Flux.just(orderService.getActiveOrders(businessDomain));
+        }
 
         // Subscribe to events and emit relevant orders
         Flux<List<OrderDto>> filteredOrders = events.onErrorResume(throwable -> {
             LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
             return Flux.empty();
-        }).filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(e -> List.of(e.getOrder())).onErrorResume(throwable -> {
+        }).filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(SubscribeKey::getOrder).onErrorResume(throwable -> {
             LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
             return Flux.empty();
         });
@@ -77,7 +82,12 @@ public class OrderApi {
         Order order = orderService.createOrder(orderDto);
         List<SystemUser> waiters = systemUserService.getAllWaiters();
         OrderDto response = orderDtoPopulator.populate(order);
-        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.WAITER, waiter.getEmail()), response)));
+        List<OrderDto> activeOrders = orderService.getActiveOrders(businessDomain);
+        List<OrderDto> customerActiveOrders = orderService.getCustomerActiveOrders(orderDto.getCustomerDto().getPhoneNumber(), businessDomain);
+
+        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.WAITER, waiter.getEmail()), activeOrders)));
+        events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.CUSTOMER, orderDto.getCustomerDto().getPhoneNumber()), customerActiveOrders));
+
         return ResponseEntity.ok(response);
     }
 

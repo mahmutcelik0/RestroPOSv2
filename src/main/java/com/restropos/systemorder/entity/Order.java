@@ -2,14 +2,13 @@ package com.restropos.systemorder.entity;
 
 import com.restropos.systemmenu.entity.WorkspaceTable;
 import com.restropos.systemorder.OrderStatus;
-import com.restropos.systemorder.dto.OrderProductDto;
+import com.restropos.systemshop.entity.user.Customer;
+import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "ORDERS")
@@ -34,4 +33,19 @@ public class Order {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private WorkspaceTable workspaceTable;
 
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    private Customer customer;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinColumn(name = "WAITER_ID",referencedColumnName = "USER_ID")
+    private SystemUser waiter;
+
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinColumn(name = "KITCHEN_ID",referencedColumnName = "USER_ID")
+    private SystemUser kitchen;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinColumn(name = "CASH_DESK_ID",referencedColumnName = "USER_ID")
+    private SystemUser cashDesk;
 }
