@@ -1,13 +1,13 @@
 package com.restropos.systemmenu.entity;
 
 import com.restropos.systemmenu.constants.ChoiceEnum;
-import com.restropos.systemorder.entity.Order;
-import com.restropos.systemorder.entity.OrderProduct;
+import com.restropos.systemorder.entity.OrderSelectedModifier;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -55,7 +55,6 @@ public class ProductModifier implements Serializable {
     @Enumerated
     private ChoiceEnum choice;
 
-    @ManyToMany(cascade = {CascadeType.ALL},mappedBy = "productModifiers")
-    private Set<OrderProduct> orderProducts = new HashSet<>();
-
+    @OneToMany(cascade = {CascadeType.ALL},mappedBy = "productModifier")
+    private List<OrderSelectedModifier> orderSelectedModifiers;
 }
