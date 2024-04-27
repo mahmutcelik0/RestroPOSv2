@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -21,7 +21,7 @@ public class OrderDto {
     private List<OrderProductDto> orderProducts;
     private Long totalOrderPrice;
     private OrderStatus orderStatus;
-    private LocalDateTime orderCreationTime;
+    private Date orderCreationTime;
     private WorkspaceTableDto workspaceTableDto;
     private CustomerDto customerDto;
     private SystemUserDto waiterDto;

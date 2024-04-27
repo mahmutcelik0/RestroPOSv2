@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -45,7 +47,7 @@ public class OrderService {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
         Order order = Order.builder()
                 .orderStatus(OrderStatus.RECEIVED)
-                .orderCreationTime(LocalDateTime.now())
+                .orderCreationTime(new Date())
                 .workspaceTable(workspaceTableService.getWorkspaceTableById(orderDto.getWorkspaceTableDto().getTableId()))
                 .customer(customerService.findCustomerByPhoneNumber(orderDto.getCustomerDto().getPhoneNumber()))
                 .build();
@@ -122,5 +124,10 @@ public class OrderService {
 
     public List<OrderDto> getActiveOrders(String businessDomain) {
         return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomainAndStatus(businessDomain,OrderStatus.RECEIVED));
+    }
+
+    public OrderDto getOrder(Long orderId) {
+        return orderDtoPopulator.populate(orderRepository.findById(orderId).orElse(null));
+
     }
 }

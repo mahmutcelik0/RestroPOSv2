@@ -48,7 +48,11 @@ public class ImageService {
         try {
             ClassPathResource serviceAccount = new ClassPathResource("firebase.json");
 
-            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream())).setStorageBucket(firebaseBucketName).build();
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount.getInputStream()))
+                    .setStorageBucket(firebaseBucketName)
+                    .setDatabaseUrl("https://restropos.firebaseio.com")
+                    .build();
 
             FirebaseApp.initializeApp(options);
 

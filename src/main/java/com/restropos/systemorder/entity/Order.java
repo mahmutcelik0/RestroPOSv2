@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,7 +30,7 @@ public class Order {
 
     private Long totalOrderPrice;
 
-    private LocalDateTime orderCreationTime;
+    private Date orderCreationTime;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private WorkspaceTable workspaceTable;
