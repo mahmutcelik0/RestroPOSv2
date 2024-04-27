@@ -56,8 +56,35 @@ public class OrderApi  implements WebMvcConfigurer{
 //    }
 
     @Transactional
-    @GetMapping(value = "/{businessDomain}/{userType}/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<List<OrderDto>> getEvents(@PathVariable String businessDomain, @PathVariable String userType, @PathVariable String userInfo) {
+    @GetMapping(value = "/{businessDomain}/CUSTOMER/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<List<OrderDto>> getEventsForCustomer(@PathVariable String businessDomain, @PathVariable String userInfo) {
+        String userType = UserTypes.CUSTOMER.name();
+        LogUtil.printLog("CONNECTED TO:" + businessDomain + "-" + userType + "-" + userInfo, OrderApi.class);
+
+        // Emit a welcome message to the subscriber
+        Flux<List<OrderDto>> welcomeMessage = null;
+        if (userType.equalsIgnoreCase(UserTypes.CUSTOMER.getName())) {
+            welcomeMessage = Flux.just(orderService.getCustomerActiveOrders(userInfo, businessDomain));
+        } else if (userType.equalsIgnoreCase(UserTypes.WAITER.name())) {
+            welcomeMessage = Flux.just(orderService.getActiveOrders(businessDomain));
+        }
+
+        // Subscribe to events and emit relevant orders
+        Flux<List<OrderDto>> filteredOrders = events.onErrorResume(throwable -> {
+            LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
+            return Flux.empty();
+        }).filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(SubscribeKey::getOrder).onErrorResume(throwable -> {
+            LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
+            return Flux.empty();
+        });
+
+        // Concatenate the welcome message and filtered orders
+        return Flux.concat(welcomeMessage, filteredOrders).share();
+    }
+
+    @GetMapping(value = "/{businessDomain}/WAITER/{userInfo}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<List<OrderDto>> getEventsForWaiter(@PathVariable String businessDomain, @PathVariable String userInfo) {
+        String userType = UserTypes.WAITER.name();
         LogUtil.printLog("CONNECTED TO:" + businessDomain + "-" + userType + "-" + userInfo, OrderApi.class);
 
         // Emit a welcome message to the subscriber
@@ -92,8 +119,8 @@ public class OrderApi  implements WebMvcConfigurer{
         List<OrderDto> activeOrders = orderService.getActiveOrders(businessDomain);
         List<OrderDto> customerActiveOrders = orderService.getCustomerActiveOrders(orderDto.getCustomerDto().getPhoneNumber(), businessDomain);
 
-        waiters.forEach(waiter -> events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.WAITER, waiter.getEmail()), activeOrders)));
-        events.onNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.CUSTOMER, orderDto.getCustomerDto().getPhoneNumber()), customerActiveOrders));
+        waiters.forEach(waiter -> events.tryEmitNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.WAITER, waiter.getEmail()), activeOrders)));
+        events.tryEmitNext(new SubscribeKey(businessDomain, new SubscribeDto(UserTypes.CUSTOMER, orderDto.getCustomerDto().getPhoneNumber()), customerActiveOrders));
 
         return ResponseEntity.ok(response);
     }
