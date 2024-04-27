@@ -33,9 +33,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getAllValidationResults().get(0).getResolvableErrors().get(0).getDefaultMessage()));
     }
 
-    @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<ResponseMessage> handleRuntimeException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
-    }
+//    @ExceptionHandler({RuntimeException.class})
+//    public ResponseEntity<ResponseMessage> handleRuntimeException(RuntimeException exception) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
+//    }
 
 }
