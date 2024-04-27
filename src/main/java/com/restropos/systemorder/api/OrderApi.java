@@ -26,7 +26,7 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderApi  implements WebMvcConfigurer{
     @Autowired
     private OrderService orderService;
@@ -60,23 +60,27 @@ public class OrderApi  implements WebMvcConfigurer{
     public Flux<List<OrderDto>> getEvents(@PathVariable String businessDomain, @PathVariable String userType, @PathVariable String userInfo) {
         LogUtil.printLog("CONNECTED TO:" + businessDomain + "-" + userType + "-" + userInfo, OrderApi.class);
 
-//        // Emit a welcome message to the subscriber
-//        Flux<List<OrderDto>> welcomeMessage = null;
-//        if (userType.equalsIgnoreCase(UserTypes.CUSTOMER.getName())) {
-//            welcomeMessage = Flux.just(orderService.getCustomerActiveOrders(userInfo, businessDomain));
-//        } else if (userType.equalsIgnoreCase(UserTypes.WAITER.name())) {
-//            welcomeMessage = Flux.just(orderService.getActiveOrders(businessDomain));
-//        }
+        // Emit a welcome message to the subscriber
+        Flux<List<OrderDto>> welcomeMessage = null;
+        if (userType.equalsIgnoreCase(UserTypes.CUSTOMER.getName())) {
+            welcomeMessage = Flux.just(orderService.getCustomerActiveOrders(userInfo, businessDomain));
+        } else if (userType.equalsIgnoreCase(UserTypes.WAITER.name())) {
+            welcomeMessage = Flux.just(orderService.getActiveOrders(businessDomain));
+        }
 
         // Subscribe to events and emit relevant orders
-        Flux<List<OrderDto>> filteredOrders = events.filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(SubscribeKey::getOrder).onErrorResume(throwable -> {
+        Flux<List<OrderDto>> filteredOrders = events.onErrorResume(throwable -> {
+            LogUtil.printLog("Error occurred while processing events: " + throwable.getMessage(), OrderApi.class);
+            return Flux.empty();
+        }).filter(event -> event.getBusinessDomain().equals(businessDomain) && event.getSubscribeDto().getUserType().name().equalsIgnoreCase(userType) && event.getSubscribeDto().getUserInfo().equals(userInfo)).map(SubscribeKey::getOrder).onErrorResume(throwable -> {
             LogUtil.printLog("Error occurred while mapping orders: " + throwable.getMessage(), OrderApi.class);
             return Flux.empty();
         });
 
         // Concatenate the welcome message and filtered orders
-        return filteredOrders.share();
+        return Flux.concat(welcomeMessage, filteredOrders).share();
     }
+
 
 
     @PostMapping
