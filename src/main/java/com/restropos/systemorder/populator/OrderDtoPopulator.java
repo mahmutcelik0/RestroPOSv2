@@ -5,8 +5,10 @@ import com.restropos.systemmenu.populator.WorkspaceTableDtoPopulator;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemshop.populator.CustomerDtoPopulator;
+import com.restropos.systemshop.populator.SystemUserDtoPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 @Component
 public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
@@ -18,6 +20,10 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
 
     @Autowired
     private CustomerDtoPopulator customerDtoPopulator;
+
+    @Autowired
+    private SystemUserDtoPopulator systemUserDtoPopulator;
+
     @Override
     protected OrderDto populate(Order order, OrderDto orderDto) {
         orderDto.setId(String.valueOf(order.getId())); //todo değişecek
@@ -27,6 +33,12 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         orderDto.setOrderCreationTime(order.getOrderCreationTime());
         orderDto.setWorkspaceTableDto(workspaceTableDtoPopulator.populate(order.getWorkspaceTable()));
         orderDto.setCustomerDto(customerDtoPopulator.populate(order.getCustomer()));
+        if(!ObjectUtils.isEmpty(order.getCustomer())){
+            orderDto.setWaiterDto(systemUserDtoPopulator.populate(order.getWaiter()));
+        }
+        if(!ObjectUtils.isEmpty(order.getKitchen())){
+            orderDto.setKitchenDto(systemUserDtoPopulator.populate(order.getKitchen()));
+        }
         return orderDto;
     }
 

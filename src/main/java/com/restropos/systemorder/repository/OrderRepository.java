@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Query("select o from Order as o where o.workspaceTable.workspace.businessDomain =?1 and o.orderStatus =?2 ")
     List<Order> findAllBusinessDomainAndStatus( String businessDomain, OrderStatus orderStatus);
 
+    @Query("select o from Order as o where o.id = ?1 and o.workspaceTable.workspace.businessDomain =?2")
+    Optional<Order> findByIdAndBusinessDomain(String orderId,String businessDomain);
 }

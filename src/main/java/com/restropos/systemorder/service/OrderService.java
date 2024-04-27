@@ -3,6 +3,8 @@ package com.restropos.systemorder.service;
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.WrongCredentialsException;
+import com.restropos.systemcore.model.ResponseMessage;
+import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.service.ProductService;
 import com.restropos.systemmenu.service.WorkspaceTableService;
@@ -14,18 +16,18 @@ import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
+import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.CustomerService;
 import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,7 +45,13 @@ public class OrderService {
     @Autowired
     private CustomerService customerService;
 
-    public Order createOrder(OrderDto orderDto) throws NotFoundException {
+    @Autowired
+    private FirebaseService firebaseService;
+
+    @Autowired
+    private SecurityProvideService securityProvideService;
+
+    public ResponseEntity<ResponseMessage> createOrder(OrderDto orderDto) throws NotFoundException {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
         Order order = Order.builder()
                 .orderStatus(OrderStatus.RECEIVED)
@@ -70,7 +78,10 @@ public class OrderService {
         order.setOrderProducts(orderProducts);
         order.setTotalOrderPrice(calculateTotalOrderPrice(orderProducts));
         orderRepository.save(order);
-        return order;
+
+        OrderDto response = orderDtoPopulator.populate(order);
+        firebaseService.save(response);
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.ORDER_CREATED));
     }
 
     private Long calculateTotalOrderPrice(List<OrderProduct> orderProducts) {
@@ -129,5 +140,25 @@ public class OrderService {
     public OrderDto getOrder(Long orderId) {
         return orderDtoPopulator.populate(orderRepository.findById(orderId).orElse(null));
 
+    }
+
+    public ResponseEntity<ResponseMessage> waiterTakeOrder(String orderId) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        Order order =  orderRepository.findByIdAndBusinessDomain(orderId,systemUser.getWorkspace().getBusinessDomain()).orElseThrow(()-> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        order.setWaiter(systemUser);
+        order.setOrderStatus(OrderStatus.PREPARING);
+        orderRepository.save(order);
+        firebaseService.save(orderDtoPopulator.populate(order));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.WAITER_HAS_TAKEN_ORDER));
+    }
+
+    public ResponseEntity<ResponseMessage> kitchenTakeOrder(String orderId) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        Order order =  orderRepository.findByIdAndBusinessDomain(orderId,systemUser.getWorkspace().getBusinessDomain()).orElseThrow(()-> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        order.setKitchen(systemUser);
+        order.setOrderStatus(OrderStatus.SERVING);
+        orderRepository.save(order);
+        firebaseService.save(orderDtoPopulator.populate(order));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.KITCHEN_HAS_PREPARED_ORDER));
     }
 }

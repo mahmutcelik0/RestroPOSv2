@@ -65,6 +65,9 @@ public class CustomResponseMessage {
     public static final String WORKSPACE_TABLE_REMOVED_SUCCESSFULLY = "Workspace table removed successfully";
     public static final String PRICE_IS_NOT_VALID = "Price is not valid";
     public static final String ORDER_CREATED = "Order created";
+    public static final String ORDER_NOT_FOUND = "Order not found";
+    public static final String WAITER_HAS_TAKEN_ORDER = "Waiter has take order";
+    public static final String KITCHEN_HAS_PREPARED_ORDER = "Kitchen has prepared order";
 
     private CustomResponseMessage(){
     }

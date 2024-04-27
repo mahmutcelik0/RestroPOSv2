@@ -25,4 +25,5 @@ public class OrderDto {
     private WorkspaceTableDto workspaceTableDto;
     private CustomerDto customerDto;
     private SystemUserDto waiterDto;
+    private SystemUserDto kitchenDto;
 }
