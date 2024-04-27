@@ -33,11 +33,14 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         orderDto.setOrderCreationTime(order.getOrderCreationTime());
         orderDto.setWorkspaceTableDto(workspaceTableDtoPopulator.populate(order.getWorkspaceTable()));
         orderDto.setCustomerDto(customerDtoPopulator.populate(order.getCustomer()));
-        if(!ObjectUtils.isEmpty(order.getCustomer())){
+        if(!ObjectUtils.isEmpty(order.getWaiter())){
             orderDto.setWaiterDto(systemUserDtoPopulator.populate(order.getWaiter()));
         }
         if(!ObjectUtils.isEmpty(order.getKitchen())){
             orderDto.setKitchenDto(systemUserDtoPopulator.populate(order.getKitchen()));
+        }
+        if(!ObjectUtils.isEmpty(order.getCashDesk())){
+            orderDto.setCashDeskDto(systemUserDtoPopulator.populate(order.getCashDesk()));
         }
         return orderDto;
     }

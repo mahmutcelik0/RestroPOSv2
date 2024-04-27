@@ -18,16 +18,16 @@ import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.CustomerService;
-import com.restropos.systemshop.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -53,12 +53,7 @@ public class OrderService {
 
     public ResponseEntity<ResponseMessage> createOrder(OrderDto orderDto) throws NotFoundException {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
-        Order order = Order.builder()
-                .orderStatus(OrderStatus.RECEIVED)
-                .orderCreationTime(new Date())
-                .workspaceTable(workspaceTableService.getWorkspaceTableById(orderDto.getWorkspaceTableDto().getTableId()))
-                .customer(customerService.findCustomerByPhoneNumber(orderDto.getCustomerDto().getPhoneNumber()))
-                .build();
+        Order order = Order.builder().orderStatus(OrderStatus.RECEIVED).orderCreationTime(new Date()).workspaceTable(workspaceTableService.getWorkspaceTableById(orderDto.getWorkspaceTableDto().getTableId())).customer(customerService.findCustomerByPhoneNumber(orderDto.getCustomerDto().getPhoneNumber())).build();
 
         List<OrderProduct> orderProducts = orderProductDtoList.stream().map(e -> {
             try {
@@ -81,7 +76,7 @@ public class OrderService {
 
         OrderDto response = orderDtoPopulator.populate(order);
         firebaseService.save(response);
-        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.ORDER_CREATED));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.ORDER_CREATED));
     }
 
     private Long calculateTotalOrderPrice(List<OrderProduct> orderProducts) {
@@ -125,40 +120,78 @@ public class OrderService {
             throw new RuntimeException("PRICE IS NOT VALID");
     }
 
-    public List<OrderDto> getOrders() {
-        return orderDtoPopulator.populateAll(orderRepository.findAll());
-    }
-
-    public List<OrderDto> getCustomerActiveOrders(String phoneNumber,String businessDomain){
-        return orderDtoPopulator.populateAll(orderRepository.findAllByPhoneNumberAndBusinessDomainAndStatus(phoneNumber,businessDomain,OrderStatus.RECEIVED));
-    }
-
-    public List<OrderDto> getActiveOrders(String businessDomain) {
-        return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomainAndStatus(businessDomain,OrderStatus.RECEIVED));
-    }
-
-    public OrderDto getOrder(Long orderId) {
-        return orderDtoPopulator.populate(orderRepository.findById(orderId).orElse(null));
-
-    }
-
     public ResponseEntity<ResponseMessage> waiterTakeOrder(String orderId) throws NotFoundException {
         SystemUser systemUser = securityProvideService.getSystemUser();
-        Order order =  orderRepository.findByIdAndBusinessDomain(orderId,systemUser.getWorkspace().getBusinessDomain()).orElseThrow(()-> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
         order.setWaiter(systemUser);
         order.setOrderStatus(OrderStatus.PREPARING);
         orderRepository.save(order);
         firebaseService.save(orderDtoPopulator.populate(order));
-        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.WAITER_HAS_TAKEN_ORDER));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.WAITER_HAS_TAKEN_ORDER));
     }
 
     public ResponseEntity<ResponseMessage> kitchenTakeOrder(String orderId) throws NotFoundException {
         SystemUser systemUser = securityProvideService.getSystemUser();
-        Order order =  orderRepository.findByIdAndBusinessDomain(orderId,systemUser.getWorkspace().getBusinessDomain()).orElseThrow(()-> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
         order.setKitchen(systemUser);
         order.setOrderStatus(OrderStatus.SERVING);
         orderRepository.save(order);
         firebaseService.save(orderDtoPopulator.populate(order));
-        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK,CustomResponseMessage.KITCHEN_HAS_PREPARED_ORDER));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.KITCHEN_HAS_PREPARED_ORDER));
+    }
+
+    public ResponseEntity<ResponseMessage> waiterServeOrder(String orderId) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        order.setOrderStatus(OrderStatus.ON_TABLE);
+        orderRepository.save(order);
+        firebaseService.save(orderDtoPopulator.populate(order));
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.WAITER_HAS_SERVED_ORDER));
+    }
+
+    public ResponseEntity<ResponseMessage> cashDeskPay(String orderId) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        firebaseService.delete(orderDtoPopulator.populate(order));
+        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setCashDesk(systemUser);
+        orderRepository.save(order);
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.CASH_DESK_PAID));
+    }
+
+    public ResponseEntity<ResponseMessage> cashDeskPayAll(List<String> orderIdList) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        orderIdList.forEach(e -> {
+            Order order = null;
+            try {
+                order = orderRepository.findByIdAndBusinessDomain(e, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+            } catch (NotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+            firebaseService.delete(orderDtoPopulator.populate(order));
+            order.setOrderStatus(OrderStatus.COMPLETED);
+            order.setCashDesk(systemUser);
+            orderRepository.save(order);
+        });
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.CASH_DESK_PAID));
+    }
+
+    public ResponseEntity<ResponseMessage> kitchenCancelOrder(String orderId) throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, systemUser.getWorkspace().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        firebaseService.delete(orderDtoPopulator.populate(order));
+        order.setOrderStatus(OrderStatus.CANCELED);
+        order.setKitchen(systemUser);
+        orderRepository.save(order);
+        return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK, CustomResponseMessage.KITCHEN_HAS_CANCELED_ORDER));
+    }
+
+    public List<OrderDto> getCustomerOrders(String customerInfo, String businessDomain) {
+        return orderDtoPopulator.populateAll(orderRepository.findByCustomerInfoAndBusinessDomainAndStatus(customerInfo, businessDomain, OrderStatus.COMPLETED, OrderStatus.CANCELED));
+    }
+
+    public List<OrderDto> getBusinessOrders() throws NotFoundException {
+        SystemUser systemUser = securityProvideService.getSystemUser();
+        return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomain(systemUser.getWorkspace().getBusinessDomain()));
     }
 }

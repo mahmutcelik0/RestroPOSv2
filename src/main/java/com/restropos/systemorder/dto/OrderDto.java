@@ -26,4 +26,5 @@ public class OrderDto {
     private CustomerDto customerDto;
     private SystemUserDto waiterDto;
     private SystemUserDto kitchenDto;
+    private SystemUserDto cashDeskDto;
 }

@@ -68,6 +68,9 @@ public class CustomResponseMessage {
     public static final String ORDER_NOT_FOUND = "Order not found";
     public static final String WAITER_HAS_TAKEN_ORDER = "Waiter has take order";
     public static final String KITCHEN_HAS_PREPARED_ORDER = "Kitchen has prepared order";
+    public static final String WAITER_HAS_SERVED_ORDER ="Waiter served order" ;
+    public static final String CASH_DESK_PAID = "Cash desk paid";
+    public static final String KITCHEN_HAS_CANCELED_ORDER = "Kitchen has canceled order";
 
     private CustomResponseMessage(){
     }
