@@ -102,7 +102,7 @@ public class OrderService {
                                 productModifier.getProductSubmodifierSet().forEach(productSubmodifier -> {
                                     if (productSelectedSubmodifierDto.getLabel().equalsIgnoreCase(productSubmodifier.getProductSubmodifierName())) {
                                         submodifierFound.set(true);
-                                        totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + productSubmodifier.getPrice());
+                                        totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + (productSubmodifier.getPrice()*orderProductDto.getQuantity()));
                                         orderSelectedModifier.getProductSubmodifiers().add(productSubmodifier);
                                     }
                                 });
