@@ -23,8 +23,8 @@ public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
 
     boolean existsSystemUserByEmail(String email);
 
-    @Query("select s from SystemUser as s where s.role.roleName != ?1")
-    List<SystemUser> getAllStaffsExceptRole(String userType);
+    @Query("select s from SystemUser as s where s.role.roleName != ?1 and s.workspace.businessDomain= ?2")
+    List<SystemUser> getAllStaffsExceptRole(String userType,String businessDomain);
 
 
 }

@@ -4,6 +4,7 @@ import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
+import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemshop.constants.UserTypes;
 import com.restropos.systemshop.dto.SystemUserDto;
 import com.restropos.systemshop.dto.SystemUserDtoResponse;
@@ -31,6 +32,9 @@ public class SystemUserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private SecurityProvideService securityProvideService;
 
     public SystemUser save(SystemUser systemUser) {
         return systemUserRepository.save(systemUser);
@@ -85,8 +89,9 @@ public class SystemUserService {
         return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsByRoleName(userType.getName()));
     }
 
-    public List<SystemUserDtoResponse> getAllStaffsExceptAdminDto() {
-        return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsExceptRole(UserTypes.ADMIN.getName()));
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdminDto() throws NotFoundException {
+        ;
+        return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsExceptRole(UserTypes.ADMIN.getName(),securityProvideService.getWorkspace().getBusinessDomain()));
     }
 
     public List<SystemUser> getAllWaiters() {
