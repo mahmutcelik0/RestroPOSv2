@@ -84,9 +84,13 @@ public class SecurityConfig {
         subdomainOrigins.add("http://subdomain1.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://subdomain2.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://subdomain3.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("http://lazy-pizza.localhost:5173"); //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+
         subdomainOrigins.add("https://subdomain1.restropos.software");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("https://subdomain2.restropos.software");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("https://subdomain3.restropos.software");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+        subdomainOrigins.add("https://lazy-pizza.restropos.software");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
+
         subdomainOrigins.add("http://localhost:5173");  //todo SEDAT OZEL ISTEK ILERDE SILINMESI SART
         subdomainOrigins.add("http://**.localhost:5173");
         subdomainOrigins.add("https://**.restropos.software");
