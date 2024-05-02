@@ -5,6 +5,7 @@ import com.restropos.systemcore.exception.AlreadyUsedException;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.exception.UnauthorizedException;
 import com.restropos.systemcore.model.ResponseMessage;
+import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemcore.utils.LogUtil;
 import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemimage.service.ImageService;
@@ -54,6 +55,9 @@ public class UserFacade {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private SecurityProvideService securityProvideService;
+
     public ResponseEntity<ResponseMessage> registerNewCustomer(CustomerDto customerDto, MultipartFile multipartFile) throws AlreadyUsedException, NotFoundException, IOException {
         if (customerService.checkCustomerExists(customerDto.getPhoneNumber())) {
             throw new AlreadyUsedException(CustomResponseMessage.PHONE_NUMBER_ALREADY_USED);
@@ -97,8 +101,9 @@ public class UserFacade {
         return systemUserService.getStaffByRole(userType);
     }
 
-    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin() {
-        return systemUserService.getAllStaffsExceptAdminDto();
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin() throws NotFoundException {
+
+        return systemUserService.getAllStaffsExceptAdminDto(securityProvideService.getWorkspace().getBusinessDomain());
     }
 
     public ResponseEntity<SystemUserDtoResponse> addNewStaff(SystemUserDto systemUserDto) throws NotFoundException {

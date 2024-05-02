@@ -26,7 +26,7 @@ public class StaffApi {
     }
 
     @GetMapping
-    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin(){
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdmin() throws NotFoundException {
         return userFacade.getAllStaffsExceptAdmin();
     }
 

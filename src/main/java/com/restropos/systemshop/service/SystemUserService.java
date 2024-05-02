@@ -33,9 +33,6 @@ public class SystemUserService {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private SecurityProvideService securityProvideService;
-
     public SystemUser save(SystemUser systemUser) {
         return systemUserRepository.save(systemUser);
     }
@@ -89,9 +86,9 @@ public class SystemUserService {
         return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsByRoleName(userType.getName()));
     }
 
-    public List<SystemUserDtoResponse> getAllStaffsExceptAdminDto() throws NotFoundException {
+    public List<SystemUserDtoResponse> getAllStaffsExceptAdminDto(String businessDomain) throws NotFoundException {
         ;
-        return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsExceptRole(UserTypes.ADMIN.getName(),securityProvideService.getWorkspace().getBusinessDomain()));
+        return systemUserDtoResponsePopulator.populateAll(systemUserRepository.getAllStaffsExceptRole(UserTypes.ADMIN.getName(),businessDomain));
     }
 
     public List<SystemUser> getAllWaiters() {
