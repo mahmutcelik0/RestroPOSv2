@@ -3,6 +3,7 @@ package com.restropos.systemorder.api;
 import com.restropos.systemcore.exception.NotFoundException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemorder.dto.OrderDto;
+import com.restropos.systemorder.dto.ReviewDto;
 import com.restropos.systemorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,5 +61,10 @@ public class OrderApi  implements WebMvcConfigurer{
     @GetMapping("/admin")
     public List<OrderDto> getBusinessOrders() throws NotFoundException {
         return orderService.getBusinessOrders();
+    }
+
+    @PutMapping("/review/{businessDomain}/{orderId}")
+    public ResponseEntity<ResponseMessage> reviewOrder(@PathVariable String businessDomain, @PathVariable String orderId, @RequestBody ReviewDto reviewDto) throws NotFoundException {
+        return orderService.reviewOrder(businessDomain,orderId,reviewDto);
     }
 }

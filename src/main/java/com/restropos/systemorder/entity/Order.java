@@ -50,4 +50,6 @@ public class Order {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "CASH_DESK_ID",referencedColumnName = "USER_ID")
     private SystemUser cashDesk;
+
+    private String userReviewComment;
 }

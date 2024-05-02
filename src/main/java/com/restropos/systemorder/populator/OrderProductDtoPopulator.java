@@ -8,6 +8,7 @@ import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.entity.OrderProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,9 @@ public class OrderProductDtoPopulator extends AbstractPopulator<OrderProduct, Or
             productSelectedModifierDto.setSelections(selections);
             productSelectedModifierDtos.add(productSelectedModifierDto);
         });
-
+        if(!ObjectUtils.isEmpty(orderProduct.getUserReviewStar())){
+            orderProductDto.setUserReviewStar(orderProduct.getUserReviewStar());
+        }
         orderProductDto.setProductSelectedModifiers(productSelectedModifierDtos);
         return orderProductDto;
     }

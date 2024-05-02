@@ -11,11 +11,13 @@ import com.restropos.systemmenu.service.WorkspaceTableService;
 import com.restropos.systemorder.OrderStatus;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
+import com.restropos.systemorder.dto.ReviewDto;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,5 +195,12 @@ public class OrderService {
     public List<OrderDto> getBusinessOrders() throws NotFoundException {
         SystemUser systemUser = securityProvideService.getSystemUser();
         return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomain(systemUser.getWorkspace().getBusinessDomain()));
+    }
+
+    public ResponseEntity<ResponseMessage> reviewOrder(String businessDomain, String orderId, ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, businessDomain).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        Customer customer = order.getCustomer();
+        if(!reviewDto.getCustomerDto().getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber())) throw new WrongCredentialsException(CustomResponseMessage.CUSTOMER_NOT_FOUND);
+
     }
 }
