@@ -2,7 +2,6 @@ package com.restropos.systemmenu.service;
 
 import com.restropos.systemcore.constants.CustomResponseMessage;
 import com.restropos.systemcore.exception.NotFoundException;
-import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemcore.utils.RequestUtils;
@@ -10,7 +9,6 @@ import com.restropos.systemimage.constants.FolderEnum;
 import com.restropos.systemimage.service.ImageService;
 import com.restropos.systemmenu.constants.ChoiceEnum;
 import com.restropos.systemmenu.dto.ProductDto;
-import com.restropos.systemmenu.dto.ProductSelectedModifierDto;
 import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.entity.ProductModifier;
 import com.restropos.systemmenu.populator.ProductDtoPopulator;
@@ -25,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,7 +114,7 @@ public class ProductService {
     }
 
     public List<ProductDto> getAllProductsForCustomer(String origin) {
-        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomainOrderByProductName(RequestUtils.getDomainFromOrigin(origin)));
+        return productDtoPopulator.populateAll(productRepository.findAllByWorkspaceBusinessDomainOrderByProductName(RequestUtils.getDomainFromOrigin(origin)).stream().sorted((o1, o2) -> o1.getProductName().compareToIgnoreCase(o2.getProductName())).toList());
     }
 
     public boolean existByProductNameAndWorkspace(String productName, String businessDomain) throws NotFoundException {
