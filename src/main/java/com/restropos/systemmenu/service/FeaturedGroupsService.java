@@ -7,6 +7,7 @@ import com.restropos.systemcore.security.SecurityProvideService;
 import com.restropos.systemcore.utils.RequestUtils;
 import com.restropos.systemmenu.dto.FeaturedGroupsDto;
 import com.restropos.systemmenu.entity.FeaturedGroups;
+import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.populator.FeaturedGroupsDtoPopulator;
 import com.restropos.systemmenu.repository.FeaturedGroupsRepository;
 import com.restropos.systemshop.entity.Workspace;
@@ -15,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class FeaturedGroupsService {
@@ -70,6 +74,16 @@ public class FeaturedGroupsService {
     }
 
     public List<FeaturedGroupsDto> getAllFeaturedGroups(String origin)  {
+        List<FeaturedGroups> featuredGroups = featuredGroupsRepository.findAllByWorkspaceBusinessDomainOrderByGroupName(RequestUtils.getDomainFromOrigin(origin));
+        featuredGroups.forEach(e -> {
+            e.setProductSet(sortProductSet(e.getProductSet()));
+        });
         return featuredGroupsDtoPopulator.populateAll(featuredGroupsRepository.findAllByWorkspaceBusinessDomainOrderByGroupName(RequestUtils.getDomainFromOrigin(origin)));
+    }
+
+    private Set<Product> sortProductSet(Set<Product> productSet) {
+        TreeSet<Product> sortedSet = new TreeSet<>(Comparator.comparing(Product::getProductName));
+        sortedSet.addAll(productSet);
+        return sortedSet;
     }
 }
