@@ -1,6 +1,7 @@
 package com.restropos.systemorder.api;
 
 import com.restropos.systemcore.exception.NotFoundException;
+import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.ReviewDto;
@@ -64,7 +65,7 @@ public class OrderApi  implements WebMvcConfigurer{
     }
 
     @PutMapping("/review/{businessDomain}/{orderId}")
-    public ResponseEntity<ResponseMessage> reviewOrder(@PathVariable String businessDomain, @PathVariable String orderId, @RequestBody ReviewDto reviewDto) throws NotFoundException {
+    public ResponseEntity<String> reviewOrder(@PathVariable String businessDomain, @PathVariable String orderId, @RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
         return orderService.reviewOrder(businessDomain,orderId,reviewDto);
     }
 }

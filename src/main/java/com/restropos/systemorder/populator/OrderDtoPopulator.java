@@ -42,8 +42,11 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         if(!ObjectUtils.isEmpty(order.getCashDesk())){
             orderDto.setCashDeskDto(systemUserDtoPopulator.populate(order.getCashDesk()));
         }
-        if(!ObjectUtils.isEmpty(order.getUserReviewComment())){
-            orderDto.setUserReviewComment(order.getUserReviewComment());
+        if(!ObjectUtils.isEmpty(order.getReviewComment())){
+            orderDto.setOrderReviewComment(order.getReviewComment());
+        }
+        if(!ObjectUtils.isEmpty(order.getReviewStar())){
+            orderDto.setOrderReviewStar(order.getReviewStar().getNumber());
         }
 
         return orderDto;

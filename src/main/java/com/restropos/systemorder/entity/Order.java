@@ -2,13 +2,12 @@ package com.restropos.systemorder.entity;
 
 import com.restropos.systemmenu.entity.WorkspaceTable;
 import com.restropos.systemorder.OrderStatus;
+import com.restropos.systemorder.constants.ReviewStar;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -51,5 +50,8 @@ public class Order {
     @JoinColumn(name = "CASH_DESK_ID",referencedColumnName = "USER_ID")
     private SystemUser cashDesk;
 
-    private String userReviewComment;
+    private String reviewComment;
+
+    @Enumerated
+    private ReviewStar reviewStar;
 }

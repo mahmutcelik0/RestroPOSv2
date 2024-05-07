@@ -20,5 +20,5 @@ public class OrderProductDto {
     private Long quantity;
     private List<ProductSelectedModifierDto> productSelectedModifiers;
     private Long calculatedPrice;
-    private ReviewStar userReviewStar;
+    private Integer orderProductReviewStar;
 }
