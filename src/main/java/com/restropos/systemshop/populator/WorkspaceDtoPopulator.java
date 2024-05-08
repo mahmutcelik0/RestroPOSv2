@@ -11,12 +11,13 @@ import org.springframework.util.ObjectUtils;
 public class WorkspaceDtoPopulator extends AbstractPopulator<Workspace, WorkspaceDto> {
     @Autowired
     private ImageDtoPopulator imageDtoPopulator;
+
     @Override
     protected WorkspaceDto populate(Workspace workspace, WorkspaceDto workspaceDto) {
-        if(ObjectUtils.isEmpty(workspace.getImage())){
-            return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),null,0,0.0);
+        if (ObjectUtils.isEmpty(workspace.getImage())) {
+            return new WorkspaceDto(workspace.getBusinessName(), workspace.getBusinessDomain(), null, 0, 0.0);
         }
-        return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),imageDtoPopulator.populate(workspace.getImage()),workspace.getTotalReviewCount(),workspace.getMeanOfWorkspaceStar());
+        return new WorkspaceDto(workspace.getBusinessName(), workspace.getBusinessDomain(), imageDtoPopulator.populate(workspace.getImage()), workspace.getTotalReviewCount() == null ? 0 : workspace.getTotalReviewCount(), workspace.getMeanOfWorkspaceStar() == null ? 0.0:workspace.getMeanOfWorkspaceStar());
     }
 
     @Override
