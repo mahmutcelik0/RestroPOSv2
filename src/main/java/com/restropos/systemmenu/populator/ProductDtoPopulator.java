@@ -29,6 +29,8 @@ public class ProductDtoPopulator extends AbstractPopulator<Product, ProductDto> 
                 .image(imageDtoPopulator.populate(product.getImage()))
                 .price(product.getPrice())
                 .categoryTitle(product.getCategory().getCategoryTitle())
+                .totalReviewCount(product.getTotalReviewCount() == null ? 0 : product.getTotalReviewCount())
+                .meanOfProductStar(product.getMeanOfProductStar() == null ? 0.0 : product.getMeanOfProductStar())
                 .build();
     }
 

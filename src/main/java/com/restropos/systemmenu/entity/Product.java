@@ -50,4 +50,8 @@ public class Product {
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},mappedBy = "product")
     private List<OrderProduct> orderProducts;
 
+    private Integer totalReviewCount = 0;
+
+    @Column(name = "mean_star")
+    private Double meanOfProductStar = 0.0;
 }
