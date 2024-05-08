@@ -42,7 +42,6 @@ public class OrderProductDtoPopulator extends AbstractPopulator<OrderProduct, Or
             orderProductDto.setOrderProductReviewStar(orderProduct.getUserReviewStar());
         }
         orderProductDto.setProductSelectedModifiers(productSelectedModifierDtos);
-        orderProductDto.setOrderProductCommentTime(orderProduct.getOrderProductCommentTime());
         return orderProductDto;
     }
 

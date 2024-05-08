@@ -21,5 +21,4 @@ public class OrderProductDto {
     private List<ProductSelectedModifierDto> productSelectedModifiers;
     private Long calculatedPrice;
     private Integer orderProductReviewStar;
-    private Date orderProductCommentTime;
 }
