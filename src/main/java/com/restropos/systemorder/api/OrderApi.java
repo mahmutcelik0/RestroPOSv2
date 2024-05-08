@@ -64,8 +64,8 @@ public class OrderApi  implements WebMvcConfigurer{
         return orderService.getBusinessOrders();
     }
 
-    @PutMapping("/review/{businessDomain}/{orderId}")
-    public ResponseEntity<String> reviewOrder(@PathVariable String businessDomain, @PathVariable String orderId, @RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
-        return orderService.reviewOrder(businessDomain,orderId,reviewDto);
+    @PutMapping("/review")
+    public ResponseEntity<String> reviewOrder(@RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+        return orderService.reviewOrder(reviewDto);
     }
 }
