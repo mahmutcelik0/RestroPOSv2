@@ -5,6 +5,7 @@ import com.restropos.systemcore.exception.WrongCredentialsException;
 import com.restropos.systemcore.model.ResponseMessage;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.ReviewDto;
+import com.restropos.systemorder.dto.ReviewResponse;
 import com.restropos.systemorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,5 +68,10 @@ public class OrderApi  implements WebMvcConfigurer{
     @PutMapping("/review")
     public ResponseEntity<OrderDto> reviewOrder(@RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
         return orderService.reviewOrder(reviewDto);
+    }
+
+    @GetMapping("/review/{businessDomain}")
+    public ResponseEntity<List<ReviewResponse>> getAllReviewsOfBusinessDomain(@PathVariable String businessDomain) throws WrongCredentialsException {
+        return orderService.getAllReviewsOfBusinessDomain(businessDomain);
     }
 }

@@ -33,6 +33,7 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         orderDto.setOrderCreationTime(order.getOrderCreationTime());
         orderDto.setWorkspaceTableDto(workspaceTableDtoPopulator.populate(order.getWorkspaceTable()));
         orderDto.setCustomerDto(customerDtoPopulator.populate(order.getCustomer()));
+        orderDto.setOrderCommentTime(order.getOrderCommentTime());
         if(!ObjectUtils.isEmpty(order.getWaiter())){
             orderDto.setWaiterDto(systemUserDtoPopulator.populate(order.getWaiter()));
         }

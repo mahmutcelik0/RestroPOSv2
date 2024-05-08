@@ -29,4 +29,5 @@ public class OrderDto {
     private SystemUserDto cashDeskDto;
     private String orderReviewComment;
     private Integer orderReviewStar;
+    private Date orderCommentTime;
 }

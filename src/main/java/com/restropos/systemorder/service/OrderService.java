@@ -12,6 +12,7 @@ import com.restropos.systemorder.OrderStatus;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.dto.ReviewDto;
+import com.restropos.systemorder.dto.ReviewResponse;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
@@ -20,7 +21,9 @@ import com.restropos.systemorder.repository.OrderRepository;
 import com.restropos.systemshop.entity.Workspace;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
+import com.restropos.systemshop.populator.CustomerDtoPopulator;
 import com.restropos.systemshop.service.CustomerService;
+import com.restropos.systemshop.service.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +58,11 @@ public class OrderService {
 
     @Autowired
     private SecurityProvideService securityProvideService;
+
+    @Autowired
+    private WorkspaceService workspaceService;
+    @Autowired
+    private CustomerDtoPopulator customerDtoPopulator;
 
     public ResponseEntity<ResponseMessage> createOrder(OrderDto orderDto) throws NotFoundException {
         List<OrderProductDto> orderProductDtoList = orderDto.getOrderProducts();
@@ -218,11 +226,13 @@ public class OrderService {
             workspace.setMeanOfWorkspaceStar(calculate(workspace.getMeanOfWorkspaceStar(),workspace.getTotalReviewCount(),orderDto.getOrderReviewStar()));
             workspace.setTotalReviewCount(workspace.getTotalReviewCount()+1);
         }
+        order.setOrderCommentTime(new Date());
         if(!CollectionUtils.isEmpty(orderDto.getOrderProducts())){
             orderDto.getOrderProducts().forEach(e -> {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
                         orderProduct.setUserReviewStar(e.getOrderProductReviewStar());
+                        orderProduct.setOrderProductCommentTime(new Date());
                         Product product = orderProduct.getProduct();
                         if(product.getTotalReviewCount() == null) product.setTotalReviewCount(0);
                         if(product.getMeanOfProductStar() == null) product.setMeanOfProductStar(0.0);
@@ -239,5 +249,16 @@ public class OrderService {
 
     private double calculate(Double mean,Integer total,Integer newValue){
         return (mean* total+newValue)/(total+1);
+    }
+
+    public ResponseEntity<List<ReviewResponse>> getAllReviewsOfBusinessDomain(String businessDomain) throws WrongCredentialsException {
+        boolean workspaceExist = workspaceService.checkWorkspaceDomainExists(businessDomain);
+        if(!workspaceExist) throw new WrongCredentialsException(CustomResponseMessage.WORKSPACE_COULD_NOT_FOUND);
+        List<Order> orders = orderRepository.findAllBusinessDomainAndCommented(businessDomain);
+        List<ReviewResponse> responseList = new ArrayList<>();
+        orders.forEach(e->{
+            responseList.add(new ReviewResponse(e.getOrderCommentTime(),e.getReviewComment(),e.getReviewStar(),customerDtoPopulator.populate(e.getCustomer())));
+        });
+        return ResponseEntity.ok(responseList);
     }
 }
