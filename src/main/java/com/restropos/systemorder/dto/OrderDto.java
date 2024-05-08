@@ -27,4 +27,6 @@ public class OrderDto {
     private SystemUserDto waiterDto;
     private SystemUserDto kitchenDto;
     private SystemUserDto cashDeskDto;
+    private String orderReviewComment;
+    private Integer orderReviewStar;
 }

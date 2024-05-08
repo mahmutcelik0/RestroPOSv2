@@ -1,6 +1,7 @@
 package com.restropos.systemorder.entity;
 
 import com.restropos.systemmenu.entity.Product;
+import com.restropos.systemorder.constants.ReviewStar;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,4 +32,7 @@ public class OrderProduct {
 
     @ManyToOne(cascade = {CascadeType.ALL})
     private Order order;
+
+    @Enumerated
+    private ReviewStar userReviewStar;
 }

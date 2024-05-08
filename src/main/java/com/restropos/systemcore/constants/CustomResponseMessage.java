@@ -71,6 +71,7 @@ public class CustomResponseMessage {
     public static final String WAITER_HAS_SERVED_ORDER ="Waiter served order" ;
     public static final String CASH_DESK_PAID = "Cash desk paid";
     public static final String KITCHEN_HAS_CANCELED_ORDER = "Kitchen has canceled order";
+    public static final String REVIEW_SAVED ="Review saved" ;
 
     private CustomResponseMessage(){
     }

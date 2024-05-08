@@ -2,6 +2,7 @@ package com.restropos.systemorder.dto;
 
 import com.restropos.systemmenu.dto.ProductDto;
 import com.restropos.systemmenu.dto.ProductSelectedModifierDto;
+import com.restropos.systemorder.constants.ReviewStar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,5 @@ public class OrderProductDto {
     private Long quantity;
     private List<ProductSelectedModifierDto> productSelectedModifiers;
     private Long calculatedPrice;
+    private Integer orderProductReviewStar;
 }

@@ -9,13 +9,16 @@ import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.service.ProductService;
 import com.restropos.systemmenu.service.WorkspaceTableService;
 import com.restropos.systemorder.OrderStatus;
+import com.restropos.systemorder.constants.ReviewStar;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
+import com.restropos.systemorder.dto.ReviewDto;
 import com.restropos.systemorder.entity.Order;
 import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
+import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,7 +107,7 @@ public class OrderService {
                                 productModifier.getProductSubmodifierSet().forEach(productSubmodifier -> {
                                     if (productSelectedSubmodifierDto.getLabel().equalsIgnoreCase(productSubmodifier.getProductSubmodifierName())) {
                                         submodifierFound.set(true);
-                                        totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + (productSubmodifier.getPrice()*orderProductDto.getQuantity()));
+                                        totalProductCalculatedPrice.set(0, totalProductCalculatedPrice.get(0) + (productSubmodifier.getPrice() * orderProductDto.getQuantity()));
                                         orderSelectedModifier.getProductSubmodifiers().add(productSubmodifier);
                                     }
                                 });
@@ -193,5 +198,31 @@ public class OrderService {
     public List<OrderDto> getBusinessOrders() throws NotFoundException {
         SystemUser systemUser = securityProvideService.getSystemUser();
         return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomain(systemUser.getWorkspace().getBusinessDomain()));
+    }
+
+    public ResponseEntity<String> reviewOrder(String businessDomain, String orderId, ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+        Order order = orderRepository.findByIdAndBusinessDomain(orderId, businessDomain).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+        Customer customer = order.getCustomer();
+        if (!reviewDto.getCustomerDto().getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber()) || !order.getWorkspaceTable().getWorkspace().getBusinessDomain().equalsIgnoreCase(businessDomain))
+            throw new WrongCredentialsException(CustomResponseMessage.CUSTOMER_NOT_FOUND);
+
+        if (StringUtils.hasText(reviewDto.getOrderDto().getOrderReviewComment())) {
+            order.setReviewComment(reviewDto.getOrderDto().getOrderReviewComment());
+        }
+        if (!ObjectUtils.isEmpty(reviewDto.getOrderDto().getOrderReviewStar())) {
+            order.setReviewStar(ReviewStar.valueOf(String.valueOf(reviewDto.getOrderDto().getOrderReviewStar())));
+        }
+        if(!CollectionUtils.isEmpty(reviewDto.getOrderDto().getOrderProducts())){
+            reviewDto.getOrderDto().getOrderProducts().forEach(e -> {
+                if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
+                    order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
+                        orderProduct.setUserReviewStar(ReviewStar.valueOf(String.valueOf(e.getOrderProductReviewStar())));
+                    });
+                }
+            });
+        }
+
+        orderRepository.save(order);
+        return ResponseEntity.ok(CustomResponseMessage.REVIEW_SAVED);
     }
 }

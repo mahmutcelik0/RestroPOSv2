@@ -26,7 +26,7 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
 
     @Override
     protected OrderDto populate(Order order, OrderDto orderDto) {
-        orderDto.setId(String.valueOf(order.getId())); //todo değişecek
+        orderDto.setId(String.valueOf(order.getId()));
         orderDto.setOrderStatus(order.getOrderStatus());
         orderDto.setTotalOrderPrice(order.getTotalOrderPrice());
         orderDto.setOrderProducts(orderProductDtoPopulator.populateAll(order.getOrderProducts()));
@@ -42,6 +42,13 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
         if(!ObjectUtils.isEmpty(order.getCashDesk())){
             orderDto.setCashDeskDto(systemUserDtoPopulator.populate(order.getCashDesk()));
         }
+        if(!ObjectUtils.isEmpty(order.getReviewComment())){
+            orderDto.setOrderReviewComment(order.getReviewComment());
+        }
+        if(!ObjectUtils.isEmpty(order.getReviewStar())){
+            orderDto.setOrderReviewStar(order.getReviewStar().getNumber());
+        }
+
         return orderDto;
     }
 
