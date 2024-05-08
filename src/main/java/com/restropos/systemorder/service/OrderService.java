@@ -9,7 +9,6 @@ import com.restropos.systemmenu.entity.Product;
 import com.restropos.systemmenu.service.ProductService;
 import com.restropos.systemmenu.service.WorkspaceTableService;
 import com.restropos.systemorder.OrderStatus;
-import com.restropos.systemorder.constants.ReviewStar;
 import com.restropos.systemorder.dto.OrderDto;
 import com.restropos.systemorder.dto.OrderProductDto;
 import com.restropos.systemorder.dto.ReviewDto;
@@ -211,13 +210,13 @@ public class OrderService {
             order.setReviewComment(orderDto.getOrderReviewComment());
         }
         if (!ObjectUtils.isEmpty(orderDto.getOrderReviewStar())) {
-            order.setReviewStar(ReviewStar.valueOf(orderDto.getOrderReviewStar().toString()));
+            order.setReviewStar(orderDto.getOrderReviewStar());
         }
         if(!CollectionUtils.isEmpty(orderDto.getOrderProducts())){
             orderDto.getOrderProducts().forEach(e -> {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
-                        orderProduct.setUserReviewStar(ReviewStar.valueOf(e.getOrderProductReviewStar().toString()));
+                        orderProduct.setUserReviewStar(e.getOrderProductReviewStar());
                     });
                 }
             });

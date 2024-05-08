@@ -2,7 +2,6 @@ package com.restropos.systemorder.entity;
 
 import com.restropos.systemmenu.entity.WorkspaceTable;
 import com.restropos.systemorder.OrderStatus;
-import com.restropos.systemorder.constants.ReviewStar;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import jakarta.persistence.*;
@@ -52,6 +51,5 @@ public class Order {
 
     private String reviewComment;
 
-    @Enumerated
-    private ReviewStar reviewStar;
+    private Integer reviewStar;
 }

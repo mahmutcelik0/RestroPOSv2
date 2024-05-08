@@ -46,7 +46,7 @@ public class OrderDtoPopulator extends AbstractPopulator<Order,OrderDto> {
             orderDto.setOrderReviewComment(order.getReviewComment());
         }
         if(!ObjectUtils.isEmpty(order.getReviewStar())){
-            orderDto.setOrderReviewStar(order.getReviewStar().getNumber());
+            orderDto.setOrderReviewStar(order.getReviewStar());
         }
 
         return orderDto;
