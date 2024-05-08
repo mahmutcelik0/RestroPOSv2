@@ -17,6 +17,7 @@ import com.restropos.systemorder.entity.OrderProduct;
 import com.restropos.systemorder.entity.OrderSelectedModifier;
 import com.restropos.systemorder.populator.OrderDtoPopulator;
 import com.restropos.systemorder.repository.OrderRepository;
+import com.restropos.systemshop.entity.Workspace;
 import com.restropos.systemshop.entity.user.Customer;
 import com.restropos.systemshop.entity.user.SystemUser;
 import com.restropos.systemshop.service.CustomerService;
@@ -210,7 +211,12 @@ public class OrderService {
             order.setReviewComment(orderDto.getOrderReviewComment());
         }
         if (!ObjectUtils.isEmpty(orderDto.getOrderReviewStar())) {
+            Workspace workspace = order.getWorkspaceTable().getWorkspace();
+            if(workspace.getTotalReviewCount() == null) workspace.setTotalReviewCount(0);
+            if(workspace.getMeanOfWorkspaceStar() == null) workspace.setMeanOfWorkspaceStar(0.0);
             order.setReviewStar(orderDto.getOrderReviewStar());
+            workspace.setMeanOfWorkspaceStar(calculate(workspace.getMeanOfWorkspaceStar(),workspace.getTotalReviewCount(),orderDto.getOrderReviewStar()));
+            workspace.setTotalReviewCount(workspace.getTotalReviewCount()+1);
         }
         if(!CollectionUtils.isEmpty(orderDto.getOrderProducts())){
             orderDto.getOrderProducts().forEach(e -> {
@@ -220,7 +226,7 @@ public class OrderService {
                         Product product = orderProduct.getProduct();
                         if(product.getTotalReviewCount() == null) product.setTotalReviewCount(0);
                         if(product.getMeanOfProductStar() == null) product.setMeanOfProductStar(0.0);
-                        product.setMeanOfProductStar((product.getMeanOfProductStar()* product.getTotalReviewCount()+e.getOrderProductReviewStar())/(product.getTotalReviewCount()+1));
+                        product.setMeanOfProductStar(calculate(product.getMeanOfProductStar(),product.getTotalReviewCount(),e.getOrderProductReviewStar()));
                         product.setTotalReviewCount(product.getTotalReviewCount()+1);
                     });
                 }
@@ -229,5 +235,9 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
         return ResponseEntity.ok(orderDtoPopulator.populate(savedOrder));
+    }
+
+    private double calculate(Double mean,Integer total,Integer newValue){
+        return (mean* total+newValue)/(total+1);
     }
 }

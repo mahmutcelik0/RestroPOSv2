@@ -17,4 +17,6 @@ public class WorkspaceDto {
     @Pattern(regexp = "[A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?",message = CustomResponseMessage.BUSINESS_DOMAIN_PATTERN)
     private String businessDomain;
     private ImageDto imageDto;
+    private Integer totalReviewCount;
+    private Double meanOfWorkspaceStar;
 }

@@ -37,4 +37,8 @@ public class Workspace {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "workspace")
     private List<Product> products;
+
+    private Integer totalReviewCount;
+
+    private Double meanOfWorkspaceStar;
 }

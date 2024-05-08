@@ -14,9 +14,9 @@ public class WorkspaceDtoPopulator extends AbstractPopulator<Workspace, Workspac
     @Override
     protected WorkspaceDto populate(Workspace workspace, WorkspaceDto workspaceDto) {
         if(ObjectUtils.isEmpty(workspace.getImage())){
-            return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),null);
+            return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),null,0,0.0);
         }
-        return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),imageDtoPopulator.populate(workspace.getImage()));
+        return new WorkspaceDto(workspace.getBusinessName(),workspace.getBusinessDomain(),imageDtoPopulator.populate(workspace.getImage()),workspace.getTotalReviewCount(),workspace.getMeanOfWorkspaceStar());
     }
 
     @Override
