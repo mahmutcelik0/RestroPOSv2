@@ -232,7 +232,6 @@ public class OrderService {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
                         orderProduct.setUserReviewStar(e.getOrderProductReviewStar());
-                        orderProduct.setOrderProductCommentTime(new Date());
                         Product product = orderProduct.getProduct();
                         if(product.getTotalReviewCount() == null) product.setTotalReviewCount(0);
                         if(product.getMeanOfProductStar() == null) product.setMeanOfProductStar(0.0);
