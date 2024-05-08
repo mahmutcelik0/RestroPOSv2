@@ -200,20 +200,21 @@ public class OrderService {
         return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomain(systemUser.getWorkspace().getBusinessDomain()));
     }
 
-    public ResponseEntity<String> reviewOrder(String businessDomain, String orderId, ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
-        Order order = orderRepository.findByIdAndBusinessDomain(orderId, businessDomain).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
+    public ResponseEntity<String> reviewOrder(ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+        OrderDto orderDto = reviewDto.getOrderDto();
+        Order order = orderRepository.findByIdAndBusinessDomain(orderDto.getId(), orderDto.getWorkspaceTableDto().getWorkspaceDto().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
         Customer customer = order.getCustomer();
-        if (!reviewDto.getCustomerDto().getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber()) || !order.getWorkspaceTable().getWorkspace().getBusinessDomain().equalsIgnoreCase(businessDomain))
+        if (!securityProvideService.getCustomer().getPhoneNumber().equalsIgnoreCase(customer.getPhoneNumber()) || !order.getWorkspaceTable().getWorkspace().getBusinessDomain().equalsIgnoreCase(orderDto.getWorkspaceTableDto().getWorkspaceDto().getBusinessDomain()))
             throw new WrongCredentialsException(CustomResponseMessage.CUSTOMER_NOT_FOUND);
 
-        if (StringUtils.hasText(reviewDto.getOrderDto().getOrderReviewComment())) {
-            order.setReviewComment(reviewDto.getOrderDto().getOrderReviewComment());
+        if (StringUtils.hasText(orderDto.getOrderReviewComment())) {
+            order.setReviewComment(orderDto.getOrderReviewComment());
         }
-        if (!ObjectUtils.isEmpty(reviewDto.getOrderDto().getOrderReviewStar())) {
-            order.setReviewStar(ReviewStar.valueOf(String.valueOf(reviewDto.getOrderDto().getOrderReviewStar())));
+        if (!ObjectUtils.isEmpty(orderDto.getOrderReviewStar())) {
+            order.setReviewStar(ReviewStar.valueOf(String.valueOf(orderDto.getOrderReviewStar())));
         }
-        if(!CollectionUtils.isEmpty(reviewDto.getOrderDto().getOrderProducts())){
-            reviewDto.getOrderDto().getOrderProducts().forEach(e -> {
+        if(!CollectionUtils.isEmpty(orderDto.getOrderProducts())){
+            orderDto.getOrderProducts().forEach(e -> {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
                         orderProduct.setUserReviewStar(ReviewStar.valueOf(String.valueOf(e.getOrderProductReviewStar())));
