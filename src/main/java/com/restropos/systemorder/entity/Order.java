@@ -52,4 +52,6 @@ public class Order {
     private String reviewComment;
 
     private Integer reviewStar;
+
+    private Date orderCommentTime;
 }

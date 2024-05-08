@@ -18,4 +18,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Query("select o from Order as o where o.workspaceTable.workspace.businessDomain =?1")
     List<Order> findAllBusinessDomain( String businessDomain);
 
+    @Query("select o from Order as o where o.workspaceTable.workspace.businessDomain =?1 and o.orderCommentTime is not null and o.reviewStar is not null and o.reviewComment is not null")
+    List<Order> findAllBusinessDomainAndCommented(String businessDomain);
 }

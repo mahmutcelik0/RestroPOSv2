@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,4 +21,5 @@ public class OrderProductDto {
     private List<ProductSelectedModifierDto> productSelectedModifiers;
     private Long calculatedPrice;
     private Integer orderProductReviewStar;
+    private Date orderProductCommentTime;
 }
