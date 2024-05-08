@@ -211,13 +211,13 @@ public class OrderService {
             order.setReviewComment(orderDto.getOrderReviewComment());
         }
         if (!ObjectUtils.isEmpty(orderDto.getOrderReviewStar())) {
-            order.setReviewStar(ReviewStar.valueOf(String.valueOf(orderDto.getOrderReviewStar())));
+            order.setReviewStar(ReviewStar.valueOf(orderDto.getOrderReviewStar().toString()));
         }
         if(!CollectionUtils.isEmpty(orderDto.getOrderProducts())){
             orderDto.getOrderProducts().forEach(e -> {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
-                        orderProduct.setUserReviewStar(ReviewStar.valueOf(String.valueOf(e.getOrderProductReviewStar())));
+                        orderProduct.setUserReviewStar(ReviewStar.valueOf(e.getOrderProductReviewStar().toString()));
                     });
                 }
             });
