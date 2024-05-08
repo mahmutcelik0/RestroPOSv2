@@ -21,4 +21,6 @@ public class ProductDto {
     private ImageDto image;
     private Double price;
     private String categoryTitle;
+    private Integer totalReviewCount;
+    private Double meanOfProductStar;
 }

@@ -199,7 +199,7 @@ public class OrderService {
         return orderDtoPopulator.populateAll(orderRepository.findAllBusinessDomain(systemUser.getWorkspace().getBusinessDomain()));
     }
 
-    public ResponseEntity<String> reviewOrder(ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+    public ResponseEntity<OrderDto> reviewOrder(ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
         OrderDto orderDto = reviewDto.getOrderDto();
         Order order = orderRepository.findByIdAndBusinessDomain(orderDto.getId(), orderDto.getWorkspaceTableDto().getWorkspaceDto().getBusinessDomain()).orElseThrow(() -> new NotFoundException(CustomResponseMessage.ORDER_NOT_FOUND));
         Customer customer = order.getCustomer();
@@ -217,12 +217,17 @@ public class OrderService {
                 if (!ObjectUtils.isEmpty(e.getOrderProductReviewStar())) {
                     order.getOrderProducts().stream().filter(orderProduct -> orderProduct.getProduct().getProductName().equalsIgnoreCase(e.getProduct().getProductName())).findFirst().ifPresent(orderProduct -> {
                         orderProduct.setUserReviewStar(e.getOrderProductReviewStar());
+                        Product product = orderProduct.getProduct();
+                        if(product.getTotalReviewCount() == null) product.setTotalReviewCount(0);
+                        if(product.getMeanOfProductStar() == null) product.setMeanOfProductStar(0.0);
+                        product.setMeanOfProductStar((product.getMeanOfProductStar()* product.getTotalReviewCount()+e.getOrderProductReviewStar())/(product.getTotalReviewCount()+1));
+                        product.setTotalReviewCount(product.getTotalReviewCount()+1);
                     });
                 }
             });
         }
 
-        orderRepository.save(order);
-        return ResponseEntity.ok(CustomResponseMessage.REVIEW_SAVED);
+        Order savedOrder = orderRepository.save(order);
+        return ResponseEntity.ok(orderDtoPopulator.populate(savedOrder));
     }
 }

@@ -65,7 +65,7 @@ public class OrderApi  implements WebMvcConfigurer{
     }
 
     @PutMapping("/review")
-    public ResponseEntity<String> reviewOrder(@RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
+    public ResponseEntity<OrderDto> reviewOrder(@RequestBody ReviewDto reviewDto) throws NotFoundException, WrongCredentialsException {
         return orderService.reviewOrder(reviewDto);
     }
 }
