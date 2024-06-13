@@ -52,8 +52,8 @@ Bu iki kullanıcı grubunun ihtiyaçları dikkate alınarak, arayüzler hem yön
 
 RestroPOS sistemi, her bir restoran için özel bir çalışma alanı sunarak işletme sahiplerine benzersiz bir yönetim deneyimi sağlar. Bu çalışma alanları, restoran yöneticileri tarafından sisteme kaydedilerek oluşturulabilir. Kayıt süreci iki aşamalıdır ve Şekil 2.1(a) ve Şekil 2.1(b)'de gösterildiği gibi ilerlemektedir. İlk adımda, restoran sahibi kişisel bilgilerini ve bir şifre belirler. İkinci adımda ise işletmenin logosu, adı ve özelleştirilmiş bir alan adı belirlenir. RestroPOS'a birden fazla işletme kaydedilebilir ve her biri kendine özgü bir çalışma alanıyla yönetilebilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/1.png)
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/2.png)
+![](images/1.png)
+![](images/2.png)
 
 Şekil 2.1 Restoran yönetici kayıt ekranları a) Kayıt ekranı ilk adım, b) Kayıt Ekranı ikinci adım.
 
@@ -61,7 +61,7 @@ RestroPOS sistemi, her bir restoran için özel bir çalışma alanı sunarak i�
 
 Restoran çalışanları ise, bağlı oldukları işletmenin URL'i ile sisteme giriş yapabilirler ancak öncesinde restoran sahibinin çalışanlarını sistemde tanımlaması gerekmektedir. Şekil 2.2'de gösterilen ekrandan, restoran sahibi çalışanların temel bilgilerini, şifrelerini ve rollerini belirleyerek sisteme kaydedebilir. Ayrıca, çalışanların bilgilerini güncelleyebilir veya silebilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/3.png)
+![](images/3.png)
 
 Şekil 2.2. Restoran çalışan listesi ekranı.
 
@@ -75,7 +75,7 @@ Siparişler ekranında (Şekil 2.3), restoran sahibi canlı olarak aktif sipari�
 
 Sipariş ekranı, restoran sahibinin işletmesinden farklı bir ortamda bulunsa bile, restoranın yoğunluğu hakkında anlık bilgi sahibi olmasını sağlar. Ayrıca, sipariş süreçlerini detaylı bir şekilde inceleyebilmesi, bir aksilik olduğunda veya olağandışı bir durumda fark edebilmesine yardımcı olabilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/4.png)
+![](images/4.png)
 
 Şekil 2.3. Siparişler ekranı.
 
@@ -83,7 +83,7 @@ Sipariş ekranı, restoran sahibinin işletmesinden farklı bir ortamda bulunsa 
 
 Menü ekranında (Şekil 2.4), üç sekme bulunmaktadır: öne çıkarılan ürünler, kategoriler ve tüm ürünler. Tüm ürünler sekmesinde, restoran sahibi menüde gösterilecek olan ürünleri ekleyebilir, ürünleri listeleyebilir ve detaylı bir şekilde filtreleyebilir. Kategoriler sekmesinde, menüdeki kategoriler ve bu kategorilerin fotoğrafları yer alır. Restoran sahibi aynı şekilde bu kategorileri ekleyip çıkarabilir ve görüntüleyebilir. Kategoriler, restoran müşterilerine aradıkları ürünleri bulmalarında yardımcı olur. Çünkü QR menü üzerinden seçilen kategorilere göre filtreleme yapılabilmektedir. Öne çıkarılan ürünler sekmesinde ise başlıklar ve o başlık altında gösterilecek ürünler listelenir. Bu ekranda restoran sahibi, QR menüde müşterilerinin dikkatini çekmek istediği ürünleri seçebilir; örneğin, promosyon veya indirimdeki ürünler gibi. Bu özellik, müşterilere kişiselleştirilmiş bir deneyim sunmak için oldukça değerlidir. Ayrıca kolay yönetilebilirliği ile anlık menü değişiklikleri gerçekleştirilebilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/5.png)
+![](images/5.png)
 
 Şekil 2.4. Menü ekranı.
 
@@ -91,7 +91,7 @@ Menü ekranında (Şekil 2.4), üç sekme bulunmaktadır: öne çıkarılan ür�
 
 Masalar ekranında (Şekil 2.5), restoran sahibinin oluşturduğu QR kodları bulunmaktadır. Restoran sahibi ayrıca masa isimlerini girerek masalar için QR kodları oluşturabilir. Sistem, her masaya özel bir QR kod oluşturur. Müşteriler bu QR kodları kullanarak restoranın menüsüne erişebilirler. Ayrıca, QR menüler sayesinde siparişlerde masa takibi yapılabilir. Restoran çalışanları, hangi müşterinin hangi masadan sipariş verdiğini görebilirler. Bu sayede, siparişlerin hangi masaya ait olduğunu anlamak daha kolay olur ve restoran operasyonları daha sorunsuz bir şekilde yürütülebilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/6.png)
+![](images/6.png)
 
 Şekil 2.5. Masalar ekranı.
 
@@ -99,7 +99,7 @@ Masalar ekranında (Şekil 2.5), restoran sahibinin oluşturduğu QR kodları bu
 
 İncelemeler ekranı (Şekil 2.6), müşterilerin restorana yaptığı yorumları ve değerlendirmeleri listeler. Restoran sahibi, müşterilerinin fikirlerini ve değerlendirmeleri bu ekran üzerinden detaylıca inceleyebilir ve istatistiksel bilgilere erişebilir. Bu sayede, müşterilerden etkili bir geri bildirim alınabilir ve restoranın hizmet kalitesi hakkında önemli bilgiler elde edilmesini sağlar.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/7.png)
+![](images/7.png)
 
 Şekil 2.6. İncelemeler ekranı.
 
@@ -109,8 +109,8 @@ Garson rolündeki çalışanlar, sistem üzerinden müşterilerin verdikleri sip
 
 Siparişlerin bu şekilde sistem üzerinden ilerletilmesi, garsonlar arasında senkronizasyon problemlerini ve olası karmaşaları önleyebilir. Çalışanlar, daha optimize ve düzenli bir şekilde işlerini kolaylıkla gerçekleştirebilirler. Ayrıca bu sistem, müşterilere daha hızlı servis hizmeti ve sipariş deneyimi sunulmasını sağlar.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/8.png)
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/9.png)
+![](images/8.png)
+![](images/9.png)
 
 Şekil 2.7. Garson ekranları a) Atanmış siparişler ekranı, b) Aktif siparişler ekranı.
 
@@ -120,7 +120,7 @@ Mutfak ekranı (Şekil 2.8), mutfakta çalışan personelin gelen siparişleri t
 
 Ayrıca, hazırlanan siparişler bu ekrandan işaretlenerek garsonlara anlık güncelleme bildirimleri yapılabilir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/10.png)
+![](images/10.png)
 
 Şekil 2.8. Mutfak ekranı.
 
@@ -132,7 +132,7 @@ Bu sistemin restoran ve müşteri için birçok faydası bulunmaktadır. Restora
 
 Müşteriler açısından ise, ödemelerin hızlı ve doğru bir şekilde yapılması, genel müşteri memnuniyetini arttırır. Ayrıca, sipariş detaylarının kasa çalışanları tarafından kolayca görüntülenebilmesi, herhangi bir karışıklık olmadan doğru siparişlerin doğru müşterilere faturalandırılmasını sağlar. Bu da müşterilere daha profesyonel ve güvenilir bir hizmet sunar.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/11.png)
+![](images/11.png)
 
 Şekil 2.9. Kasa ekranı.
 
@@ -152,10 +152,10 @@ Müşteri, siparişinin durumunu anlık olarak takip edebilir ve böylece beklem
 
 Sepetim ekranında (Şekil 2.10(d)), müşterinin sepetine eklediği ürünler görüntülenir. Müşteri sepetini istediği gibi güncelleyebilir ve siparişini oluşturabilir. Bu ekran, müşterinin siparişlerini kolayca yönetebilmesini ve değiştirebilmesini sağlar, bu da sipariş sürecini daha esnek ve kullanıcı dostu hale getirir.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/12.png)
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/13.png)
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/14.png)
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/15.png)
+![](images/12.png)
+![](images/13.png)
+![](images/14.png)
+![](images/15.png)
 
 Şekil 2.10. a) Telefon numarası ekranı, b) Ana ekran, c) Siparişler ekranı, d) Sepetim ekranı.
 
@@ -286,7 +286,7 @@ Uygulamanın tüm ön yüz elementleri, açık kaynak kodlu bir kütüphane olan
 
 Yönetici ekranı (Şekil 3.1), geniş ekranlara uygun olarak kurgulanmıştır. Yönetici paneli, birçok bilgiyi ve işlevi içermektedir. Bu nedenle, yan menü kullanılarak ekranlar arası yönlendirme sağlanmıştır. Ekran boyutuna uygun olarak daha büyük arayüz öğeleri ve yazı tipleri tercih edilmiştir. Bu yaklaşım, kullanıcı deneyimini geliştirerek okunabilirliği ve arayüzün anlaşılabilirliğini artırmaktadır.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/16.png)
+![](images/16.png)
 
 Şekil 3.1. Yönetici ekranı.
 
@@ -312,7 +312,7 @@ RestroPOS sisteminde her restoranın kendine ait bir çalışma alanı bulunmakt
 
 RestroPOS, İstemci-Sunucu mimarisi kullanılarak tasarlanmış bir sistemdir. Bu mimaride, istemci tarafında bir React (Meta, 2024) JavaScript uygulaması, sunucu tarafında ise REST API olarak yapılandırılmış bir Java Spring Boot uygulaması bulunmaktadır. İki uygulama arasındaki iletişim HTTPS protokolü ile sağlanmaktadır. Şekil 3.2'de, sistemin genel mimarisini gösteren bir şema yer almaktadır.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/17.png)
+![](images/17.png)
 
 Şekil 3.2. Alt alanı diyagramı.
 
@@ -332,11 +332,11 @@ Bu şekilde, sistemin genel işleyişi ve kullanıcı etkileşimlerinin nasıl y
 
 Bu mimari, kullanıcı deneyimini optimize ederken sistemin güvenliğini ve bütünlüğünü de korur.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/18.png)
+![](images/18.png)
 
 Şekil 3.3. Sistem mimarisi diyagramı.
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/19.png)
+![](images/19.png)
 
 Şekil 3.4. Sipariş yönetim diyagramı.
 
@@ -352,7 +352,7 @@ Bu yapı, her restoranın kendi operasyonel süreçlerini bağımsız bir şekil
 
 Bu mimari, restoranların kendi verilerini güvenli ve düzenli bir şekilde yönetmelerine imkan tanır ve kullanıcı deneyimini optimize eder. Ayrıca, sistemin farklı bileşenlerinin nasıl etkileşime girdiği ve kullanıcıların bu bileşenlerle nasıl etkileşim kurduğu açık bir şekilde ortaya konulmuştur (Şekil 3.5).
 
-![github-large](https://github.com/mahmutcelik0/images/blob/dev/20.png)
+![](images/20.png)
 
 Şekil 3.5. Veritabanı şeması.
 
